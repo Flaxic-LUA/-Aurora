@@ -96,7 +96,7 @@ function setup:CreateSmallBag(bagID, isKeyRing)
         frame:SetScript('OnClick', function()
             local gameMenu = getglobal('AU_GameMenuFrame')
             if gameMenu and gameMenu:IsVisible() then return end
-            if AU_GlobalDB['bags']['oneBagMode'] then
+            if AU.profile['bags']['oneBagMode'] then
                 local unified = AU.setups.bags.unified
                 if unified then
                     if unified:IsShown() then unified:Hide() else unified:Show() end
@@ -138,7 +138,7 @@ function setup:CreateBagBar()
 
     self.expandButton = AU.ui.ExpandButton(self.container, 23, 14, self.textures.expand, function()
         local checked = this:GetChecked() and true or false
-        debugprint('Expand button clicked, checked=' .. tostring(checked))
+        -- debugprint('Expand button clicked, checked=' .. tostring(checked))
         AU:SetConfig('bagbar', 'expandBags', checked)
     end, 'AU_BagToggle')
 

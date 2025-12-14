@@ -73,7 +73,7 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
             local free, total = helpers.GetBagFreeAndTotal()
             local used = total - free
             local percent = (used / total) * 100
-            if AU_GlobalDB['bagbar']['colorizedFreeSlots'] then
+            if AU.profile['bagbar']['colorizedFreeSlots'] then
                 if percent <= 50 then
                     mainBag.FreeSlotsText:SetTextColor(0, 1, 0)
                 elseif percent <= 79 then
@@ -82,14 +82,14 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
                     mainBag.FreeSlotsText:SetTextColor(1, 0, 0)
                 end
             else
-                local color = AU_GlobalDB['bagbar']['freeSlotsColour']
+                local color = AU.profile['bagbar']['freeSlotsColour']
                 mainBag.FreeSlotsText:SetTextColor(color[1], color[2], color[3])
             end
         end
     end
 
     helpers.SetupBarFade = function()
-        local delay = AU_GlobalDB['bagbar']['fadeOutDelay']
+        local delay = AU.profile['bagbar']['fadeOutDelay']
         local wasEnabled = container.fadeEnabled
         if delay > 0 then
             local fadeIn = function()
@@ -213,7 +213,6 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
     end
 
     callbacks.expandBags = function(value)
-        debugprint('expandBags callback called with value=' .. tostring(value))
         expandButton:SetChecked(value)
         if value then
             expandButton:GetNormalTexture():SetTexCoord(0, 1, 0, 1)
@@ -282,7 +281,7 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
                 mainBag.FreeSlotsText = text
             end
             mainBag.FreeSlotsText:Show()
-            if AU_GlobalDB['bagbar']['showBackground'] then
+            if AU.profile['bagbar']['showBackground'] then
                 mainBag.FreeSlotsBg:Show()
             end
 
@@ -325,13 +324,13 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
             if string.find(value, 'font:') then
                 fontPath = media[value]
             end
-            mainBag.FreeSlotsText:SetFont(fontPath, AU_GlobalDB['bagbar']['freeSlotsSize'], 'OUTLINE')
+            mainBag.FreeSlotsText:SetFont(fontPath, AU.profile['bagbar']['freeSlotsSize'], 'OUTLINE')
         end
     end
 
     callbacks.freeSlotsSize = function(value)
         if mainBag.FreeSlotsText then
-            local fontPath = AU_GlobalDB['bagbar']['freeSlotsFont']
+            local fontPath = AU.profile['bagbar']['freeSlotsFont']
             if string.find(fontPath, 'font:') then
                 fontPath = media[fontPath]
             end
@@ -348,7 +347,7 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
     end
 
     callbacks.freeSlotsColour = function(value)
-        if not AU_GlobalDB['bagbar']['colorizedFreeSlots'] then
+        if not AU.profile['bagbar']['colorizedFreeSlots'] then
             if mainBag.FreeSlotsText then
                 mainBag.FreeSlotsText:SetTextColor(value[1], value[2], value[3])
             end
@@ -358,22 +357,22 @@ AU:NewModule('bagbar', 1, 'PLAYER_LOGIN', function()
     callbacks.freeSlotsX = function(value)
         if mainBag.FreeSlotsText then
             mainBag.FreeSlotsText:ClearAllPoints()
-            mainBag.FreeSlotsText:SetPoint('TOP', mainBag, 'BOTTOM', value, AU_GlobalDB['bagbar']['freeSlotsY'])
+            mainBag.FreeSlotsText:SetPoint('TOP', mainBag, 'BOTTOM', value, AU.profile['bagbar']['freeSlotsY'])
         end
         if mainBag.FreeSlotsBg then
             mainBag.FreeSlotsBg:ClearAllPoints()
-            mainBag.FreeSlotsBg:SetPoint('TOP', mainBag, 'BOTTOM', value, AU_GlobalDB['bagbar']['freeSlotsY'])
+            mainBag.FreeSlotsBg:SetPoint('TOP', mainBag, 'BOTTOM', value, AU.profile['bagbar']['freeSlotsY'])
         end
     end
 
     callbacks.freeSlotsY = function(value)
         if mainBag.FreeSlotsText then
             mainBag.FreeSlotsText:ClearAllPoints()
-            mainBag.FreeSlotsText:SetPoint('TOP', mainBag, 'BOTTOM', AU_GlobalDB['bagbar']['freeSlotsX'], value)
+            mainBag.FreeSlotsText:SetPoint('TOP', mainBag, 'BOTTOM', AU.profile['bagbar']['freeSlotsX'], value)
         end
         if mainBag.FreeSlotsBg then
             mainBag.FreeSlotsBg:ClearAllPoints()
-            mainBag.FreeSlotsBg:SetPoint('TOP', mainBag, 'BOTTOM', AU_GlobalDB['bagbar']['freeSlotsX'], value)
+            mainBag.FreeSlotsBg:SetPoint('TOP', mainBag, 'BOTTOM', AU.profile['bagbar']['freeSlotsX'], value)
         end
     end
 

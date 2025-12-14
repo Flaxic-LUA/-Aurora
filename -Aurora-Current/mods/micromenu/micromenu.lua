@@ -32,8 +32,8 @@ AU:NewModule('micro', 1, 'PLAYER_LOGIN', function()
     local helpers = {}
 
     helpers.RepositionButtons = function()
-        local size = AU_GlobalDB['micro']['buttonSize']
-        local spacing = AU_GlobalDB['micro']['buttonSpacing']
+        local size = AU.profile['micro']['buttonSize']
+        local spacing = AU.profile['micro']['buttonSpacing']
         for i = 1, table.getn(setup.buttons) do
             local xOffset = (i - 1) * (size + spacing)
             setup.buttons[i]:ClearAllPoints()
@@ -43,7 +43,7 @@ AU:NewModule('micro', 1, 'PLAYER_LOGIN', function()
     end
 
     helpers.SetupFade = function()
-        local delay = AU_GlobalDB['micro']['fadeOutDelay']
+        local delay = AU.profile['micro']['fadeOutDelay']
         if not setup.frame.originalScriptsStored then
             for i = 1, table.getn(setup.buttons) do
                 setup.buttons[i].originalOnEnter = setup.buttons[i]:GetScript('OnEnter')
@@ -58,7 +58,7 @@ AU:NewModule('micro', 1, 'PLAYER_LOGIN', function()
                     if setup.frame.fadeTimer then
                         setup.frame.fadeTimer = nil
                     end
-                    UIFrameFadeIn(setup.frame, 0.2, setup.frame:GetAlpha(), AU_GlobalDB['micro']['alpha'])
+                    UIFrameFadeIn(setup.frame, 0.2, setup.frame:GetAlpha(), AU.profile['micro']['alpha'])
                 end)
                 setup.buttons[i]:SetScript('OnLeave', function()
                     if this.originalOnLeave then this.originalOnLeave() end
@@ -69,14 +69,14 @@ AU:NewModule('micro', 1, 'PLAYER_LOGIN', function()
                             if setup.frame.fadeTimer <= 0 then
                                 setup.frame.fadeTimer = nil
                                 setup.frame:SetScript('OnUpdate', nil)
-                                UIFrameFadeOut(setup.frame, 0.5, AU_GlobalDB['micro']['alpha'], AU_GlobalDB['micro']['minAlpha'])
+                                UIFrameFadeOut(setup.frame, 0.5, AU.profile['micro']['alpha'], AU.profile['micro']['minAlpha'])
                             end
                         end
                     end)
                 end)
             end
             if not setup.frame.fadeEnabled then
-                UIFrameFadeOut(setup.frame, 0.5, AU_GlobalDB['micro']['alpha'], AU_GlobalDB['micro']['minAlpha'])
+                UIFrameFadeOut(setup.frame, 0.5, AU.profile['micro']['alpha'], AU.profile['micro']['minAlpha'])
             end
             setup.frame.fadeEnabled = true
         else
@@ -87,7 +87,7 @@ AU:NewModule('micro', 1, 'PLAYER_LOGIN', function()
                 setup.buttons[i]:SetScript('OnEnter', setup.buttons[i].originalOnEnter)
                 setup.buttons[i]:SetScript('OnLeave', setup.buttons[i].originalOnLeave)
             end
-            setup.frame:SetAlpha(AU_GlobalDB['micro']['alpha'])
+            setup.frame:SetAlpha(AU.profile['micro']['alpha'])
         end
     end
 
@@ -104,7 +104,7 @@ AU:NewModule('micro', 1, 'PLAYER_LOGIN', function()
     end
 
     callbacks.alpha = function(value)
-        if AU_GlobalDB['micro']['fadeOutDelay'] == 0 then
+        if AU.profile['micro']['fadeOutDelay'] == 0 then
             setup.frame:SetAlpha(value)
         end
     end

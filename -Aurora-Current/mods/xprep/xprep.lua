@@ -62,70 +62,70 @@ AU:NewDefaults('xprep', {
 })
 
 AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
-    local xpbar = AU.animations.CreateStatusBar(UIParent, AU_GlobalDB['xprep']['xpBarWidth'], AU_GlobalDB['xprep']['xpBarHeight'], {pulse = AU_GlobalDB['xprep']['xpBarPulse']}, 'AU_XPBar')
+    local xpbar = AU.animations.CreateStatusBar(UIParent, AU.profile['xprep']['xpBarWidth'], AU.profile['xprep']['xpBarHeight'], {pulse = AU.profile['xprep']['xpBarPulse']}, 'AU_XPBar')
     xpbar:SetTextures(media['tex:generic:xpbar_1.blp'], media['tex:generic:xpbar_1_bg.blp'])
     xpbar:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM', -250, 4)
-    local color = AU_GlobalDB['xprep']['xpBarColour']
+    local color = AU.profile['xprep']['xpBarColour']
     xpbar:SetFillColor(color[1], color[2], color[3], color[4])
-    local pulseColor = AU_GlobalDB['xprep']['xpBarPulseColour']
+    local pulseColor = AU.profile['xprep']['xpBarPulseColour']
     xpbar:SetPulseColor(pulseColor[1], pulseColor[2], pulseColor[3], pulseColor[4])
-    xpbar:SetAlpha(AU_GlobalDB['xprep']['xpBarAlpha'])
+    xpbar:SetAlpha(AU.profile['xprep']['xpBarAlpha'])
     xpbar:EnableMouse(true)
     xpbar:SetFrameStrata('BACKGROUND')
-    if not AU_GlobalDB['xprep']['xpBarEnabled'] then
+    if not AU.profile['xprep']['xpBarEnabled'] then
         xpbar:Hide()
     end
 
     local xpText = xpbar:CreateFontString(nil, 'OVERLAY')
-    local xpFont = AU_GlobalDB['xprep']['xpBarTextFont']
+    local xpFont = AU.profile['xprep']['xpBarTextFont']
     if strfind(xpFont, 'font:') then
         xpFont = media[xpFont]
     end
-    xpText:SetFont(xpFont, AU_GlobalDB['xprep']['xpBarTextSize'], 'OUTLINE')
-    xpText:SetPoint(AU_GlobalDB['xprep']['xpBarTextAnchor'], xpbar, AU_GlobalDB['xprep']['xpBarTextAnchor'], AU_GlobalDB['xprep']['xpBarTextOffsetX'], AU_GlobalDB['xprep']['xpBarTextOffsetY'])
-    local xpColor = AU_GlobalDB['xprep']['xpBarTextColour']
+    xpText:SetFont(xpFont, AU.profile['xprep']['xpBarTextSize'], 'OUTLINE')
+    xpText:SetPoint(AU.profile['xprep']['xpBarTextAnchor'], xpbar, AU.profile['xprep']['xpBarTextAnchor'], AU.profile['xprep']['xpBarTextOffsetX'], AU.profile['xprep']['xpBarTextOffsetY'])
+    local xpColor = AU.profile['xprep']['xpBarTextColour']
     xpText:SetTextColor(xpColor[1], xpColor[2], xpColor[3], xpColor[4])
 
     local xpRestedText = xpbar:CreateFontString(nil, 'OVERLAY')
-    local restedFont = AU_GlobalDB['xprep']['xpBarRestedFont']
+    local restedFont = AU.profile['xprep']['xpBarRestedFont']
     if strfind(restedFont, 'font:') then
         restedFont = media[restedFont]
     end
-    xpRestedText:SetFont(restedFont, AU_GlobalDB['xprep']['xpBarRestedSize'], 'OUTLINE')
-    xpRestedText:SetPoint(AU_GlobalDB['xprep']['xpBarRestedAnchor'], xpbar, AU_GlobalDB['xprep']['xpBarRestedAnchor'], AU_GlobalDB['xprep']['xpBarRestedOffsetX'], AU_GlobalDB['xprep']['xpBarRestedOffsetY'])
-    local restedColor = AU_GlobalDB['xprep']['xpBarRestedColour']
+    xpRestedText:SetFont(restedFont, AU.profile['xprep']['xpBarRestedSize'], 'OUTLINE')
+    xpRestedText:SetPoint(AU.profile['xprep']['xpBarRestedAnchor'], xpbar, AU.profile['xprep']['xpBarRestedAnchor'], AU.profile['xprep']['xpBarRestedOffsetX'], AU.profile['xprep']['xpBarRestedOffsetY'])
+    local restedColor = AU.profile['xprep']['xpBarRestedColour']
     xpRestedText:SetTextColor(restedColor[1], restedColor[2], restedColor[3], restedColor[4])
 
-    local repbar = AU.animations.CreateStatusBar(UIParent, AU_GlobalDB['xprep']['repBarWidth'], AU_GlobalDB['xprep']['repBarHeight'], {pulse = AU_GlobalDB['xprep']['repBarPulse']}, 'AU_RepBar')
+    local repbar = AU.animations.CreateStatusBar(UIParent, AU.profile['xprep']['repBarWidth'], AU.profile['xprep']['repBarHeight'], {pulse = AU.profile['xprep']['repBarPulse']}, 'AU_RepBar')
     repbar:SetTextures(media['tex:generic:xpbar_1.blp'], media['tex:generic:xpbar_1_bg.blp'])
     repbar:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM', 250, 4)
-    repbar:SetAlpha(AU_GlobalDB['xprep']['repBarAlpha'])
-    local repPulseColor = AU_GlobalDB['xprep']['repBarPulseColour']
+    repbar:SetAlpha(AU.profile['xprep']['repBarAlpha'])
+    local repPulseColor = AU.profile['xprep']['repBarPulseColour']
     repbar:SetPulseColor(repPulseColor[1], repPulseColor[2], repPulseColor[3], repPulseColor[4])
     repbar:EnableMouse(true)
     repbar:SetFrameStrata('BACKGROUND')
-    if not AU_GlobalDB['xprep']['repBarEnabled'] then
+    if not AU.profile['xprep']['repBarEnabled'] then
         repbar:Hide()
     end
 
     local repText = repbar:CreateFontString(nil, 'OVERLAY')
-    local repFont = AU_GlobalDB['xprep']['repBarTextFont']
+    local repFont = AU.profile['xprep']['repBarTextFont']
     if strfind(repFont, 'font:') then
         repFont = media[repFont]
     end
-    repText:SetFont(repFont, AU_GlobalDB['xprep']['repBarTextSize'], 'OUTLINE')
-    repText:SetPoint(AU_GlobalDB['xprep']['repBarTextAnchor'], repbar, AU_GlobalDB['xprep']['repBarTextAnchor'], AU_GlobalDB['xprep']['repBarTextOffsetX'], AU_GlobalDB['xprep']['repBarTextOffsetY'])
-    local repColor = AU_GlobalDB['xprep']['repBarTextColour']
+    repText:SetFont(repFont, AU.profile['xprep']['repBarTextSize'], 'OUTLINE')
+    repText:SetPoint(AU.profile['xprep']['repBarTextAnchor'], repbar, AU.profile['xprep']['repBarTextAnchor'], AU.profile['xprep']['repBarTextOffsetX'], AU.profile['xprep']['repBarTextOffsetY'])
+    local repColor = AU.profile['xprep']['repBarTextColour']
     repText:SetTextColor(repColor[1], repColor[2], repColor[3], repColor[4])
 
     local repFactionText = repbar:CreateFontString(nil, 'OVERLAY')
-    local factionFont = AU_GlobalDB['xprep']['repBarFactionNameFont']
+    local factionFont = AU.profile['xprep']['repBarFactionNameFont']
     if strfind(factionFont, 'font:') then
         factionFont = media[factionFont]
     end
-    repFactionText:SetFont(factionFont, AU_GlobalDB['xprep']['repBarFactionNameSize'], 'OUTLINE')
-    repFactionText:SetPoint(AU_GlobalDB['xprep']['repBarFactionNameAnchor'], repbar, AU_GlobalDB['xprep']['repBarFactionNameAnchor'], AU_GlobalDB['xprep']['repBarFactionNameOffsetX'], AU_GlobalDB['xprep']['repBarFactionNameOffsetY'])
-    local factionColor = AU_GlobalDB['xprep']['repBarFactionNameColour']
+    repFactionText:SetFont(factionFont, AU.profile['xprep']['repBarFactionNameSize'], 'OUTLINE')
+    repFactionText:SetPoint(AU.profile['xprep']['repBarFactionNameAnchor'], repbar, AU.profile['xprep']['repBarFactionNameAnchor'], AU.profile['xprep']['repBarFactionNameOffsetX'], AU.profile['xprep']['repBarFactionNameOffsetY'])
+    local factionColor = AU.profile['xprep']['repBarFactionNameColour']
     repFactionText:SetTextColor(factionColor[1], factionColor[2], factionColor[3], factionColor[4])
 
     local lastXP = UnitXP('player')
@@ -138,7 +138,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
             xpbar:Hide()
             return
         end
-        if AU_GlobalDB['xprep']['xpBarEnabled'] then
+        if AU.profile['xprep']['xpBarEnabled'] then
             xpbar:Show()
         end
         local xp = UnitXP('player')
@@ -148,14 +148,14 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
 
         if xp ~= lastXP then
             lastXP = xp
-            if AU_GlobalDB['xprep']['xpBarShowTextOnGainOnly'] then
+            if AU.profile['xprep']['xpBarShowTextOnGainOnly'] then
                 xpTextHideTimer = 10
             end
         end
 
-        if AU_GlobalDB['xprep']['xpBarShowText'] then
+        if AU.profile['xprep']['xpBarShowText'] then
             local text
-            local format = AU_GlobalDB['xprep']['xpBarTextFormat']
+            local format = AU.profile['xprep']['xpBarTextFormat']
             if format == 'percent' then
                 local percent = math.floor((xp / maxxp) * 100)
                 text = percent .. '%'
@@ -166,7 +166,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                 text = xp .. ' / ' .. maxxp .. ' (' .. percent .. '%)'
             end
             xpText:SetText(text)
-            if AU_GlobalDB['xprep']['xpBarShowTextOnGainOnly'] then
+            if AU.profile['xprep']['xpBarShowTextOnGainOnly'] then
                 if xpTextHideTimer and xpTextHideTimer > 0 then
                     xpText:Show()
                 else
@@ -180,9 +180,9 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
         end
 
         local rested = GetXPExhaustion()
-        if rested and AU_GlobalDB['xprep']['xpBarShowRested'] then
+        if rested and AU.profile['xprep']['xpBarShowRested'] then
             local text
-            local format = AU_GlobalDB['xprep']['xpBarRestedFormat']
+            local format = AU.profile['xprep']['xpBarRestedFormat']
             if format == 'percent' then
                 local percent = math.floor((rested / maxxp) * 100)
                 text = '+' .. percent .. '%'
@@ -193,7 +193,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                 text = '+' .. rested .. ' (' .. percent .. '%)'
             end
             xpRestedText:SetText(text)
-            if AU_GlobalDB['xprep']['xpBarShowTextOnGainOnly'] then
+            if AU.profile['xprep']['xpBarShowTextOnGainOnly'] then
                 if xpTextHideTimer and xpTextHideTimer > 0 then
                     xpRestedText:Show()
                 else
@@ -210,7 +210,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
     local function UpdateRep()
         local name, standing, min, max, value = GetWatchedFactionInfo()
         if name then
-            if AU_GlobalDB['xprep']['repBarEnabled'] then
+            if AU.profile['xprep']['repBarEnabled'] then
                 repbar:Show()
             end
             if max == min then max = min + 1 end
@@ -220,13 +220,13 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
 
             if value ~= lastRep then
                 lastRep = value
-                if AU_GlobalDB['xprep']['repBarShowTextOnGainOnly'] then
+                if AU.profile['xprep']['repBarShowTextOnGainOnly'] then
                     repTextHideTimer = 10
                 end
             end
 
-            if AU_GlobalDB['xprep']['repBarOverrideColour'] then
-                local color = AU_GlobalDB['xprep']['repBarCustomColour']
+            if AU.profile['xprep']['repBarOverrideColour'] then
+                local color = AU.profile['xprep']['repBarCustomColour']
                 repbar:SetFillColor(color[1], color[2], color[3], color[4])
             else
                 if standing == 1 or standing == 2 then
@@ -246,9 +246,9 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                 end
             end
 
-            if AU_GlobalDB['xprep']['repBarShowFactionName'] then
+            if AU.profile['xprep']['repBarShowFactionName'] then
                 repFactionText:SetText(name)
-                if AU_GlobalDB['xprep']['repBarShowTextOnGainOnly'] then
+                if AU.profile['xprep']['repBarShowTextOnGainOnly'] then
                     if repTextHideTimer and repTextHideTimer > 0 then
                         repFactionText:Show()
                     else
@@ -261,11 +261,11 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                 repFactionText:Hide()
             end
 
-            if AU_GlobalDB['xprep']['repBarShowText'] then
+            if AU.profile['xprep']['repBarShowText'] then
                 local current = value - min
                 local total = max - min
                 local text
-                local format = AU_GlobalDB['xprep']['repBarTextFormat']
+                local format = AU.profile['xprep']['repBarTextFormat']
                 if format == 'percent' then
                     local percent = math.floor((current / total) * 100)
                     text = percent .. '%'
@@ -276,7 +276,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                     text = current .. ' / ' .. total .. ' (' .. percent .. '%)'
                 end
                 repText:SetText(text)
-                if AU_GlobalDB['xprep']['repBarShowTextOnGainOnly'] then
+                if AU.profile['xprep']['repBarShowTextOnGainOnly'] then
                     if repTextHideTimer and repTextHideTimer > 0 then
                         repText:Show()
                     else
@@ -330,14 +330,14 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
     -- callbacks
     local helpers = {
         SetupBarFade = function(frame, delayKey, alphaKey, isXP)
-            local delay = AU_GlobalDB['xprep'][delayKey]
+            local delay = AU.profile['xprep'][delayKey]
             local wasEnabled = frame.fadeEnabled
             if delay > 0 then
                 frame:SetScript('OnEnter', function()
                     if frame.fadeTimer then
                         frame.fadeTimer = nil
                     end
-                    UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), AU_GlobalDB['xprep'][alphaKey])
+                    UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), AU.profile['xprep'][alphaKey])
                     if isXP then
                         local xp = UnitXP('player')
                         local maxxp = UnitXPMax('player')
@@ -365,14 +365,14 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                             if frame.fadeTimer <= 0 then
                                 frame.fadeTimer = nil
                                 frame:SetScript('OnUpdate', nil)
-                                UIFrameFadeOut(frame, 0.5, AU_GlobalDB['xprep'][alphaKey], 0)
+                                UIFrameFadeOut(frame, 0.5, AU.profile['xprep'][alphaKey], 0)
                             end
                         end
                     end)
                 end)
                 frame.fadeEnabled = true
                 if not wasEnabled then
-                    UIFrameFadeOut(frame, 0.5, AU_GlobalDB['xprep'][alphaKey], 0)
+                    UIFrameFadeOut(frame, 0.5, AU.profile['xprep'][alphaKey], 0)
                 end
             else
                 frame:SetScript('OnEnter', function()
@@ -400,7 +400,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                 frame:SetScript('OnUpdate', nil)
                 frame.fadeTimer = nil
                 frame.fadeEnabled = nil
-                frame:SetAlpha(AU_GlobalDB['xprep'][alphaKey])
+                frame:SetAlpha(AU.profile['xprep'][alphaKey])
             end
         end
     }
@@ -474,11 +474,11 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
         if strfind(font, 'font:') then
             font = media[font]
         end
-        xpText:SetFont(font, AU_GlobalDB['xprep']['xpBarTextSize'], 'OUTLINE')
+        xpText:SetFont(font, AU.profile['xprep']['xpBarTextSize'], 'OUTLINE')
     end
 
     callbacks.xpBarTextSize = function(value)
-        local font = AU_GlobalDB['xprep']['xpBarTextFont']
+        local font = AU.profile['xprep']['xpBarTextFont']
         if strfind(font, 'font:') then
             font = media[font]
         end
@@ -491,17 +491,17 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
 
     callbacks.xpBarTextAnchor = function(value)
         xpText:ClearAllPoints()
-        xpText:SetPoint(value, xpbar, value, AU_GlobalDB['xprep']['xpBarTextOffsetX'], AU_GlobalDB['xprep']['xpBarTextOffsetY'])
+        xpText:SetPoint(value, xpbar, value, AU.profile['xprep']['xpBarTextOffsetX'], AU.profile['xprep']['xpBarTextOffsetY'])
     end
 
     callbacks.xpBarTextOffsetX = function(value)
         xpText:ClearAllPoints()
-        xpText:SetPoint(AU_GlobalDB['xprep']['xpBarTextAnchor'], xpbar, AU_GlobalDB['xprep']['xpBarTextAnchor'], value, AU_GlobalDB['xprep']['xpBarTextOffsetY'])
+        xpText:SetPoint(AU.profile['xprep']['xpBarTextAnchor'], xpbar, AU.profile['xprep']['xpBarTextAnchor'], value, AU.profile['xprep']['xpBarTextOffsetY'])
     end
 
     callbacks.xpBarTextOffsetY = function(value)
         xpText:ClearAllPoints()
-        xpText:SetPoint(AU_GlobalDB['xprep']['xpBarTextAnchor'], xpbar, AU_GlobalDB['xprep']['xpBarTextAnchor'], AU_GlobalDB['xprep']['xpBarTextOffsetX'], value)
+        xpText:SetPoint(AU.profile['xprep']['xpBarTextAnchor'], xpbar, AU.profile['xprep']['xpBarTextAnchor'], AU.profile['xprep']['xpBarTextOffsetX'], value)
     end
 
     callbacks.xpBarShowRested = function(value)
@@ -517,11 +517,11 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
         if strfind(font, 'font:') then
             font = media[font]
         end
-        xpRestedText:SetFont(font, AU_GlobalDB['xprep']['xpBarRestedSize'], 'OUTLINE')
+        xpRestedText:SetFont(font, AU.profile['xprep']['xpBarRestedSize'], 'OUTLINE')
     end
 
     callbacks.xpBarRestedSize = function(value)
-        local font = AU_GlobalDB['xprep']['xpBarRestedFont']
+        local font = AU.profile['xprep']['xpBarRestedFont']
         if strfind(font, 'font:') then
             font = media[font]
         end
@@ -534,17 +534,17 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
 
     callbacks.xpBarRestedAnchor = function(value)
         xpRestedText:ClearAllPoints()
-        xpRestedText:SetPoint(value, xpbar, value, AU_GlobalDB['xprep']['xpBarRestedOffsetX'], AU_GlobalDB['xprep']['xpBarRestedOffsetY'])
+        xpRestedText:SetPoint(value, xpbar, value, AU.profile['xprep']['xpBarRestedOffsetX'], AU.profile['xprep']['xpBarRestedOffsetY'])
     end
 
     callbacks.xpBarRestedOffsetX = function(value)
         xpRestedText:ClearAllPoints()
-        xpRestedText:SetPoint(AU_GlobalDB['xprep']['xpBarRestedAnchor'], xpbar, AU_GlobalDB['xprep']['xpBarRestedAnchor'], value, AU_GlobalDB['xprep']['xpBarRestedOffsetY'])
+        xpRestedText:SetPoint(AU.profile['xprep']['xpBarRestedAnchor'], xpbar, AU.profile['xprep']['xpBarRestedAnchor'], value, AU.profile['xprep']['xpBarRestedOffsetY'])
     end
 
     callbacks.xpBarRestedOffsetY = function(value)
         xpRestedText:ClearAllPoints()
-        xpRestedText:SetPoint(AU_GlobalDB['xprep']['xpBarRestedAnchor'], xpbar, AU_GlobalDB['xprep']['xpBarRestedAnchor'], AU_GlobalDB['xprep']['xpBarRestedOffsetX'], value)
+        xpRestedText:SetPoint(AU.profile['xprep']['xpBarRestedAnchor'], xpbar, AU.profile['xprep']['xpBarRestedAnchor'], AU.profile['xprep']['xpBarRestedOffsetX'], value)
     end
 
     callbacks.repBarTextFont = function(value)
@@ -552,11 +552,11 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
         if strfind(font, 'font:') then
             font = media[font]
         end
-        repText:SetFont(font, AU_GlobalDB['xprep']['repBarTextSize'], 'OUTLINE')
+        repText:SetFont(font, AU.profile['xprep']['repBarTextSize'], 'OUTLINE')
     end
 
     callbacks.repBarTextSize = function(value)
-        local font = AU_GlobalDB['xprep']['repBarTextFont']
+        local font = AU.profile['xprep']['repBarTextFont']
         if strfind(font, 'font:') then
             font = media[font]
         end
@@ -569,17 +569,17 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
 
     callbacks.repBarTextAnchor = function(value)
         repText:ClearAllPoints()
-        repText:SetPoint(value, repbar, value, AU_GlobalDB['xprep']['repBarTextOffsetX'], AU_GlobalDB['xprep']['repBarTextOffsetY'])
+        repText:SetPoint(value, repbar, value, AU.profile['xprep']['repBarTextOffsetX'], AU.profile['xprep']['repBarTextOffsetY'])
     end
 
     callbacks.repBarTextOffsetX = function(value)
         repText:ClearAllPoints()
-        repText:SetPoint(AU_GlobalDB['xprep']['repBarTextAnchor'], repbar, AU_GlobalDB['xprep']['repBarTextAnchor'], value, AU_GlobalDB['xprep']['repBarTextOffsetY'])
+        repText:SetPoint(AU.profile['xprep']['repBarTextAnchor'], repbar, AU.profile['xprep']['repBarTextAnchor'], value, AU.profile['xprep']['repBarTextOffsetY'])
     end
 
     callbacks.repBarTextOffsetY = function(value)
         repText:ClearAllPoints()
-        repText:SetPoint(AU_GlobalDB['xprep']['repBarTextAnchor'], repbar, AU_GlobalDB['xprep']['repBarTextAnchor'], AU_GlobalDB['xprep']['repBarTextOffsetX'], value)
+        repText:SetPoint(AU.profile['xprep']['repBarTextAnchor'], repbar, AU.profile['xprep']['repBarTextAnchor'], AU.profile['xprep']['repBarTextOffsetX'], value)
     end
 
     callbacks.xpBarFadeOutDelay = function(value)
@@ -611,7 +611,7 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
     end
 
     callbacks.repBarCustomColour = function(value)
-        if AU_GlobalDB['xprep']['repBarOverrideColour'] then
+        if AU.profile['xprep']['repBarOverrideColour'] then
             repbar:SetFillColor(value[1], value[2], value[3], value[4])
         end
     end
@@ -639,11 +639,11 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
         if strfind(font, 'font:') then
             font = media[font]
         end
-        repFactionText:SetFont(font, AU_GlobalDB['xprep']['repBarFactionNameSize'], 'OUTLINE')
+        repFactionText:SetFont(font, AU.profile['xprep']['repBarFactionNameSize'], 'OUTLINE')
     end
 
     callbacks.repBarFactionNameSize = function(value)
-        local font = AU_GlobalDB['xprep']['repBarFactionNameFont']
+        local font = AU.profile['xprep']['repBarFactionNameFont']
         if strfind(font, 'font:') then
             font = media[font]
         end
@@ -656,17 +656,17 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
 
     callbacks.repBarFactionNameAnchor = function(value)
         repFactionText:ClearAllPoints()
-        repFactionText:SetPoint(value, repbar, value, AU_GlobalDB['xprep']['repBarFactionNameOffsetX'], AU_GlobalDB['xprep']['repBarFactionNameOffsetY'])
+        repFactionText:SetPoint(value, repbar, value, AU.profile['xprep']['repBarFactionNameOffsetX'], AU.profile['xprep']['repBarFactionNameOffsetY'])
     end
 
     callbacks.repBarFactionNameOffsetX = function(value)
         repFactionText:ClearAllPoints()
-        repFactionText:SetPoint(AU_GlobalDB['xprep']['repBarFactionNameAnchor'], repbar, AU_GlobalDB['xprep']['repBarFactionNameAnchor'], value, AU_GlobalDB['xprep']['repBarFactionNameOffsetY'])
+        repFactionText:SetPoint(AU.profile['xprep']['repBarFactionNameAnchor'], repbar, AU.profile['xprep']['repBarFactionNameAnchor'], value, AU.profile['xprep']['repBarFactionNameOffsetY'])
     end
 
     callbacks.repBarFactionNameOffsetY = function(value)
         repFactionText:ClearAllPoints()
-        repFactionText:SetPoint(AU_GlobalDB['xprep']['repBarFactionNameAnchor'], repbar, AU_GlobalDB['xprep']['repBarFactionNameAnchor'], AU_GlobalDB['xprep']['repBarFactionNameOffsetX'], value)
+        repFactionText:SetPoint(AU.profile['xprep']['repBarFactionNameAnchor'], repbar, AU.profile['xprep']['repBarFactionNameAnchor'], AU.profile['xprep']['repBarFactionNameOffsetX'], value)
     end
 
     AU:NewCallbacks('xprep', callbacks)

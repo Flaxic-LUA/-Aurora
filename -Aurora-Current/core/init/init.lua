@@ -2,7 +2,7 @@ UNLOCKAURORA()
 
 local init = {eventGroups = {}, pendingEvents = {}}
 
-AU.others.dbversion = 1
+AU.others.dbversion = 2
 
 AU.others.blacklist = {
     'DragonflightReloaded',
@@ -33,12 +33,13 @@ function init:ApplyDefaults(profileName)
             end
         end
     end
-end
-
-function init:LoadProfile(profileName)
-    if not AU_GlobalDB.profiles[profileName] then return end
-    for module, data in pairs(AU_GlobalDB.profiles[profileName]) do
-        AU_GlobalDB[module] = data
+    AU_GlobalDB.meta.profileMeta = AU_GlobalDB.meta.profileMeta or {}
+    if not AU_GlobalDB.meta.profileMeta[profileName] then
+        AU_GlobalDB.meta.profileMeta[profileName] = {
+            created = date('%Y-%m-%d %H:%M'),
+            modified = date('%Y-%m-%d %H:%M'),
+            description = ''
+        }
     end
 end
 
@@ -51,9 +52,7 @@ function init:CheckBlacklist()
                 'Blacklisted addon detected: ' .. addonName .. '\n\nContinue loading Aurora?',
                 'Continue',
                 function()
-                    init:ApplyDefaults()
-                    if init:CheckVersions() then return end
-                    init:ExecModules(true)
+                    ReloadUI()
                 end,
                 'Cancel',
                 function()
@@ -65,19 +64,9 @@ function init:CheckBlacklist()
     return false
 end
 
-function init:CheckVersions()
+function init:CheckDBVersion()
     AU_GlobalDB.meta = AU_GlobalDB.meta or {}
-    -- first run protection
     AU_GlobalDB.meta.dbversion = AU_GlobalDB.meta.dbversion or AU.others.dbversion
-
-    local function ReloadModules()
-        init:ApplyDefaults()
-        for name, callback in pairs(AU.callbacks) do
-            local mod, opt = AU.lua.match(name, '(.*)%.(.*)')
-            callback(AU_GlobalDB[mod][opt])
-        end
-        init:ExecModules(true)
-    end
 
     if AU_GlobalDB.meta.dbversion ~= AU.others.dbversion then
         AU.ui.StaticPopup_Show(
@@ -87,7 +76,7 @@ function init:CheckVersions()
                 _G.AU_GlobalDB = {}
                 _G.AU_GlobalDB.meta = {}
                 _G.AU_GlobalDB.meta.dbversion = AU.others.dbversion
-                ReloadModules()
+                ReloadUI()
             end,
             'Cancel',
             function()
@@ -95,12 +84,15 @@ function init:CheckVersions()
         )
         return true
     end
+    return false
+end
 
+function init:CheckModuleVersions()
     local mismatchModules = {}
     for module, defaults in pairs(AU.defaults) do
         if defaults.version then
             local expected = defaults.version.value
-            if not AU_GlobalDB[module] or not AU_GlobalDB[module].version or AU_GlobalDB[module].version ~= expected then
+            if not AU.profile[module] or not AU.profile[module].version or AU.profile[module].version ~= expected then
                 table.insert(mismatchModules, module)
             end
         end
@@ -116,10 +108,24 @@ function init:CheckVersions()
         AU.ui.StaticPopup_Show(msg,
             'Reset',
             function()
+                print('CheckModuleVersions: Resetting modules...')
                 for _, mod in pairs(mismatchModules) do
-                    AU_GlobalDB[mod] = {}
+                    AU.profile[mod] = {}
                 end
-                ReloadModules()
+                local charName = UnitName('player')
+                local realmName = GetRealmName()
+                local charKey = charName .. '-' .. realmName
+                local profileName = AU_GlobalDB.meta.characterProfiles[charKey] or charKey
+                init:ApplyDefaults(profileName)
+                AU.profile = AU_GlobalDB.profiles[profileName]
+                print('CheckModuleVersions: Running callbacks...')
+                for name, callback in pairs(AU.callbacks) do
+                    local mod, opt = AU.lua.match(name, '(.*)%.(.*)')
+                    callback(AU.profile[mod][opt])
+                end
+                print('CheckModuleVersions: Executing modules...')
+                init:ExecModules(true)
+                print('CheckModuleVersions: Done, no ReloadUI called from here')
             end,
             'Cancel',
             function()
@@ -131,15 +137,45 @@ function init:CheckVersions()
     return false
 end
 
-function init:Finalize()
-    AU:UnregisterAllEvents()
-    init.pendingEvents = {}
+function init:InitAU()
+    AU.others.server = init:DetectServer()
+
+    local charName = UnitName('player')
+    local realmName = GetRealmName()
+    local charKey = charName .. '-' .. realmName
+
+    AU_GlobalDB.meta = AU_GlobalDB.meta or {}
+    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
+    AU_GlobalDB.meta.characterProfiles = AU_GlobalDB.meta.characterProfiles or {}
+    AU_GlobalDB.meta.autoAssigned = AU_GlobalDB.meta.autoAssigned or {}
+
+    if not AU_GlobalDB.profiles['.defaults'] then
+        init:ApplyDefaults('.defaults')
+    end
+
+    if init:CheckBlacklist() then return end
+    if init:CheckDBVersion() then return end
+
+    local profileName = AU_GlobalDB.meta.characterProfiles[charKey]
+    if not profileName and not AU_GlobalDB.meta.autoAssigned[charKey] then
+        profileName = charKey
+        init:ApplyDefaults(profileName)
+        AU_GlobalDB.meta.characterProfiles[charKey] = profileName
+        AU_GlobalDB.meta.autoAssigned[charKey] = true
+    end
+
+    AU.profile = AU_GlobalDB.profiles[profileName]
+    AU_GlobalDB.meta.activeProfile = profileName
+    AU.others.currentProfile = profileName
+
+    if init:CheckModuleVersions() then return end
+    init:ExecModules(false)
 end
 
 function init:ExecModules(forceImmediate)
     local sorted = {}
     for name, module in pairs(AU.modules) do
-        if AU_GlobalDB[name].enabled then
+        if AU.profile[name].enabled then
             table.insert(sorted, {name=name, module=module})
         end
     end
@@ -147,6 +183,7 @@ function init:ExecModules(forceImmediate)
 
     if forceImmediate then
         for _, entry in pairs(sorted) do
+            print('ExecModules: Running ' .. entry.name)
             entry.module.func()
         end
         init:Finalize()
@@ -173,31 +210,9 @@ function init:ExecModules(forceImmediate)
     end
 end
 
-function init:InitAU()
-    AU.others.server = init:DetectServer()
-
-    local charName = UnitName('player')
-    local realmName = GetRealmName()
-    local charKey = charName .. '-' .. realmName
-
-    AU_GlobalDB.meta = AU_GlobalDB.meta or {}
-    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
-    AU_GlobalDB.meta.characterProfiles = AU_GlobalDB.meta.characterProfiles or {}
-
-    if init:CheckBlacklist() then return end
-
-    local profileName = AU_GlobalDB.meta.characterProfiles[charKey] or charKey
-    if not AU_GlobalDB.profiles[profileName] then
-        init:ApplyDefaults(profileName)
-        AU_GlobalDB.meta.characterProfiles[charKey] = profileName
-    end
-
-    init:LoadProfile(profileName)
-    AU_GlobalDB.meta.activeProfile = profileName
-    AU.others.currentProfile = profileName
-
-    if init:CheckVersions() then return end
-    init:ExecModules(false)
+function init:Finalize()
+    AU:UnregisterAllEvents()
+    init.pendingEvents = {}
 end
 
 -- public
@@ -223,60 +238,15 @@ function AU:NewCallbacks(module, callbacks)
     for option, callback in pairs(callbacks) do
         AU.callbacks[module .. '.' .. option] = callback
         -- trigger all callbacks with current value
-        if AU_GlobalDB[module] and AU_GlobalDB[module][option] ~= nil then
-            callback(AU_GlobalDB[module][option])
+        if AU.profile[module] and AU.profile[module][option] ~= nil then
+            callback(AU.profile[module][option])
         end
     end
 end
 
 function AU:SetConfig(module, option, value)
-    AU_GlobalDB[module][option] = value
-    if AU.others.currentProfile then
-        AU_GlobalDB.profiles[AU.others.currentProfile][module][option] = value
-    end
+    AU.profile[module][option] = value
     AU.callbacks[module .. '.' .. option](value)
-end
-
-function AU:CreateProfile(name)
-    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
-    AU_GlobalDB.profiles[name] = {}
-    for module, defaults in pairs(AU.defaults) do
-        AU_GlobalDB.profiles[name][module] = {}
-        for option, data in pairs(defaults) do
-            AU_GlobalDB.profiles[name][module][option] = data.value
-        end
-    end
-    AU_GlobalDB.meta = AU_GlobalDB.meta or {}
-    AU_GlobalDB.meta.profileMeta = AU_GlobalDB.meta.profileMeta or {}
-    AU_GlobalDB.meta.profileMeta[name] = {
-        created = date('%Y-%m-%d %H:%M'),
-        modified = date('%Y-%m-%d %H:%M'),
-        description = ''
-    }
-end
-
-function AU:DeleteProfile(name)
-    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
-    AU_GlobalDB.profiles[name] = nil
-end
-
-function AU:SwitchProfile(name)
-    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
-
-    for module, data in pairs(AU_GlobalDB.profiles[name]) do
-        AU_GlobalDB[module] = data
-    end
-
-    AU_GlobalDB.meta = AU_GlobalDB.meta or {}
-    AU_GlobalDB.meta.activeProfile = name
-    AU.others.currentProfile = name
-
-    for callbackName, callback in pairs(AU.callbacks) do
-        local mod, opt = AU.lua.match(callbackName, '(.*)%.(.*)')
-        if AU_GlobalDB[mod] and AU_GlobalDB[mod][opt] ~= nil then
-            callback(AU_GlobalDB[mod][opt])
-        end
-    end
 end
 
 -- updates/events

@@ -47,21 +47,21 @@ AU:NewDefaults('buffs', defaults)
 
 AU:NewModule('buffs', 1, 'PLAYER_LOGIN', function()
     local setup = AU.setups.buffs
-    local frameSpacing = AU_GlobalDB['buffs']['frameSpacing'] or 15
+    local frameSpacing = AU.profile['buffs']['frameSpacing'] or 15
 
-    local buffFrame = setup:CreateBuffFrame('AU_BuffFrame', 16, 'HELPFUL', AU_GlobalDB['buffs']['buffButtonsPerRow'] or 8)
-    buffFrame.buttonSize = AU_GlobalDB['buffs']['buffSize'] or 22
-    buffFrame.spacing = AU_GlobalDB['buffs']['buffSpacing'] or 5
+    local buffFrame = setup:CreateBuffFrame('AU_BuffFrame', 16, 'HELPFUL', AU.profile['buffs']['buffButtonsPerRow'] or 8)
+    buffFrame.buttonSize = AU.profile['buffs']['buffSize'] or 22
+    buffFrame.spacing = AU.profile['buffs']['buffSpacing'] or 5
     buffFrame:SetPoint('TOPRIGHT', UIParent, 'TOPRIGHT', -15, -15)
 
-    local debuffFrame = setup:CreateBuffFrame('AU_DebuffFrame', 16, 'HARMFUL', AU_GlobalDB['buffs']['debuffButtonsPerRow'] or 8)
-    debuffFrame.buttonSize = AU_GlobalDB['buffs']['debuffSize'] or 33
-    debuffFrame.spacing = AU_GlobalDB['buffs']['debuffSpacing'] or 5
+    local debuffFrame = setup:CreateBuffFrame('AU_DebuffFrame', 16, 'HARMFUL', AU.profile['buffs']['debuffButtonsPerRow'] or 8)
+    debuffFrame.buttonSize = AU.profile['buffs']['debuffSize'] or 33
+    debuffFrame.spacing = AU.profile['buffs']['debuffSpacing'] or 5
     debuffFrame:SetPoint('TOPRIGHT', buffFrame, 'BOTTOMRIGHT', 0, -frameSpacing)
 
-    local weaponFrame = setup:CreateWeaponFrame('AU_WeaponFrame', AU_GlobalDB['buffs']['weaponButtonsPerRow'] or 2)
-    weaponFrame.buttonSize = AU_GlobalDB['buffs']['weaponSize'] or 30
-    weaponFrame.spacing = AU_GlobalDB['buffs']['weaponSpacing'] or 5
+    local weaponFrame = setup:CreateWeaponFrame('AU_WeaponFrame', AU.profile['buffs']['weaponButtonsPerRow'] or 2)
+    weaponFrame.buttonSize = AU.profile['buffs']['weaponSize'] or 30
+    weaponFrame.spacing = AU.profile['buffs']['weaponSpacing'] or 5
     weaponFrame:SetPoint('TOPRIGHT', debuffFrame, 'BOTTOMRIGHT', 0, -frameSpacing)
 
     local frames = {
@@ -97,23 +97,23 @@ AU:NewModule('buffs', 1, 'PLAYER_LOGIN', function()
             for _, btn in pairs(frame.buttons) do
                 btn:SetSize(value, value)
             end
-            setup:UpdateFrameLayout(frame, frame.buttons, AU_GlobalDB['buffs'][prefix..'ButtonsPerRow'])
+            setup:UpdateFrameLayout(frame, frame.buttons, AU.profile['buffs'][prefix..'ButtonsPerRow'])
         end
 
         callbacks[prefix..'Spacing'] = function(value)
             frame.spacing = value
-            setup:UpdateFrameLayout(frame, frame.buttons, AU_GlobalDB['buffs'][prefix..'ButtonsPerRow'])
+            setup:UpdateFrameLayout(frame, frame.buttons, AU.profile['buffs'][prefix..'ButtonsPerRow'])
         end
 
         callbacks[prefix..'DurationFont'] = function(value)
             for _, btn in pairs(frame.buttons) do
-                btn.duration:SetFont(media[value], AU_GlobalDB['buffs'][prefix..'DurationFontSize'], 'OUTLINE')
+                btn.duration:SetFont(media[value], AU.profile['buffs'][prefix..'DurationFontSize'], 'OUTLINE')
             end
         end
 
         callbacks[prefix..'DurationFontSize'] = function(value)
             for _, btn in pairs(frame.buttons) do
-                btn.duration:SetFont(media[AU_GlobalDB['buffs'][prefix..'DurationFont']], value, 'OUTLINE')
+                btn.duration:SetFont(media[AU.profile['buffs'][prefix..'DurationFont']], value, 'OUTLINE')
             end
         end
 

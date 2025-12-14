@@ -149,7 +149,7 @@ AU:NewModule('gui-extrapanels', 2, function()
     local totalModules = 0
     local enabledModules = 0
     local disabledModules = 0
-    for moduleName, moduleData in pairs(AU_GlobalDB) do
+    for moduleName, moduleData in pairs(AU.profile) do
         if moduleData.version and moduleData.enabled ~= nil then
             totalModules = totalModules + 1
             if moduleData.enabled then
@@ -400,7 +400,7 @@ AU:NewModule('gui-extrapanels', 2, function()
 
     local moduleNames = {}
     local initialStates = {}
-    for moduleName, moduleData in pairs(AU_GlobalDB) do
+    for moduleName, moduleData in pairs(AU.profile) do
         if moduleData.version and moduleData.enabled ~= nil then
             local lowerName = string.lower(moduleName)
             if not (string.len(lowerName) >= 3 and string.sub(lowerName, 1, 3) == 'gui') then
@@ -418,7 +418,7 @@ AU:NewModule('gui-extrapanels', 2, function()
     function setup:updateReloadButton()
         local hasChanges = false
         for modName, initialState in pairs(initialStates) do
-            if AU_GlobalDB[modName] and AU_GlobalDB[modName].enabled ~= initialState then
+            if AU.profile[modName] and AU.profile[modName].enabled ~= initialState then
                 hasChanges = true
                 break
             end
@@ -432,7 +432,7 @@ AU:NewModule('gui-extrapanels', 2, function()
 
     local yOffset = 0
     for _, moduleName in ipairs(moduleNames) do
-        local moduleData = AU_GlobalDB[moduleName]
+        local moduleData = AU.profile[moduleName]
         local moduleFrame = CreateFrame('Frame', nil, modulesScroll.content)
         moduleFrame:SetWidth(530)
         moduleFrame:SetHeight(25)
@@ -456,7 +456,7 @@ AU:NewModule('gui-extrapanels', 2, function()
         checkbox.nameText = nameText
         checkbox:SetScript('OnClick', function()
             local isChecked = this:GetChecked() and true or false
-            AU_GlobalDB[this.moduleName].enabled = isChecked
+            AU.profile[this.moduleName].enabled = isChecked
             if isChecked then
                 this.nameText:SetTextColor(0.53, 0.81, 0.92)
                 this.label:SetTextColor(0.9, 0.9, 0.9)
@@ -481,7 +481,7 @@ AU:NewModule('gui-extrapanels', 2, function()
 
     function setup:checkModuleChanges()
         for moduleName, initialState in pairs(initialStates) do
-            if AU_GlobalDB[moduleName] and AU_GlobalDB[moduleName].enabled ~= initialState then
+            if AU.profile[moduleName] and AU.profile[moduleName].enabled ~= initialState then
                 return true
             end
         end

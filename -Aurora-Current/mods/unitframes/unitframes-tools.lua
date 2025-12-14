@@ -317,7 +317,7 @@ end
 -- updates
 function setup:UpdatePortraitMode(frame, unit)
     local modeKey = string.find(frame.unit, 'party') and 'partyPortraitMode' or frame.unit..'PortraitMode'
-    local mode = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][modeKey]) or '3D Model'
+    local mode = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][modeKey]) or '3D Model'
     if mode == '3D Model' then
         frame.model:Show()
         frame.classIcon:Hide()
@@ -345,7 +345,7 @@ end
 
 function setup:UpdatePortraitVisibility(portraitFrame)
     local enabledKey = string.find(portraitFrame.unit, 'party') and 'partyEnabled' or portraitFrame.unit..'Enabled'
-    if AU_GlobalDB and AU_GlobalDB['unitframes'] and not AU_GlobalDB['unitframes'][enabledKey] then
+    if AU_GlobalDB and AU.profile['unitframes'] and not AU.profile['unitframes'][enabledKey] then
         portraitFrame:Hide()
         return
     end
@@ -355,7 +355,7 @@ function setup:UpdatePortraitVisibility(portraitFrame)
         end
         if portraitFrame.unit ~= 'targettarget' and portraitFrame.unit ~= 'pettarget' then
             local showPortraitKey = string.find(portraitFrame.unit, 'party') and 'partyShowPortrait' or portraitFrame.unit..'ShowPortrait'
-            if AU_GlobalDB and AU_GlobalDB['unitframes'] and not AU_GlobalDB['unitframes'][showPortraitKey] then
+            if AU_GlobalDB and AU.profile['unitframes'] and not AU.profile['unitframes'][showPortraitKey] then
                 portraitFrame.model:Hide()
                 portraitFrame.portrait2D:Hide()
                 portraitFrame.classIcon:Hide()
@@ -403,6 +403,8 @@ function setup:UpdatePowerBarColor(unitFrame)
         unitFrame.powerBar:SetFillColor(0.2, 0.4, 1, 1)
     elseif powerType == 1 then
         unitFrame.powerBar:SetFillColor(1, 0, 0, 1)
+    elseif powerType == 2 then
+        unitFrame.powerBar:SetFillColor(1, 0.5, 0.25, 1)
     elseif powerType == 3 then
         unitFrame.powerBar:SetFillColor(1, 1, 0, 1)
     else
@@ -430,7 +432,19 @@ function setup:UpdateUnitMana(unitFrame, instant)
 end
 
 function setup:UpdateBarText(unitFrame)
+    if UnitIsDead(unitFrame.unit) or UnitIsGhost(unitFrame.unit) then
+        unitFrame.hpBar.text:ClearAllPoints()
+        unitFrame.hpBar.text:SetPoint('CENTER', unitFrame.hpBar, 'CENTER', 0, 0)
+        unitFrame.hpBar.text:SetText('Dead')
+        unitFrame.hpBar.pctText:SetText('')
+        unitFrame.powerBar.text:SetText('')
+        unitFrame.powerBar.pctText:SetText('')
+        return
+    end
+
     if not UnitIsConnected(unitFrame.unit) then
+        unitFrame.hpBar.text:ClearAllPoints()
+        unitFrame.hpBar.text:SetPoint('CENTER', unitFrame.hpBar, 'CENTER', 0, 0)
         unitFrame.hpBar.text:SetText('Offline')
         unitFrame.hpBar.pctText:SetText('')
         unitFrame.powerBar.text:SetText('')
@@ -489,46 +503,42 @@ function setup:UpdateBarText(unitFrame)
     unitFrame.powerBar.pctText:SetText(unitFrame.manaTextShowPercent and manaPct..'%' or '')
 
     unitFrame.hpBar.text:ClearAllPoints()
-    unitFrame.hpBar.pctText:ClearAllPoints()
     if hpAnchor == 'center' then
         unitFrame.hpBar.text:SetPoint('CENTER', unitFrame.hpBar, 'CENTER', 0, 0)
-        unitFrame.hpBar.pctText:SetPoint('CENTER', unitFrame.hpBar, 'CENTER', 0, 0)
     elseif hpAnchor == 'right' then
         unitFrame.hpBar.text:SetPoint('RIGHT', unitFrame.hpBar, 'RIGHT', -3, 0)
-        unitFrame.hpBar.pctText:SetPoint('LEFT', unitFrame.hpBar, 'LEFT', 3, 0)
     else
-        if isTarget then
-            unitFrame.hpBar.text:SetPoint('LEFT', unitFrame.hpBar, 'LEFT', 3, 0)
-            unitFrame.hpBar.pctText:SetPoint('RIGHT', unitFrame.hpBar, 'RIGHT', -3, 0)
-        else
-            unitFrame.hpBar.text:SetPoint('RIGHT', unitFrame.hpBar, 'RIGHT', 0, 0)
-            unitFrame.hpBar.pctText:SetPoint('LEFT', unitFrame.hpBar, 'LEFT', 3, 0)
-        end
+        unitFrame.hpBar.text:SetPoint('LEFT', unitFrame.hpBar, 'LEFT', 3, 0)
+    end
+
+    unitFrame.hpBar.pctText:ClearAllPoints()
+    if isTarget then
+        unitFrame.hpBar.pctText:SetPoint('RIGHT', unitFrame.hpBar, 'RIGHT', -3, 0)
+    else
+        unitFrame.hpBar.pctText:SetPoint('LEFT', unitFrame.hpBar, 'LEFT', 3, 0)
     end
 
     unitFrame.powerBar.text:ClearAllPoints()
-    unitFrame.powerBar.pctText:ClearAllPoints()
     if manaAnchor == 'center' then
         unitFrame.powerBar.text:SetPoint('CENTER', unitFrame.powerBar, 'CENTER', 0, 0)
-        unitFrame.powerBar.pctText:SetPoint('CENTER', unitFrame.powerBar, 'CENTER', 0, 0)
     elseif manaAnchor == 'right' then
         unitFrame.powerBar.text:SetPoint('RIGHT', unitFrame.powerBar, 'RIGHT', -3, 0)
-        unitFrame.powerBar.pctText:SetPoint('LEFT', unitFrame.powerBar, 'LEFT', 3, 0)
     else
-        if isTarget then
-            unitFrame.powerBar.text:SetPoint('LEFT', unitFrame.powerBar, 'LEFT', 3, 0)
-            unitFrame.powerBar.pctText:SetPoint('RIGHT', unitFrame.powerBar, 'RIGHT', -3, 0)
-        else
-            unitFrame.powerBar.text:SetPoint('RIGHT', unitFrame.powerBar, 'RIGHT', 0, 0)
-            unitFrame.powerBar.pctText:SetPoint('LEFT', unitFrame.powerBar, 'LEFT', 3, 0)
-        end
+        unitFrame.powerBar.text:SetPoint('LEFT', unitFrame.powerBar, 'LEFT', 3, 0)
+    end
+
+    unitFrame.powerBar.pctText:ClearAllPoints()
+    if isTarget then
+        unitFrame.powerBar.pctText:SetPoint('RIGHT', unitFrame.powerBar, 'RIGHT', -3, 0)
+    else
+        unitFrame.powerBar.pctText:SetPoint('LEFT', unitFrame.powerBar, 'LEFT', 3, 0)
     end
 end
 
 function setup:UpdatePvPIcon(unitFrame)
     if not unitFrame.pvpIcon then return end
     local showKey = string.find(unitFrame.unit, 'party') and 'partyShowPvPIcon' or unitFrame.unit..'ShowPvPIcon'
-    local show = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][showKey])
+    local show = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][showKey])
     if show == false then
         unitFrame.pvpIcon:Hide()
         return
@@ -594,7 +604,7 @@ end
 function setup:UpdateNameColor(unitFrame)
     if unitFrame.unit == 'target' or unitFrame.unit == 'targettarget' or unitFrame.unit == 'pettarget' then
         local reactionKey = string.find(unitFrame.unit, 'party') and 'partyNameReactionColoring' or unitFrame.unit..'NameReactionColoring'
-        local useReaction = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][reactionKey])
+        local useReaction = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][reactionKey])
         if useReaction then
             local reaction = UnitReaction('player', unitFrame.unit)
             if reaction and AU.tables['factioncolors'][reaction] then
@@ -605,7 +615,7 @@ function setup:UpdateNameColor(unitFrame)
         end
     end
     local colorKey = string.find(unitFrame.unit, 'party') and 'partyNameTextColor' or unitFrame.unit..'NameTextColor'
-    local color = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][colorKey]) or {1, 0.82, 0, 1}
+    local color = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][colorKey]) or {1, 0.82, 0, 1}
     unitFrame.name:SetTextColor(color[1], color[2], color[3])
 end
 
@@ -647,7 +657,7 @@ function setup:UpdateClassificationBorder(unitFrame)
     else
         unitFrame.border:SetTexture(self.textures.portraitBorder)
         local flipKey = 'targetFlipPortraitBorder'
-        local shouldFlip = AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][flipKey]
+        local shouldFlip = AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][flipKey]
         if shouldFlip then
             unitFrame.border:SetTexCoord(1, 0, 0, 1)
         else
@@ -677,10 +687,10 @@ end
 
 function setup:UpdateHealthBarColor(portrait, unit)
     local modeKey = string.find(portrait.unit, 'party') and 'partyHealthBarColorMode' or portrait.unit..'HealthBarColorMode'
-    local mode = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][modeKey]) or 'class'
+    local mode = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][modeKey]) or 'class'
     if mode == 'custom' then
         local colorKey = string.find(portrait.unit, 'party') and 'partyHealthBarCustomColor' or portrait.unit..'HealthBarCustomColor'
-        local color = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][colorKey]) or {0, 1, 0}
+        local color = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][colorKey]) or {0, 1, 0}
         portrait.hpBar:SetFillColor(color[1], color[2], color[3], 1)
         return
     end
@@ -762,7 +772,7 @@ function setup:UpdateDebuffs(unitFrame, buffRows)
         offsetRows = buffRows
     end
     local showTimerKey = string.find(unitFrame.unit, 'party') and 'partyShowDebuffTimer' or unitFrame.unit..'ShowDebuffTimer'
-    local showTimer = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][showTimerKey])
+    local showTimer = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][showTimerKey])
 
     for i = 1, 16 do
         local texture, stacks, debuffType = UnitDebuff(unitFrame.unit, i)
@@ -951,10 +961,10 @@ function setup:OnUpdate()
                     if portrait.unit == 'pettarget' and (not UnitExists('pet') or not UnitIsVisible('pettarget')) then
                         portrait:Hide()
                     elseif string.find(portrait.unit, 'party') then
-                        if not AU_GlobalDB['unitframes']['partyEnabled'] then
+                        if not AU.profile['unitframes']['partyEnabled'] then
                             portrait:Hide()
                         elseif UnitExists(portrait.unit) then
-                            if not AU_GlobalDB['unitframes']['partyShowPortrait'] then
+                            if not AU.profile['unitframes']['partyShowPortrait'] then
                                 portrait.model:Hide()
                                 portrait.portrait2D:Hide()
                             elseif not UnitIsVisible(portrait.unit) or not UnitIsConnected(portrait.unit) then
@@ -1050,7 +1060,7 @@ function setup:OnUpdate()
                 end
             end
             local showTimerKey = string.find(portrait.unit, 'party') and 'partyShowDebuffTimer' or portrait.unit..'ShowDebuffTimer'
-            if AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][showTimerKey] and AU.lib.libdebuff then
+            if AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][showTimerKey] and AU.lib.libdebuff then
                 for k = 1, 16 do
                     if portrait.debuffs[k]:IsShown() then
                         local _, _, _, _, _, duration, timeleft = AU.lib.libdebuff:UnitDebuff(portrait.unit, k)
@@ -1099,6 +1109,8 @@ function setup:OnEvent()
     self.eventFrame:RegisterEvent'PARTY_LEADER_CHANGED'
     self.eventFrame:RegisterEvent'PARTY_LOOT_METHOD_CHANGED'
     self.eventFrame:RegisterEvent'RAID_ROSTER_UPDATE'
+    self.eventFrame:RegisterEvent'PLAYER_LEVEL_UP'
+    self.eventFrame:RegisterEvent'UNIT_LEVEL'
     self.eventFrame:SetScript('OnEvent', function()
     if event == 'PLAYER_TARGET_CHANGED' then
         for i = 1, table.getn(setup.portraits) do
@@ -1116,9 +1128,9 @@ function setup:OnEvent()
                     else
                         PlaySound('igCreatureNeutralSelect')
                     end
-                    local targetMode = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes']['targetHealthBarColorMode']) or 'class'
+                    local targetMode = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes']['targetHealthBarColorMode']) or 'class'
                     if targetMode == 'custom' then
-                        local color = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes']['targetHealthBarCustomColor']) or {0, 1, 0}
+                        local color = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes']['targetHealthBarCustomColor']) or {0, 1, 0}
                         setup.lastTargetColor = {color[1], color[2], color[3]}
                     elseif targetMode == 'reaction' then
                         local reaction = UnitReaction('target', 'player')
@@ -1150,7 +1162,7 @@ function setup:OnEvent()
                 setup:UpdateDebuffs(portrait, math.ceil(visibleBuffs / 5))
                 for k = 1, table.getn(setup.portraits) do
                     if setup.portraits[k].unit == 'player' then
-                        local playerMode = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes']['playerHealthBarColorMode']) or 'class'
+                        local playerMode = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes']['playerHealthBarColorMode']) or 'class'
                         if playerMode == 'mirror' then
                             setup:UpdateHealthBarColor(setup.portraits[k], 'player')
                         end
@@ -1276,11 +1288,18 @@ function setup:OnEvent()
                 end
             end
         end
+    elseif event == 'PLAYER_LEVEL_UP' or event == 'UNIT_LEVEL' then
+        for i = 1, table.getn(setup.portraits) do
+            local portrait = setup.portraits[i]
+            if UnitExists(portrait.unit) then
+                setup:UpdateLevelColor(portrait)
+            end
+        end
     elseif event == 'PARTY_MEMBERS_CHANGED' or event == 'PARTY_MEMBER_ENABLE' or event == 'PARTY_MEMBER_DISABLE' or event == 'PARTY_LEADER_CHANGED' or event == 'PARTY_LOOT_METHOD_CHANGED' or event == 'RAID_ROSTER_UPDATE' then
         for i = 1, table.getn(setup.portraits) do
             local portrait = setup.portraits[i]
             if string.find(portrait.unit, 'party') then
-                if not AU_GlobalDB['unitframes']['partyEnabled'] then
+                if not AU.profile['unitframes']['partyEnabled'] then
                     portrait:Hide()
                 elseif UnitInRaid('player') then
                     portrait:Hide()
@@ -2171,7 +2190,7 @@ function setup:GenerateCallbacks()
                         end
                     end
                     local borderKey = string.find(portrait.unit, 'party') and 'partyPortraitBorderTexture' or portrait.unit..'PortraitBorderTexture'
-                    local borderTexture = (AU_GlobalDB and AU_GlobalDB['unitframes'] and AU_GlobalDB['unitframes'][borderKey]) or 'portrait_border_edge'
+                    local borderTexture = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][borderKey]) or 'portrait_border_edge'
                     if value then
                         portrait.border:SetTexCoord(1, 0, 0, 1)
                         if borderTexture == 'portrait_border_edge' then

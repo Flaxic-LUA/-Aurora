@@ -254,7 +254,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     end
 
     helpers.ApplyGradientAlpha = function(buttons, direction, minAlpha, countKey)
-        local count = AU_GlobalDB['actionbars'][countKey] or table.getn(buttons)
+        local count = AU.profile['actionbars'][countKey] or table.getn(buttons)
         if direction == 'none' then
             for i = 1, count do
                 buttons[i].baseAlpha = 1
@@ -285,10 +285,10 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     end
 
     helpers.RestoreBarSettings = function(barName, barFrame)
-        local buttonSize = AU_GlobalDB['actionbars'][barName..'ButtonSize']
-        local buttonSpacing = AU_GlobalDB['actionbars'][barName..'ButtonSpacing']
-        local buttonsPerRow = AU_GlobalDB['actionbars'][barName..'ButtonsPerRow']
-        local buttonsToShow = AU_GlobalDB['actionbars'][barName..'ButtonsToShow']
+        local buttonSize = AU.profile['actionbars'][barName..'ButtonSize']
+        local buttonSpacing = AU.profile['actionbars'][barName..'ButtonSpacing']
+        local buttonsPerRow = AU.profile['actionbars'][barName..'ButtonsPerRow']
+        local buttonsToShow = AU.profile['actionbars'][barName..'ButtonsToShow']
 
         for i = 1, table.getn(barFrame.buttons) do
             barFrame.buttons[i]:SetWidth(buttonSize)
@@ -306,14 +306,14 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
             end
         end
 
-        if AU_GlobalDB['actionbars'][barName..'ConcatenateEnabled'] then
+        if AU.profile['actionbars'][barName..'ConcatenateEnabled'] then
             helpers.UpdateBarConcatenate(barFrame, barName)
         end
     end
 
     helpers.SetupBarFadeAndHighlight = function(frame, buttons, delayKey, alphaKey, countKey)
-        local delay = AU_GlobalDB['actionbars'][delayKey]
-        local count = AU_GlobalDB['actionbars'][countKey] or table.getn(buttons)
+        local delay = AU.profile['actionbars'][delayKey]
+        local count = AU.profile['actionbars'][countKey] or table.getn(buttons)
         if not frame.originalScriptsStored then
             for i = 1, count do
                 buttons[i].originalOnEnter = buttons[i]:GetScript('OnEnter')
@@ -328,7 +328,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                     if frame.fadeTimer then
                         frame.fadeTimer = nil
                     end
-                    UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), AU_GlobalDB['actionbars'][alphaKey])
+                    UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), AU.profile['actionbars'][alphaKey])
                 end)
                 buttons[i]:SetScript('OnLeave', function()
                     if this.originalOnLeave then this.originalOnLeave() end
@@ -340,7 +340,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                                 frame.fadeTimer = nil
                                 frame:SetScript('OnUpdate', nil)
                                 local minAlphaKey = string.gsub(alphaKey, 'Alpha$', 'MinAlpha')
-                                UIFrameFadeOut(frame, 0.5, AU_GlobalDB['actionbars'][alphaKey], AU_GlobalDB['actionbars'][minAlphaKey])
+                                UIFrameFadeOut(frame, 0.5, AU.profile['actionbars'][alphaKey], AU.profile['actionbars'][minAlphaKey])
                             end
                         end
                     end)
@@ -348,7 +348,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
             end
             if not frame.fadeEnabled then
                 local minAlphaKey = string.gsub(alphaKey, 'Alpha$', 'MinAlpha')
-                UIFrameFadeOut(frame, 0.5, AU_GlobalDB['actionbars'][alphaKey], AU_GlobalDB['actionbars'][minAlphaKey])
+                UIFrameFadeOut(frame, 0.5, AU.profile['actionbars'][alphaKey], AU.profile['actionbars'][minAlphaKey])
             end
             frame.fadeEnabled = true
         else
@@ -359,7 +359,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                 buttons[i]:SetScript('OnEnter', buttons[i].originalOnEnter)
                 buttons[i]:SetScript('OnLeave', buttons[i].originalOnLeave)
             end
-            frame:SetAlpha(AU_GlobalDB['actionbars'][alphaKey])
+            frame:SetAlpha(AU.profile['actionbars'][alphaKey])
         end
     end
 
@@ -374,16 +374,16 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     end
 
     helpers.UpdateBarConcatenate = function(barFrame, barName)
-        if not AU_GlobalDB['actionbars'][barName..'ConcatenateEnabled'] then return end
+        if not AU.profile['actionbars'][barName..'ConcatenateEnabled'] then return end
         if setup.isDragging then return end
 
         -- debugprint('UpdateBarConcatenate: barName='..barName..' barFrame='..tostring(barFrame:GetName())..' currentPageBar='..tostring(setup.currentPageBar and setup.currentPageBar:GetName() or 'nil'))
         assert(barFrame and barFrame.buttons, 'UpdateBarConcatenate: barFrame must have buttons')
 
-        local buttonSize = AU_GlobalDB['actionbars'][barName..'ButtonSize']
-        local spacing = AU_GlobalDB['actionbars'][barName..'ButtonSpacing']
-        local buttonsToShow = AU_GlobalDB['actionbars'][barName..'ButtonsToShow']
-        local direction = AU_GlobalDB['actionbars'][barName..'ConcatenateDirection']
+        local buttonSize = AU.profile['actionbars'][barName..'ButtonSize']
+        local spacing = AU.profile['actionbars'][barName..'ButtonSpacing']
+        local buttonsToShow = AU.profile['actionbars'][barName..'ButtonsToShow']
+        local direction = AU.profile['actionbars'][barName..'ConcatenateDirection']
         local buttons = barFrame.buttons
 
         local anchorFrame = buttons[1]:GetParent()
@@ -509,7 +509,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     callbacks.hotkeyFont = function(value)
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
-                bar.buttons[i].keybind:SetFont(media[value], AU_GlobalDB['actionbars']['hotkeyFontSize'], 'OUTLINE')
+                bar.buttons[i].keybind:SetFont(media[value], AU.profile['actionbars']['hotkeyFontSize'], 'OUTLINE')
             end
         end
     end
@@ -517,7 +517,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     callbacks.hotkeyFontSize = function(value)
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
-                bar.buttons[i].keybind:SetFont(media[AU_GlobalDB['actionbars']['hotkeyFont']], value, 'OUTLINE')
+                bar.buttons[i].keybind:SetFont(media[AU.profile['actionbars']['hotkeyFont']], value, 'OUTLINE')
             end
         end
     end
@@ -534,7 +534,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].keybind:ClearAllPoints()
-                bar.buttons[i].keybind:SetPoint('TOPRIGHT', bar.buttons[i], 'TOPRIGHT', value, AU_GlobalDB['actionbars']['hotkeyY'])
+                bar.buttons[i].keybind:SetPoint('TOPRIGHT', bar.buttons[i], 'TOPRIGHT', value, AU.profile['actionbars']['hotkeyY'])
             end
         end
     end
@@ -543,7 +543,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].keybind:ClearAllPoints()
-                bar.buttons[i].keybind:SetPoint('TOPRIGHT', bar.buttons[i], 'TOPRIGHT', AU_GlobalDB['actionbars']['hotkeyX'], value)
+                bar.buttons[i].keybind:SetPoint('TOPRIGHT', bar.buttons[i], 'TOPRIGHT', AU.profile['actionbars']['hotkeyX'], value)
             end
         end
     end
@@ -559,7 +559,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     callbacks.macroFont = function(value)
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
-                bar.buttons[i].macroText:SetFont(media[value], AU_GlobalDB['actionbars']['macroFontSize'], 'OUTLINE')
+                bar.buttons[i].macroText:SetFont(media[value], AU.profile['actionbars']['macroFontSize'], 'OUTLINE')
             end
         end
     end
@@ -567,7 +567,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     callbacks.macroFontSize = function(value)
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
-                bar.buttons[i].macroText:SetFont(media[AU_GlobalDB['actionbars']['macroFont']], value, 'OUTLINE')
+                bar.buttons[i].macroText:SetFont(media[AU.profile['actionbars']['macroFont']], value, 'OUTLINE')
             end
         end
     end
@@ -584,7 +584,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].macroText:ClearAllPoints()
-                bar.buttons[i].macroText:SetPoint('BOTTOM', bar.buttons[i], 'BOTTOM', value, AU_GlobalDB['actionbars']['macroY'])
+                bar.buttons[i].macroText:SetPoint('BOTTOM', bar.buttons[i], 'BOTTOM', value, AU.profile['actionbars']['macroY'])
             end
         end
     end
@@ -593,7 +593,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].macroText:ClearAllPoints()
-                bar.buttons[i].macroText:SetPoint('BOTTOM', bar.buttons[i], 'BOTTOM', AU_GlobalDB['actionbars']['macroX'], value)
+                bar.buttons[i].macroText:SetPoint('BOTTOM', bar.buttons[i], 'BOTTOM', AU.profile['actionbars']['macroX'], value)
             end
         end
     end
@@ -609,7 +609,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     callbacks.countFont = function(value)
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
-                bar.buttons[i].count:SetFont(media[value], AU_GlobalDB['actionbars']['countFontSize'], 'OUTLINE')
+                bar.buttons[i].count:SetFont(media[value], AU.profile['actionbars']['countFontSize'], 'OUTLINE')
             end
         end
     end
@@ -617,7 +617,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     callbacks.countFontSize = function(value)
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
-                bar.buttons[i].count:SetFont(media[AU_GlobalDB['actionbars']['countFont']], value, 'OUTLINE')
+                bar.buttons[i].count:SetFont(media[AU.profile['actionbars']['countFont']], value, 'OUTLINE')
             end
         end
     end
@@ -634,7 +634,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].count:ClearAllPoints()
-                bar.buttons[i].count:SetPoint('BOTTOMRIGHT', bar.buttons[i], 'BOTTOMRIGHT', value, AU_GlobalDB['actionbars']['countY'])
+                bar.buttons[i].count:SetPoint('BOTTOMRIGHT', bar.buttons[i], 'BOTTOMRIGHT', value, AU.profile['actionbars']['countY'])
             end
         end
     end
@@ -643,7 +643,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].count:ClearAllPoints()
-                bar.buttons[i].count:SetPoint('BOTTOMRIGHT', bar.buttons[i], 'BOTTOMRIGHT', AU_GlobalDB['actionbars']['countX'], value)
+                bar.buttons[i].count:SetPoint('BOTTOMRIGHT', bar.buttons[i], 'BOTTOMRIGHT', AU.profile['actionbars']['countX'], value)
             end
         end
     end
@@ -809,7 +809,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                             barFrame.buttons[i]:Hide()
                         end
                     else
-                        if i <= AU_GlobalDB['actionbars'][barName..'ButtonsToShow'] then
+                        if i <= AU.profile['actionbars'][barName..'ButtonsToShow'] then
                             barFrame.buttons[i]:Show()
                         end
                     end
@@ -818,11 +818,11 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
 
         callbacks[barName..'ButtonsPerRow'] = function(value)
-            if barName ~= 'mainBar' and barName ~= 'petBar' and barName ~= 'stanceBar' and not AU_GlobalDB['actionbars'][barName..'Enabled'] then return end
-            helpers.RepositionButtons(barFrame, barFrame.buttons, value, AU_GlobalDB['actionbars'][barName..'ButtonSize'], AU_GlobalDB['actionbars'][barName..'ButtonSpacing'])
+            if barName ~= 'mainBar' and barName ~= 'petBar' and barName ~= 'stanceBar' and not AU.profile['actionbars'][barName..'Enabled'] then return end
+            helpers.RepositionButtons(barFrame, barFrame.buttons, value, AU.profile['actionbars'][barName..'ButtonSize'], AU.profile['actionbars'][barName..'ButtonSpacing'])
             if barName == 'mainBar' then
                 for i = 1, 4 do
-                    helpers.RepositionButtons(setup.bonusBars[i], setup.bonusBars[i].buttons, value, AU_GlobalDB['actionbars'][barName..'ButtonSize'], AU_GlobalDB['actionbars'][barName..'ButtonSpacing'])
+                    helpers.RepositionButtons(setup.bonusBars[i], setup.bonusBars[i].buttons, value, AU.profile['actionbars'][barName..'ButtonSize'], AU.profile['actionbars'][barName..'ButtonSpacing'])
                 end
             end
             if barName ~= 'petBar' and barName ~= 'stanceBar' then
@@ -831,19 +831,19 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
 
         callbacks[barName..'ButtonSize'] = function(value)
-            if barName ~= 'mainBar' and barName ~= 'petBar' and barName ~= 'stanceBar' and not AU_GlobalDB['actionbars'][barName..'Enabled'] then return end
+            if barName ~= 'mainBar' and barName ~= 'petBar' and barName ~= 'stanceBar' and not AU.profile['actionbars'][barName..'Enabled'] then return end
             for i = 1, table.getn(barFrame.buttons) do
                 barFrame.buttons[i]:SetWidth(value)
                 barFrame.buttons[i]:SetHeight(value)
             end
-            helpers.RepositionButtons(barFrame, barFrame.buttons, AU_GlobalDB['actionbars'][barName..'ButtonsPerRow'], value, AU_GlobalDB['actionbars'][barName..'ButtonSpacing'])
+            helpers.RepositionButtons(barFrame, barFrame.buttons, AU.profile['actionbars'][barName..'ButtonsPerRow'], value, AU.profile['actionbars'][barName..'ButtonSpacing'])
             if barName == 'mainBar' then
                 for i = 1, 4 do
                     for j = 1, table.getn(setup.bonusBars[i].buttons) do
                         setup.bonusBars[i].buttons[j]:SetWidth(value)
                         setup.bonusBars[i].buttons[j]:SetHeight(value)
                     end
-                    helpers.RepositionButtons(setup.bonusBars[i], setup.bonusBars[i].buttons, AU_GlobalDB['actionbars'][barName..'ButtonsPerRow'], value, AU_GlobalDB['actionbars'][barName..'ButtonSpacing'])
+                    helpers.RepositionButtons(setup.bonusBars[i], setup.bonusBars[i].buttons, AU.profile['actionbars'][barName..'ButtonsPerRow'], value, AU.profile['actionbars'][barName..'ButtonSpacing'])
                 end
             end
             if barName ~= 'petBar' and barName ~= 'stanceBar' then
@@ -852,11 +852,11 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
 
         callbacks[barName..'ButtonSpacing'] = function(value)
-            if barName ~= 'mainBar' and barName ~= 'petBar' and barName ~= 'stanceBar' and not AU_GlobalDB['actionbars'][barName..'Enabled'] then return end
-            helpers.RepositionButtons(barFrame, barFrame.buttons, AU_GlobalDB['actionbars'][barName..'ButtonsPerRow'], AU_GlobalDB['actionbars'][barName..'ButtonSize'], value)
+            if barName ~= 'mainBar' and barName ~= 'petBar' and barName ~= 'stanceBar' and not AU.profile['actionbars'][barName..'Enabled'] then return end
+            helpers.RepositionButtons(barFrame, barFrame.buttons, AU.profile['actionbars'][barName..'ButtonsPerRow'], AU.profile['actionbars'][barName..'ButtonSize'], value)
             if barName == 'mainBar' then
                 for i = 1, 4 do
-                    helpers.RepositionButtons(setup.bonusBars[i], setup.bonusBars[i].buttons, AU_GlobalDB['actionbars'][barName..'ButtonsPerRow'], AU_GlobalDB['actionbars'][barName..'ButtonSize'], value)
+                    helpers.RepositionButtons(setup.bonusBars[i], setup.bonusBars[i].buttons, AU.profile['actionbars'][barName..'ButtonsPerRow'], AU.profile['actionbars'][barName..'ButtonSize'], value)
                 end
             end
             if barName ~= 'petBar' and barName ~= 'stanceBar' then
@@ -865,7 +865,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
 
         callbacks[barName..'Alpha'] = function(value)
-            if AU_GlobalDB['actionbars'][barName..'FadeOutDelay'] == 0 then
+            if AU.profile['actionbars'][barName..'FadeOutDelay'] == 0 then
                 barFrame:SetAlpha(value)
             end
         end
@@ -875,26 +875,26 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
 
         callbacks[barName..'GradientDirection'] = function(value)
-            helpers.ApplyGradientAlpha(barFrame.buttons, value, AU_GlobalDB['actionbars'][barName..'MinAlpha'], barName..'ButtonsToShow')
+            helpers.ApplyGradientAlpha(barFrame.buttons, value, AU.profile['actionbars'][barName..'MinAlpha'], barName..'ButtonsToShow')
             if barName == 'mainBar' then
                 for i = 1, 4 do
-                    helpers.ApplyGradientAlpha(setup.bonusBars[i].buttons, value, AU_GlobalDB['actionbars'][barName..'MinAlpha'], barName..'ButtonsToShow')
+                    helpers.ApplyGradientAlpha(setup.bonusBars[i].buttons, value, AU.profile['actionbars'][barName..'MinAlpha'], barName..'ButtonsToShow')
                 end
             end
         end
 
         callbacks[barName..'MinAlpha'] = function(value)
-            helpers.ApplyGradientAlpha(barFrame.buttons, AU_GlobalDB['actionbars'][barName..'GradientDirection'], value, barName..'ButtonsToShow')
+            helpers.ApplyGradientAlpha(barFrame.buttons, AU.profile['actionbars'][barName..'GradientDirection'], value, barName..'ButtonsToShow')
             if barName == 'mainBar' then
                 for i = 1, 4 do
-                    helpers.ApplyGradientAlpha(setup.bonusBars[i].buttons, AU_GlobalDB['actionbars'][barName..'GradientDirection'], value, barName..'ButtonsToShow')
+                    helpers.ApplyGradientAlpha(setup.bonusBars[i].buttons, AU.profile['actionbars'][barName..'GradientDirection'], value, barName..'ButtonsToShow')
                 end
             end
         end
 
         if barName ~= 'petBar' and barName ~= 'stanceBar' then
             callbacks[barName..'ButtonsToShow'] = function(value)
-                if barName ~= 'mainBar' and not AU_GlobalDB['actionbars'][barName..'Enabled'] then return end
+                if barName ~= 'mainBar' and not AU.profile['actionbars'][barName..'Enabled'] then return end
                 for i = 1, 12 do
                     if i <= value then
                         barFrame.buttons[i]:Show()
@@ -902,13 +902,13 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                         barFrame.buttons[i]:Hide()
                     end
                 end
-                helpers.ApplyGradientAlpha(barFrame.buttons, AU_GlobalDB['actionbars'][barName..'GradientDirection'], AU_GlobalDB['actionbars'][barName..'MinAlpha'], barName..'ButtonsToShow')
+                helpers.ApplyGradientAlpha(barFrame.buttons, AU.profile['actionbars'][barName..'GradientDirection'], AU.profile['actionbars'][barName..'MinAlpha'], barName..'ButtonsToShow')
                 helpers.SetupBarFadeAndHighlight(barFrame, barFrame.buttons, barName..'FadeOutDelay', barName..'Alpha', barName..'ButtonsToShow')
                 helpers.UpdateBarConcatenate(barFrame, barName)
             end
 
             callbacks[barName..'ConcatenateEnabled'] = function(value)
-                if barName ~= 'mainBar' and not AU_GlobalDB['actionbars'][barName..'Enabled'] then return end
+                if barName ~= 'mainBar' and not AU.profile['actionbars'][barName..'Enabled'] then return end
                 local targetFrame = barFrame
                 if barName == 'mainBar' and setup.currentPageBar and setup.currentPageBar ~= setup.mainBar then
                     targetFrame = setup.currentPageBar
@@ -916,9 +916,9 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                 if value then
                     helpers.UpdateBarConcatenate(targetFrame, barName)
                 else
-                    helpers.RepositionButtons(targetFrame, targetFrame.buttons, AU_GlobalDB['actionbars'][barName..'ButtonsPerRow'], AU_GlobalDB['actionbars'][barName..'ButtonSize'], AU_GlobalDB['actionbars'][barName..'ButtonSpacing'])
+                    helpers.RepositionButtons(targetFrame, targetFrame.buttons, AU.profile['actionbars'][barName..'ButtonsPerRow'], AU.profile['actionbars'][barName..'ButtonSize'], AU.profile['actionbars'][barName..'ButtonSpacing'])
                     for i = 1, 12 do
-                        if i <= AU_GlobalDB['actionbars'][barName..'ButtonsToShow'] then
+                        if i <= AU.profile['actionbars'][barName..'ButtonsToShow'] then
                             targetFrame.buttons[i]:Show()
                         else
                             targetFrame.buttons[i]:Hide()
@@ -928,7 +928,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
             end
 
             callbacks[barName..'ConcatenateDirection'] = function(value)
-                if barName ~= 'mainBar' and not AU_GlobalDB['actionbars'][barName..'Enabled'] then return end
+                if barName ~= 'mainBar' and not AU.profile['actionbars'][barName..'Enabled'] then return end
                 local targetFrame = barFrame
                 if barName == 'mainBar' and setup.currentPageBar and setup.currentPageBar ~= setup.mainBar then
                     targetFrame = setup.currentPageBar
@@ -938,11 +938,11 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
 
         callbacks[barName..'DecorationTexture'] = function(value)
-            setup:UpdateBarDecorations(barFrame, value, AU_GlobalDB['actionbars'][barName..'DecorationPosition'])
+            setup:UpdateBarDecorations(barFrame, value, AU.profile['actionbars'][barName..'DecorationPosition'])
         end
 
         callbacks[barName..'DecorationPosition'] = function(value)
-            setup:UpdateBarDecorations(barFrame, AU_GlobalDB['actionbars'][barName..'DecorationTexture'], value)
+            setup:UpdateBarDecorations(barFrame, AU.profile['actionbars'][barName..'DecorationTexture'], value)
         end
 
         callbacks[barName..'DecorationSize'] = function(value)

@@ -163,7 +163,7 @@ function setup:UpdateButton(button)
 end
 
 function setup:SortButtons(frame)
-    local sortOrder = frame.sortOrder or AU_GlobalDB['buffs'][frame.buffFilter == 'HELPFUL' and 'buffSortOrder' or 'debuffSortOrder'] or 'descending'
+    local sortOrder = frame.sortOrder or AU.profile['buffs'][frame.buffFilter == 'HELPFUL' and 'buffSortOrder' or 'debuffSortOrder'] or 'descending'
 
     local buffData = {}
     local i = 0

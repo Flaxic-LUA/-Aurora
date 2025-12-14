@@ -16,7 +16,7 @@ AU:NewModule('gui-extrapanels4', 1, function()
     local devPanel = setup.panels['development']
     if not devPanel then return end
 
-    local font = media[AU_GlobalDB['gui-generator'].guifont] or 'Fonts\\FRIZQT__.TTF'
+    local font = media[AU.profile['gui-generator'].guifont] or 'Fonts\\FRIZQT__.TTF'
 
     local title = devPanel:CreateFontString(nil, 'OVERLAY')
     title:SetFont(font, 18, 'OUTLINE')

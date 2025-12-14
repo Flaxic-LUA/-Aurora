@@ -121,6 +121,8 @@ perfFrame:RegisterEvent'VARIABLES_LOADED'
 perfFrame:SetScript('OnEvent', function()
     if event == 'VARIABLES_LOADED' then
         perfFrame:UnregisterAllEvents()
+        perfFrame:SetScript('OnEvent', nil)
+        -- ENV:BiosPrint('loaded in ' .. string.format('%.3f', GetTime() - biosStartTime) .. 's')
         return
     end
     if arg1 == ENV.info.addonBIOS then

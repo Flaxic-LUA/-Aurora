@@ -60,7 +60,7 @@
     <Include file="gui\base.lua"/>
     <Include file="gui\extrapanels.lua"/>
     <Include file="gui\extrapanels2.lua"/>
-    <Include file="gui\extrapanels3.lua"/>
+    <Include file="gui\profiles.lua"/>
     <Include file="gui\extrapanels4.lua"/>
     <Include file="gui\generator.lua"/>
 </Ui>

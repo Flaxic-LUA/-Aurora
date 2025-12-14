@@ -67,7 +67,7 @@ AU:NewModule('gui-generator', 3, function()
     function setup:CheckDependency(mod, dep)
         if not dep then return true end
         if dep.key then
-            local depValue = AU_GlobalDB[mod][dep.key]
+            local depValue = AU.profile[mod][dep.key]
             if dep.state ~= nil then
                 if dep.state == false then
                     return (depValue == 0 or depValue == false)
@@ -204,7 +204,7 @@ AU:NewModule('gui-generator', 3, function()
 
                                 local checkbox = AU.ui.Checkbox(panel, setup:FormatKeyName(key))
                                 checkbox:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -setup.paddingRight, yOffset)
-                                checkbox:SetChecked(AU_GlobalDB[mod][key])
+                                checkbox:SetChecked(AU.profile[mod][key])
                                 checkbox:SetScript('OnClick', function()
                                     local newValue = this:GetChecked() and true or false
                                     AU:SetConfig(mod, key, newValue)
@@ -257,7 +257,7 @@ AU:NewModule('gui-generator', 3, function()
 
                                 local slider = AU.ui.Slider(panel, nil, setup:FormatKeyName(key), element.min, element.max, element.stepSize, '%.0f')
                                 slider:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -setup.paddingRight, yOffset)
-                                slider:SetValue(AU_GlobalDB[mod][key])
+                                slider:SetValue(AU.profile[mod][key])
                                 slider:SetScript('OnValueChanged', function()
                                     local newValue = this:GetValue()
                                     AU:SetConfig(mod, key, newValue)
@@ -356,7 +356,7 @@ AU:NewModule('gui-generator', 3, function()
                                         end
                                     end)
                                 end
-                                local currentValue = AU_GlobalDB[mod][key]
+                                local currentValue = AU.profile[mod][key]
                                 local currentDisplay = string.gsub(currentValue, 'Fonts\\', '')
                                 currentDisplay = string.gsub(currentDisplay, 'font:', '')
                                 dropdown.text:SetText(currentDisplay)
@@ -383,7 +383,7 @@ AU:NewModule('gui-generator', 3, function()
                                 local desc = AU.ui.Font(panel, 12, element.description, {.9, .9, .9}, 'LEFT')
                                 desc:SetPoint('TOPLEFT', panel, 'TOPLEFT', setup.paddingLeft, yOffset)
 
-                                local colorpicker = AU.ui.ColorPicker(panel, AU_GlobalDB[mod][key], function(color)
+                                local colorpicker = AU.ui.ColorPicker(panel, AU.profile[mod][key], function(color)
                                     AU:SetConfig(mod, key, color)
                                 end)
                                 colorpicker:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -setup.paddingRight, yOffset)

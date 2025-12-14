@@ -159,7 +159,7 @@ function setup:CreateBagFrame(bagID, numSlots)
         end)
 
         bag.search:SetScript('OnEscapePressed', function()
-            local clearOnEscape = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['searchClearOnEscape']
+            local clearOnEscape = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['searchClearOnEscape']
             if clearOnEscape then
                 this:SetText('')
                 this:ClearFocus()
@@ -379,7 +379,7 @@ function setup:CreateOneBag()
     end)
 
     bag.search:SetScript('OnEscapePressed', function()
-        local clearOnEscape = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['searchClearOnEscape']
+        local clearOnEscape = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['searchClearOnEscape']
         if clearOnEscape then
             this:SetText('')
             this:ClearFocus()
@@ -570,8 +570,8 @@ function setup:UpdateLocks(bagFrame)
     local slots = bagFrame.slots
     local scanner = AU.lib.libtipscan:GetScanner('unusable')
     local durability = string.gsub(DURABILITY_TEMPLATE, '%%[^%s]+', '(.+)')
-    local color = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['unusableColour'] or {1, 0, 0, 1}
-    local mode = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showUnusableItems'] or 'both'
+    local color = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['unusableColour'] or {1, 0, 0, 1}
+    local mode = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showUnusableItems'] or 'both'
 
     for i = 1, table.getn(slots) do
         local btn = slots[i]
@@ -609,8 +609,8 @@ function setup:UpdateUnusableItems(bagFrame)
     local slots = bagFrame.slots
     local scanner = AU.lib.libtipscan:GetScanner('unusable')
     local durability = string.gsub(DURABILITY_TEMPLATE, '%%[^%s]+', '(.+)')
-    local color = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['unusableColour'] or {1, 0, 0, 1}
-    local mode = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showUnusableItems'] or 'both'
+    local color = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['unusableColour'] or {1, 0, 0, 1}
+    local mode = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showUnusableItems'] or 'both'
 
     for i = 1, table.getn(slots) do
         local btn = slots[i]

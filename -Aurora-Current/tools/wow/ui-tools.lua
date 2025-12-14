@@ -900,13 +900,14 @@ function AU.ui.Confirmbox(message, onAccept, onDecline)
     return frame
 end
 
-function AU.ui.PushFrame(parent, width, height, maxLines)
+function AU.ui.PushFrame(parent, width, height, maxLines, font)
     local LINE_HEIGHT = 16
     local PADDING = 5
 
     local pushFrame = AU.ui.Scrollframe(parent, width or 300, height or 200)
     pushFrame.messages = {}
     pushFrame.maxLines = maxLines or 100
+    pushFrame.font = font or 'Fonts\\FRIZQT__.TTF'
 
     local function updateLayout()
         local currentScroll = pushFrame:GetVerticalScroll()
@@ -914,9 +915,9 @@ function AU.ui.PushFrame(parent, width, height, maxLines)
         for i = 1, table.getn(pushFrame.messages) do
             local msg = pushFrame.messages[i]
             msg.fontString:SetPoint('TOPLEFT', pushFrame.content, 'TOPLEFT', PADDING, -yOffset - PADDING)
-            yOffset = yOffset + LINE_HEIGHT
+            yOffset = yOffset + msg.fontString:GetHeight()
         end
-        pushFrame.content:SetHeight(yOffset + PADDING * 2)
+        pushFrame.content:SetHeight(yOffset + PADDING)
         pushFrame.updateScrollBar()
 
         local maxScroll = math.max(0, pushFrame.content:GetHeight() - pushFrame:GetHeight())
@@ -938,7 +939,11 @@ function AU.ui.PushFrame(parent, width, height, maxLines)
         position = position or 'bottom'
 
         local fontString = pushFrame.content:CreateFontString(nil, 'OVERLAY')
-        fontString:SetFont('Fonts\\FRIZQT__.TTF', 12, 'OUTLINE')
+        local currentFont = pushFrame.font
+        if AU and AU.profile and AU.profile['gui-generator'] and AU.profile['gui-generator'].guifont then
+            currentFont = media[AU.profile['gui-generator'].guifont] or currentFont
+        end
+        fontString:SetFont(currentFont, 12, 'OUTLINE')
         fontString:SetTextColor(color[1], color[2], color[3])
         fontString:SetText(text)
         fontString:SetWidth(pushFrame:GetWidth() - PADDING * 2)
@@ -962,6 +967,7 @@ function AU.ui.PushFrame(parent, width, height, maxLines)
         end
 
         updateLayout()
+        pushFrame:ScrollToBottom()
     end
 
     pushFrame.Clear = function(self)
@@ -1858,9 +1864,9 @@ function AU.ui.CollapsibleSection(parent, headerText, width, startExpanded)
     return section
 end
 
-function AU.ui.StaticPopup_Show(text, btn1Text, btn1Callback, btn2Text, btn2Callback)
+function AU.ui.StaticPopup_Show(text, btn1Text, btn1Callback, btn2Text, btn2Callback, parent)
     if not AU.ui.staticPopup then
-        local frame = AU.ui.CreatePaperDollFrame('AU_StaticPopup', UIParent, 280, 100, 3)
+        local frame = AU.ui.CreatePaperDollFrame('AU_StaticPopup', parent or UIParent, 280, 100, 3)
         frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
         frame:SetFrameStrata('DIALOG')
         frame:Hide()

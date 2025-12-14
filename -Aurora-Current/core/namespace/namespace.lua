@@ -12,6 +12,7 @@ AU.defaults = {}
 AU.modules = {}
 AU.setups = {}
 AU.callbacks = {}
+AU.profile = {}
 AU.others = {}
 AU.mixin = {}
 AU.lib = {}
@@ -27,3 +28,6 @@ AU.date = {}
 AU.common = {}
 AU.timers = {}
 AU.animations = {}
+
+-- tview(AU)
+-- tview(_G.AU_GlobalDB)

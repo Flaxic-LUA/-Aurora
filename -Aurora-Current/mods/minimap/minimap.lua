@@ -159,7 +159,7 @@ AU:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
     }
 
     playerArrow = helpers.FindPlayerArrow()
-    local customArrowFrame, customArrowTex, originalArrow
+    customArrowFrame, customArrowTex, originalArrow = AU.lib.CreateCustomPlayerArrow()
     local callbacks = {}
 
     callbacks.showMinimap = function(value)
@@ -233,7 +233,7 @@ AU:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
                                 pingTimerId = nil
                             end)
 
-                            if _G.AU_GlobalDB.minimap.printPing then
+                            if AU.profile.minimap.printPing then
                                 print(name .. " pinged the minimap")
                             end
                         end
@@ -297,7 +297,7 @@ AU:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
 
         callbacks['animationTexture'..suffix] = function(value)
             helpers.DestroyRotatingTexture(layer)
-            local db = _G.AU_GlobalDB.minimap
+            local db = AU.profile.minimap
             helpers.CreateRotatingTexture(layer, value, db['animationSpeed'..suffix], db['animationSize'..suffix], db['animationAlpha'..suffix], db['animationStrata'..suffix], db['animationColor'..suffix])
             if not db['minimapAnimation'..suffix] then
                 rotatingFrames[layer]:Hide()
@@ -362,19 +362,21 @@ AU:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
 
     callbacks.customPlayerArrow = function(value)
         if value then
-            customArrowFrame, customArrowTex, originalArrow = AU.lib.CreateCustomPlayerArrow()
-            local db = _G.AU_GlobalDB.minimap
+            local db = AU.profile.minimap
             if customArrowTex then
                 customArrowTex:SetVertexColor(db.playerArrowColor[1], db.playerArrowColor[2], db.playerArrowColor[3])
             end
             if customArrowFrame then
                 customArrowFrame:SetScale(db.playerArrowScale)
                 customArrowFrame:SetFrameStrata(Minimap:GetFrameStrata())
+                customArrowFrame:Show()
+            end
+            if originalArrow then
+                originalArrow:Hide()
             end
         else
             if customArrowFrame then
                 customArrowFrame:Hide()
-                customArrowFrame = nil
             end
             if originalArrow then
                 originalArrow:Show()

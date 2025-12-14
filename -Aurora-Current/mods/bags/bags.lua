@@ -122,7 +122,7 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
             end
         end,
         ProcessQuestIcons = function(slots, value)
-            local size = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['questIconSize'] or 22
+            local size = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['questIconSize'] or 22
             for _, btn in pairs(slots) do
                 if not btn.questIcon then
                     btn.questIcon = btn:CreateTexture(nil, 'OVERLAY')
@@ -193,13 +193,13 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
             if this.title and this:GetID() > 0 then
                 setup:TruncateText(GetBagName(this:GetID()), setup.TITLE_MAX_WIDTH, this.title)
             end
-            if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showItemRarity'] then
+            if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showItemRarity'] then
                 helpers.UpdateQualityBorders(true)
             end
-            if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showQuestItems'] then
+            if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showQuestItems'] then
                 helpers.ProcessQuestIcons(this.slots, true)
             end
-            if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showUnusableItems'] and AU_GlobalDB['bags']['showUnusableItems'] ~= 'none' then
+            if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showUnusableItems'] and AU.profile['bags']['showUnusableItems'] ~= 'none' then
                 setup:UpdateUnusableItems(this)
             end
         elseif event == 'BAG_UPDATE_COOLDOWN' then
@@ -243,13 +243,13 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
         AU.setups.bags.unified:SetScript('OnEvent', function()
             if event == 'BAG_UPDATE' then
                 setup:UpdateBag(this)
-                if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showItemRarity'] then
+                if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showItemRarity'] then
                     helpers.UpdateQualityBorders(true)
                 end
-                if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showQuestItems'] then
+                if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showQuestItems'] then
                     helpers.ProcessQuestIcons(this.slots, true)
                 end
-                if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showUnusableItems'] and AU_GlobalDB['bags']['showUnusableItems'] ~= 'none' then
+                if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showUnusableItems'] and AU.profile['bags']['showUnusableItems'] ~= 'none' then
                     setup:UpdateUnusableItems(this)
                 end
             elseif event == 'BAG_UPDATE_COOLDOWN' then
@@ -263,7 +263,7 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
     local callbacks = {}
 
     callbacks.oneBagMode = function(value)
-        local scale = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['bagScale'] or 0.85
+        local scale = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['bagScale'] or 0.85
         if value then
             for i = 0, 4 do
                 local bag = AU.setups.bags[i]
@@ -358,7 +358,7 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
     end
 
     callbacks.questIconSize = function(value)
-        local showQuestItems = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showQuestItems']
+        local showQuestItems = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showQuestItems']
         for i = 0, 4 do
             local bag = AU.setups.bags[i]
             if bag and bag.slots then
@@ -442,7 +442,7 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
     end
 
     callbacks.unusableColour = function(value)
-        local mode = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['showUnusableItems'] or 'both'
+        local mode = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['showUnusableItems'] or 'both'
         if mode ~= 'none' then
             helpers.ForEachBag(function(bag) setup:UpdateUnusableItems(bag) end)
         end
@@ -514,7 +514,7 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
     end
 
     callbacks.bagScale = function(value)
-        local oneBagMode = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['oneBagMode']
+        local oneBagMode = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['oneBagMode']
         if oneBagMode then
             if oneBag then oneBag:SetScale(value) end
         else
@@ -529,7 +529,7 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
     merchantFrame:RegisterEvent('MERCHANT_SHOW')
     merchantFrame:SetScript('OnEvent', function()
         if event == 'MERCHANT_SHOW' then
-            local oneBagMode = AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['oneBagMode']
+            local oneBagMode = AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['oneBagMode']
             local anyBagOpen = false
 
             if oneBagMode then
@@ -551,10 +551,10 @@ AU:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
                 end
             end
 
-            if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['repairButton'] then
+            if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['repairButton'] then
                 setup:RepairItems()
             end
-            if AU_GlobalDB and AU_GlobalDB['bags'] and AU_GlobalDB['bags']['autoSellGrey'] then
+            if AU_GlobalDB and AU.profile['bags'] and AU.profile['bags']['autoSellGrey'] then
                 setup:SellGreyItems()
             end
         end

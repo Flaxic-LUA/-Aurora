@@ -333,7 +333,7 @@ AU:NewModule('castbar', 2, 'PLAYER_LOGIN', function()
     callbacks.playerAutoColorTime = function(value)
         castBar.config.autoColorTime = value
         if not value then
-            local color = AU_GlobalDB['castbar']['playerTimeColor']
+            local color = AU.profile['castbar']['playerTimeColor']
             castBar.timeText:SetTextColor(color[1], color[2], color[3])
         end
     end
@@ -345,7 +345,7 @@ AU:NewModule('castbar', 2, 'PLAYER_LOGIN', function()
     callbacks.targetAutoColorTime = function(value)
         targetCastBar.config.autoColorTime = value
         if not value then
-            local color = AU_GlobalDB['castbar']['targetTimeColor']
+            local color = AU.profile['castbar']['targetTimeColor']
             targetCastBar.timeText:SetTextColor(color[1], color[2], color[3])
         end
     end

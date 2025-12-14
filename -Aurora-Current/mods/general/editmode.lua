@@ -89,11 +89,11 @@ AU:NewModule('editmode', 1, 'PLAYER_ENTERING_WORLD', function()
         local name = frame:GetName()
         if not name then return end
         local x, y = floor(frame:GetLeft() + 0.5), floor(frame:GetTop() + 0.5)
-        AU_GlobalDB['editmode']['framePositions'][name] = {x = x, y = y}
+        AU.profile['editmode']['framePositions'][name] = {x = x, y = y}
     end
 
     local function RestoreFramePositions()
-        for name, pos in pairs(AU_GlobalDB['editmode']['framePositions']) do
+        for name, pos in pairs(AU.profile['editmode']['framePositions']) do
             local frame = getglobal(name)
             if frame and pos.x and pos.y then
                 frame:ClearAllPoints()

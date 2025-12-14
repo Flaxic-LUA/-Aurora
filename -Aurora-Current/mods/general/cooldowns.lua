@@ -24,7 +24,7 @@ AU:NewModule('cooldowns', 1, function()
         elseif seconds >= 3600 then
             return string.format('%dh', seconds / 3600)
         elseif seconds >= 60 then
-            if AU_GlobalDB.cooldowns.showSeconds then
+            if AU.profile.cooldowns.showSeconds then
                 return string.format('%d:%02d', seconds / 60, math.mod(seconds, 60))
             else
                 return string.format('%dm', seconds / 60)
@@ -43,7 +43,7 @@ AU:NewModule('cooldowns', 1, function()
                 this.text:SetFont('Fonts\\FRIZQT__.TTF', 14, 'OUTLINE')
             end
             this.text:SetText(GetTimeString(remaining))
-            if AU_GlobalDB.cooldowns.colorByTime then
+            if AU.profile.cooldowns.colorByTime then
                 if remaining < 10 then
                     this.text:SetTextColor(1, 0, 0)
                 elseif remaining < 30 then
@@ -64,9 +64,9 @@ AU:NewModule('cooldowns', 1, function()
         frame:SetAllPoints(cooldown)
         frame:SetFrameLevel(cooldown:GetParent():GetFrameLevel() + 2)
         frame.text = frame:CreateFontString(nil, 'OVERLAY')
-        local fontKey = AU_GlobalDB and AU_GlobalDB.cooldowns and AU_GlobalDB.cooldowns.textFont or 'font:FRIZQT__.TTF'
+        local fontKey = AU.profile and AU.profile.cooldowns and AU.profile.cooldowns.textFont or 'font:FRIZQT__.TTF'
         local font = (media and media[fontKey]) or 'Fonts\\FRIZQT__.TTF'
-        local size = (AU_GlobalDB and AU_GlobalDB.cooldowns and AU_GlobalDB.cooldowns.textSize) or 14
+        local size = (AU.profile and AU.profile.cooldowns and AU.profile.cooldowns.textSize) or 14
         frame.text:SetFont(font, size, 'OUTLINE')
         frame.text:SetPoint('CENTER', 0, 0)
         frame:SetScript('OnUpdate', OnUpdate)
@@ -75,7 +75,7 @@ AU:NewModule('cooldowns', 1, function()
     end
 
     AU.hooks.HookSecureFunc('CooldownFrame_SetTimer', function(cooldownFrame, start, duration, enable)
-        if not AU_GlobalDB.cooldowns.showText then
+        if not AU.profile.cooldowns.showText then
             if cooldownFrame.cdText then cooldownFrame.cdText:Hide() end
             return
         end
@@ -105,7 +105,7 @@ AU:NewModule('cooldowns', 1, function()
 
     callbacks.textSize = function(value)
         for _, frame in pairs(allCooldownTexts) do
-            local font = media[AU_GlobalDB.cooldowns.textFont] or 'Fonts\\FRIZQT__.TTF'
+            local font = media[AU.profile.cooldowns.textFont] or 'Fonts\\FRIZQT__.TTF'
             frame.text:SetFont(font, value, 'OUTLINE')
         end
     end
@@ -113,7 +113,7 @@ AU:NewModule('cooldowns', 1, function()
     callbacks.textFont = function(value)
         for _, frame in pairs(allCooldownTexts) do
             local font = media[value] or 'Fonts\\FRIZQT__.TTF'
-            frame.text:SetFont(font, AU_GlobalDB.cooldowns.textSize or 14, 'OUTLINE')
+            frame.text:SetFont(font, AU.profile.cooldowns.textSize or 14, 'OUTLINE')
         end
     end
 

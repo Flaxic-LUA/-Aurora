@@ -86,7 +86,7 @@ function setup:CreateActionButton(parent, name, actionID)
     button.highlightTex:SetTexture(self.textures.highlight)
     button.highlightTex:SetPoint('TOPLEFT', button.highlight, 'TOPLEFT', -4, 4)
     button.highlightTex:SetPoint('BOTTOMRIGHT', button.highlight, 'BOTTOMRIGHT', 4, -4)
-    local hColor = AU_GlobalDB['actionbars']['highlightColour']
+    local hColor = AU.profile['actionbars']['highlightColour']
     button.highlightTex:SetVertexColor(hColor[1], hColor[2], hColor[3], hColor[4])
 
     button.checked:SetBackdrop(nil)
@@ -94,7 +94,7 @@ function setup:CreateActionButton(parent, name, actionID)
     button.checkedTex:SetTexture(self.textures.highlight)
     button.checkedTex:SetPoint('TOPLEFT', button.checked, 'TOPLEFT', -4, 4)
     button.checkedTex:SetPoint('BOTTOMRIGHT', button.checked, 'BOTTOMRIGHT', 4, -4)
-    local cColor = AU_GlobalDB['actionbars']['checkedColour']
+    local cColor = AU.profile['actionbars']['checkedColour']
     button.checkedTex:SetVertexColor(cColor[1], cColor[2], cColor[3], cColor[4])
 
     local id = actionID
@@ -130,7 +130,7 @@ function setup:CreateActionButton(parent, name, actionID)
         edgeFile = self.textures.equippedBorderEdge,
         edgeSize = 5
     })
-    local eColor = AU_GlobalDB['actionbars']['equippedBorderColour']
+    local eColor = AU.profile['actionbars']['equippedBorderColour']
     button.equippedBorder:SetBackdropBorderColor(eColor[1], eColor[2], eColor[3], eColor[4])
     button.equippedBorder:Hide()
 
@@ -173,11 +173,11 @@ function setup:CreateActionButton(parent, name, actionID)
         button.autocast:SetModel('Interface\\Buttons\\UI-AutoCastButton.mdx')
         button.autocast:SetSequence(0)
         button.autocast:SetSequenceTime(0, 0)
-        button.autocast:SetAlpha(AU_GlobalDB['actionbars']['petAutocastAlpha'] or 0.5)
+        button.autocast:SetAlpha(AU.profile['actionbars']['petAutocastAlpha'] or 0.5)
         button.autocast:Hide()
     end
 
-    if AU_GlobalDB['actionbars']['clickMode'] == 'down' then
+    if AU.profile['actionbars']['clickMode'] == 'down' then
         button:RegisterForClicks('LeftButtonDown', 'RightButtonDown')
     else
         button:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -188,7 +188,7 @@ function setup:CreateActionButton(parent, name, actionID)
 
     button:SetScript('OnClick', function()
         setup.lastUsedAction = this:GetID()
-        if AU_GlobalDB['actionbars']['animationTrigger'] == 'keypress' then
+        if AU.profile['actionbars']['animationTrigger'] == 'keypress' then
             this.animation.active = 0
             this.animation:Show()
         end
@@ -203,10 +203,10 @@ function setup:CreateActionButton(parent, name, actionID)
             end
         else
             local selfCast = false
-            if AU_GlobalDB['actionbars']['altSelfCast'] and IsAltKeyDown() then
+            if AU.profile['actionbars']['altSelfCast'] and IsAltKeyDown() then
                 selfCast = true
             end
-            if AU_GlobalDB['actionbars']['rightSelfCast'] and arg1 == 'RightButton' then
+            if AU.profile['actionbars']['rightSelfCast'] and arg1 == 'RightButton' then
                 selfCast = true
             end
             UseAction(this:GetID(), 1, selfCast)
@@ -321,7 +321,7 @@ function setup:CreateKeyboardRouting(mainButtons, multiButtons, bonusButtons)
                 setup.lastUsedAction = btn:GetID()
                 btn.pushed:Hide()
                 btn.highlight:Hide()
-                if AU_GlobalDB['actionbars']['animationTrigger'] == 'keypress' then
+                if AU.profile['actionbars']['animationTrigger'] == 'keypress' then
                     btn.animation.active = 0
                     btn.animation:Show()
                 end
@@ -331,7 +331,7 @@ function setup:CreateKeyboardRouting(mainButtons, multiButtons, bonusButtons)
             setup.lastUsedAction = setup.activeMainButtons[id]:GetID()
             setup.activeMainButtons[id].pushed:Hide()
             setup.activeMainButtons[id].highlight:Hide()
-            if AU_GlobalDB['actionbars']['animationTrigger'] == 'keypress' then
+            if AU.profile['actionbars']['animationTrigger'] == 'keypress' then
                 setup.activeMainButtons[id].animation.active = 0
                 setup.activeMainButtons[id].animation:Show()
             end
@@ -364,7 +364,7 @@ function setup:CreateKeyboardRouting(mainButtons, multiButtons, bonusButtons)
             local btn = multiButtons[barNum][id]
             btn.pushed:Hide()
             btn.highlight:Hide()
-            if AU_GlobalDB['actionbars']['animationTrigger'] == 'keypress' then
+            if AU.profile['actionbars']['animationTrigger'] == 'keypress' then
                 btn.animation.active = 0
                 btn.animation:Show()
             end
@@ -386,7 +386,7 @@ function setup:ShowAllButtons()
 
         -- If mainBar is paged away, use currentPageBar for mainBar concatenate
         if barName == 'mainBar' and self.currentPageBar and self.currentPageBar ~= self.mainBar then
-            if AU_GlobalDB['actionbars']['mainBarConcatenateEnabled'] then
+            if AU.profile['actionbars']['mainBarConcatenateEnabled'] then
                 barFrame = self.currentPageBar
                 anchorFrame = self.mainBar
                 assert(barFrame ~= self.mainBar, 'ShowAllButtons: when paged, barFrame must not be mainBar')
@@ -397,10 +397,10 @@ function setup:ShowAllButtons()
             end
         end
 
-        if not skipBar and barFrame and AU_GlobalDB['actionbars'][barName..'ConcatenateEnabled'] then
-            local buttonSize = AU_GlobalDB['actionbars'][barName..'ButtonSize']
-            local spacing = AU_GlobalDB['actionbars'][barName..'ButtonSpacing']
-            local buttonsToShow = AU_GlobalDB['actionbars'][barName..'ButtonsToShow']
+        if not skipBar and barFrame and AU.profile['actionbars'][barName..'ConcatenateEnabled'] then
+            local buttonSize = AU.profile['actionbars'][barName..'ButtonSize']
+            local spacing = AU.profile['actionbars'][barName..'ButtonSpacing']
+            local buttonsToShow = AU.profile['actionbars'][barName..'ButtonsToShow']
 
             if not barFrame.expandFrame then
                 barFrame.expandFrame = CreateFrame('Frame')
@@ -455,7 +455,7 @@ function setup:HideEmptyButtons()
     for idx = 1, table.getn(barNames) do
         local barName = barNames[idx]
         local barFrame = barFrames[idx]
-        if AU_GlobalDB['actionbars'][barName..'ConcatenateEnabled'] then
+        if AU.profile['actionbars'][barName..'ConcatenateEnabled'] then
             if AU.setups.helpers and AU.setups.helpers.actionbars and AU.setups.helpers.actionbars.UpdateBarConcatenate then
                 local targetFrame = barFrame
                 if barName == 'mainBar' and self.currentPageBar and self.currentPageBar ~= self.mainBar then
@@ -465,7 +465,7 @@ function setup:HideEmptyButtons()
                 end
                 AU.setups.helpers.actionbars.UpdateBarConcatenate(targetFrame, barName)
             end
-        elseif AU_GlobalDB['actionbars'][barName..'HideEmptyButtons'] then
+        elseif AU.profile['actionbars'][barName..'HideEmptyButtons'] then
             for i = 1, 12 do
                 if HasAction(barFrame.buttons[i]:GetID()) then
                     barFrame.buttons[i]:Show()
@@ -534,13 +534,14 @@ function setup:UpdateButtonKeybind(button)
 
         if key then
             key = GetBindingText(key, 'KEY_')
+            key = string.gsub(key, 'Mouse Wheel Up', 'MWU')
+            key = string.gsub(key, 'Mouse Wheel Down', 'MWD')
+            key = string.gsub(key, 'Mouse Button ', 'M')
+            key = string.gsub(key, 'Num Pad ', 'N')
+            key = string.gsub(key, 'Spacebar', 'Spc')
             key = string.gsub(key, 'SHIFT%-', 'S-')
             key = string.gsub(key, 'CTRL%-', 'C-')
             key = string.gsub(key, 'ALT%-', 'A-')
-            key = string.gsub(key, 'MOUSEWHEELUP', 'MWU')
-            key = string.gsub(key, 'MOUSEWHEELDOWN', 'MWD')
-            key = string.gsub(key, 'BUTTON', 'MB-')
-            key = string.gsub(key, 'NUMPAD', 'N-')
             button.keybind:SetText(key)
         else
             button.keybind:SetText('')
@@ -603,16 +604,16 @@ function setup:UpdateButtonUsable(button)
     end
 
     local outOfRange = ActionHasRange(id) and IsActionInRange(id) == 0
-    local rangeColor = AU_GlobalDB['actionbars']['rangeColour']
-    local manaColor = AU_GlobalDB['actionbars']['manaColour']
-    local usableColor = AU_GlobalDB['actionbars']['usableColour']
-    local unusableColor = AU_GlobalDB['actionbars']['unusableColour']
+    local rangeColor = AU.profile['actionbars']['rangeColour']
+    local manaColor = AU.profile['actionbars']['manaColour']
+    local usableColor = AU.profile['actionbars']['usableColour']
+    local unusableColor = AU.profile['actionbars']['unusableColour']
 
     if self.rangeIndicator == 'keybind' then
         if outOfRange then
             button.keybind:SetTextColor(rangeColor[1], rangeColor[2], rangeColor[3], rangeColor[4])
         else
-            local color = AU_GlobalDB['actionbars']['hotkeyColour']
+            local color = AU.profile['actionbars']['hotkeyColour']
             button.keybind:SetTextColor(color[1], color[2], color[3], color[4])
         end
 
@@ -735,9 +736,9 @@ function setup:UpdatePage(direction)
         self.activeMainButtons = pagedBar.buttons
         assert(self.currentPageBar, 'UpdatePage: currentPageBar must be set')
 
-        local mainSize = AU_GlobalDB['actionbars']['mainBarButtonSize']
-        local mainSpacing = AU_GlobalDB['actionbars']['mainBarButtonSpacing']
-        local mainPerRow = AU_GlobalDB['actionbars']['mainBarButtonsPerRow']
+        local mainSize = AU.profile['actionbars']['mainBarButtonSize']
+        local mainSpacing = AU.profile['actionbars']['mainBarButtonSpacing']
+        local mainPerRow = AU.profile['actionbars']['mainBarButtonsPerRow']
 
         for i = 1, table.getn(pagedBar.buttons) do
             local btn = pagedBar.buttons[i]
@@ -754,7 +755,7 @@ function setup:UpdatePage(direction)
                 btn:SetPoint('TOPLEFT', self.mainBar, 'TOPLEFT', col * (mainSize + mainSpacing), -row * (mainSize + mainSpacing))
             end
 
-            if i <= AU_GlobalDB['actionbars']['mainBarButtonsToShow'] then
+            if i <= AU.profile['actionbars']['mainBarButtonsToShow'] then
                 btn:Show()
             else
                 btn:Hide()
@@ -771,7 +772,7 @@ function setup:UpdatePage(direction)
         if pagedBar ~= self.mainBar then
             assert(pagedBar.buttons[1]:GetParent() == self.mainBar, 'UpdatePage: paged buttons must be parented to mainBar')
         end
-        if AU_GlobalDB and AU_GlobalDB['actionbars'] and AU_GlobalDB['actionbars']['mainBarConcatenateEnabled'] then
+        if AU_GlobalDB and AU.profile['actionbars'] and AU.profile['actionbars']['mainBarConcatenateEnabled'] then
             if AU.setups.helpers and AU.setups.helpers.actionbars and AU.setups.helpers.actionbars.UpdateBarConcatenate then
                 AU.setups.helpers.actionbars.UpdateBarConcatenate(pagedBar, 'mainBar')
             end
@@ -786,7 +787,7 @@ function setup:UpdatePageableBars()
     end
     for i = 1, table.getn(self.multiBars) do
         local barName = 'multibar'..i
-        if AU_GlobalDB and AU_GlobalDB['actionbars'] and not AU_GlobalDB['actionbars'][barName..'Enabled'] then
+        if AU_GlobalDB and AU.profile['actionbars'] and not AU.profile['actionbars'][barName..'Enabled'] then
             table.insert(self.pageableBars, self.multiBars[i])
         end
     end
@@ -828,7 +829,7 @@ end
 
 function setup:UpdatePetBarVisibility()
     if self.petBar then
-        if AU_GlobalDB and AU_GlobalDB['actionbars'] and AU_GlobalDB['actionbars']['petBarEnabled'] and PetHasActionBar() then
+        if AU_GlobalDB and AU.profile['actionbars'] and AU.profile['actionbars']['petBarEnabled'] and PetHasActionBar() then
             self.petBar:Show()
         else
             self.petBar:Hide()
@@ -839,7 +840,7 @@ end
 function setup:UpdateStanceBarVisibility()
     local numForms = GetNumShapeshiftForms()
     if self.stanceBar then
-        if AU_GlobalDB and AU_GlobalDB['actionbars'] and AU_GlobalDB['actionbars']['stanceBarEnabled'] and numForms > 0 then
+        if AU_GlobalDB and AU.profile['actionbars'] and AU.profile['actionbars']['stanceBarEnabled'] and numForms > 0 then
             for i = 1, table.getn(self.stanceButtons) do
                 if i <= numForms then
                     self.stanceButtons[i]:Show()
