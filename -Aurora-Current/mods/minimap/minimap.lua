@@ -9,7 +9,7 @@ AU:NewDefaults('minimap', {
     },
 
     showMinimap = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 1, description = 'Show or hide the minimap'}},
-    minimapSize = {value = 105, metadata = {element = 'slider', category = 'General', indexInCategory = 2, description = 'Size of the minimap', min = 140, max = 350, stepSize = 5, dependency = {key = 'showMinimap', state = true}}},
+    minimapSize = {value = 105, metadata = {element = 'slider', category = 'General', indexInCategory = 2, description = 'Size of the minimap', min = 100, max = 350, stepSize = 5, dependency = {key = 'showMinimap', state = true}}},
     mapSquare = {value = false, metadata = {element = 'checkbox', category = 'General', indexInCategory = 3, description = 'Use square minimap shape', dependency = {key = 'showMinimap', state = true}}},
     mapAlpha = {value = 1, metadata = {element = 'slider', category = 'General', indexInCategory = 4, description = 'Transparency of the minimap', min = 0, max = 1, stepSize = 0.05, dependency = {key = 'showMinimap', state = true}}},
     showPing = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 5, description = 'Show name of the pinging player on minimap', dependency = {key = 'showMinimap', state = true}}},
@@ -370,6 +370,7 @@ AU:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
 
     callbacks.mailSize = function(value)
         MiniMapMailFrame:SetSize(value, value)
+        MiniMapMailIcon:SetSize(value, value)
     end
 
     callbacks.customPlayerArrow = function(value)
