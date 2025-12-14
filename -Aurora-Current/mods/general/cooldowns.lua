@@ -79,7 +79,7 @@ AU:NewModule('cooldowns', 1, function()
             if cooldownFrame.cdText then cooldownFrame.cdText:Hide() end
             return
         end
-        if start == 0 or duration == 0 or duration < 1.5 then
+        if start == 0 or duration == 0 or duration < 1.6 then
             if cooldownFrame.cdText then cooldownFrame.cdText:Hide() end
             return
         end
