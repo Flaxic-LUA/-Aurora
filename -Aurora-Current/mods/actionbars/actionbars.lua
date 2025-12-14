@@ -140,7 +140,7 @@ end
 
 AU:NewDefaults('actionbars', defaults)
 
-AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
+AU:NewModule('actionbars', 1, 'PLAYER_ENTERING_WORLD', function()
     local setup = AU.setups.actionbars
 
     function _G.MultiActionBar_Update() end
@@ -801,19 +801,7 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
 
         if barName ~= 'petBar' and barName ~= 'stanceBar' then
             callbacks[barName..'HideEmptyButtons'] = function(value)
-                for i = 1, 12 do
-                    if value then
-                        if HasAction(barFrame.buttons[i]:GetID()) then
-                            barFrame.buttons[i]:Show()
-                        else
-                            barFrame.buttons[i]:Hide()
-                        end
-                    else
-                        if i <= AU.profile['actionbars'][barName..'ButtonsToShow'] then
-                            barFrame.buttons[i]:Show()
-                        end
-                    end
-                end
+                setup:HideEmptyButtons()
             end
         end
 

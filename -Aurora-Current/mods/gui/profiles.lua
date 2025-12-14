@@ -57,11 +57,11 @@ AU:NewModule('gui-profiles', 2, function()
     inputOkBtn:SetPoint('BOTTOMLEFT', inputDialog, 'BOTTOMLEFT', 15, 10)
     inputOkBtn:SetScript('OnClick', function()
         if inputDialog.mode == 'delete' and inputDialog.deleteTarget then
-            debugprint('DELETE: deleteTarget = ' .. inputDialog.deleteTarget)
+            -- debugprint('DELETE: deleteTarget = ' .. inputDialog.deleteTarget)
             local ptr = tostring(AU_GlobalDB.profiles[inputDialog.deleteTarget])
-            debugprint('DELETE: ptr before = ' .. ptr)
+            -- debugprint('DELETE: ptr before = ' .. ptr)
             profileUI:DeleteProfile(inputDialog.deleteTarget)
-            debugprint('DELETE: ptr after = ' .. tostring(AU_GlobalDB.profiles[inputDialog.deleteTarget]))
+            -- debugprint('DELETE: ptr after = ' .. tostring(AU_GlobalDB.profiles[inputDialog.deleteTarget]))
             profileUI.activityLog:AddMessage('[DELETE] ' .. inputDialog.deleteTarget .. ' (' .. ptr .. ')', {1, 0.6, 0.6})
             profileUI.selectedProfile = nil
             inputDialog.deleteTarget = nil
@@ -150,7 +150,7 @@ AU:NewModule('gui-profiles', 2, function()
     local copyBtn = AU.ui.Button(leftFrame, 'Copy', btnWidth, 28)
     copyBtn:SetPoint('BOTTOMRIGHT', leftFrame, 'BOTTOMRIGHT', -10, 76)
     copyBtn:SetScript('OnClick', function()
-        debugprint('COPY CLICKED: selectedProfile = ' .. tostring(profileUI.selectedProfile))
+        -- debugprint('COPY CLICKED: selectedProfile = ' .. tostring(profileUI.selectedProfile))
         if not profileUI.selectedProfile then return end
         inputDialog.mode = 'copy'
         inputDialog:SetHeight(150)
@@ -254,9 +254,9 @@ AU:NewModule('gui-profiles', 2, function()
             end
 
             profileBtn:SetScript('OnClick', function()
-                debugprint('PROFILE CLICKED: ' .. profileName)
+                -- debugprint('PROFILE CLICKED: ' .. profileName)
                 profileUI.selectedProfile = profileName
-                debugprint('selectedProfile SET TO: ' .. tostring(profileUI.selectedProfile))
+                -- debugprint('selectedProfile SET TO: ' .. tostring(profileUI.selectedProfile))
                 profileUI:UpdateRightPanel(profileName)
                 profileUI:UpdateButtonStates()
                 for j = 1, table.getn(profileScroll.content.buttons) do
@@ -471,7 +471,7 @@ AU:NewModule('gui-profiles', 2, function()
         if not profileUI.selectedProfile then return end
         local str = profileUI:ExportProfile(profileUI.selectedProfile)
         if str then
-            debugprint('Export string length: ' .. string.len(str))
+            -- debugprint('Export string length: ' .. string.len(str))
             profileUI.activityLog:AddMessage('[EXPORT] ' .. profileUI.selectedProfile .. ' (size: ' .. string.len(str) .. ' chars)', {0.6, 1, 0.6})
             exportBox:SetText(str)
             exportBox:HighlightText()

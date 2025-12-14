@@ -37,7 +37,7 @@ AU:NewModule('editmode', 1, 'PLAYER_ENTERING_WORLD', function()
         for i = 0, 64 do
             if i == 64 / 2 then
                 line = grid:CreateTexture(nil, 'BORDER')
-                line:SetTexture(.8, .6, 0)
+                line:SetTexture(0, 0.8, 1)
             else
                 line = grid:CreateTexture(nil, 'BACKGROUND')
                 line:SetTexture(0, 0, 0, .2)
@@ -50,7 +50,7 @@ AU:NewModule('editmode', 1, 'PLAYER_ENTERING_WORLD', function()
         for i = 1, floor(height/hStep) do
             if i == floor(height/hStep / 2) then
                 line = grid:CreateTexture(nil, 'BORDER')
-                line:SetTexture(.8, .6, 0)
+                line:SetTexture(0, 0.8, 1)
             else
                 line = grid:CreateTexture(nil, 'BACKGROUND')
                 line:SetTexture(0, 0, 0, .2)
@@ -267,6 +267,7 @@ AU:NewModule('editmode', 1, 'PLAYER_ENTERING_WORLD', function()
         RegisterFrame('DurabilityFrame', 'frames')
         RegisterFrame('AU_WeaponFrame', 'frames')
         RegisterFrame('AuroraPetBar', 'frames')
+        RegisterFrame('AuroraStanceBar', 'frames')
         RegisterFrame('AuroraPettargetFrame', 'frames')
         RegisterFrame('AuroraParty1Frame', 'frames')
         RegisterFrame('AuroraParty2Frame', 'frames')
@@ -311,6 +312,28 @@ AU:NewModule('editmode', 1, 'PLAYER_ENTERING_WORLD', function()
         end
         for i = 1, 12 do
             RegisterFrame('AuroraMultiBar5Button'..i, 'elements')
+        end
+        ActivateMode('elements')
+    end)
+    dropdown:AddItem('Petbar', function()
+        dropdown.text:SetText('Petbar')
+        dropdown.selectedValue = 'Petbar'
+        dropdown.popup:Hide()
+        lastDropdown = 'Petbar'
+        registry.elements = {}
+        for i = 1, 10 do
+            RegisterFrame('AuroraPetBarButton'..i, 'elements')
+        end
+        ActivateMode('elements')
+    end)
+    dropdown:AddItem('Stancebar', function()
+        dropdown.text:SetText('Stancebar')
+        dropdown.selectedValue = 'Stancebar'
+        dropdown.popup:Hide()
+        lastDropdown = 'Stancebar'
+        registry.elements = {}
+        for i = 1, 10 do
+            RegisterFrame('AuroraStanceBarButton'..i, 'elements')
         end
         ActivateMode('elements')
     end)

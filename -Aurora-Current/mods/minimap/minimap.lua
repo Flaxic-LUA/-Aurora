@@ -37,6 +37,8 @@ AU:NewDefaults('minimap', {
     playerArrowColor = {value = {1, 1, 1}, metadata = {element = 'colorpicker', category = 'Arrow', indexInCategory = 4, description = 'Color of the player arrow', dependency = {key = 'customPlayerArrow', state = true}}},
     mapColor = {value = {1, 1, 1}, metadata = {element = 'colorpicker', category = 'General', indexInCategory = 7, description = 'Color tint of the map', dependency = {key = 'showMinimap', state = true}}},
     showSunMoon = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 8, description = 'Show sun/moon indicator', dependency = {key = 'showMinimap', state = true}}},
+    gameTimeSize = {value = 25, metadata = {element = 'slider', category = 'General', indexInCategory = 9, description = 'Size of sun/moon button', min = 16, max = 48, stepSize = 1, dependency = {key = 'showSunMoon', state = true}}},
+    mailSize = {value = 32, metadata = {element = 'slider', category = 'General', indexInCategory = 10, description = 'Size of mail icon', min = 16, max = 48, stepSize = 1, dependency = {key = 'showMinimap', state = true}}},
     showZoom = {value = true, metadata = {element = 'checkbox', category = 'Zoom', indexInCategory = 1, description = 'Show zoom buttons', dependency = {key = 'showMinimap', state = true}}},
     zoomSize = {value = 15, metadata = {element = 'slider', category = 'Zoom', indexInCategory = 2, description = 'Size of zoom buttons', min = 20, max = 50, stepSize = 1, dependency = {key = 'showZoom', state = true}}},
     zoomTextures = {value = 'Default', metadata = {element = 'dropdown', category = 'Zoom', indexInCategory = 3, description = 'Zoom button textures', options = {'Default'}, dependency = {key = 'showZoom', state = true}}},
@@ -358,6 +360,16 @@ AU:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
         else
             gameTimeButton:Hide()
         end
+    end
+
+    callbacks.gameTimeSize = function(value)
+        gameTimeButton:SetSize(value, value)
+        gameTimeBorder:SetSize(value, value)
+        gameTimeIcon:SetSize(value, value)
+    end
+
+    callbacks.mailSize = function(value)
+        MiniMapMailFrame:SetSize(value, value)
     end
 
     callbacks.customPlayerArrow = function(value)

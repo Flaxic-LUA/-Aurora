@@ -257,7 +257,12 @@ AU:NewModule('gui-generator', 3, function()
 
                                 local slider = AU.ui.Slider(panel, nil, setup:FormatKeyName(key), element.min, element.max, element.stepSize, '%.0f')
                                 slider:SetPoint('TOPRIGHT', panel, 'TOPRIGHT', -setup.paddingRight, yOffset)
-                                slider:SetValue(AU.profile[mod][key])
+                                local profileValue = AU.profile[mod][key]
+                                if profileValue == nil then
+                                    profileValue = element.value
+                                    AU.profile[mod][key] = profileValue
+                                end
+                                slider:SetValue(profileValue)
                                 slider:SetScript('OnValueChanged', function()
                                     local newValue = this:GetValue()
                                     AU:SetConfig(mod, key, newValue)

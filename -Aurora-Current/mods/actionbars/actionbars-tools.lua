@@ -813,14 +813,6 @@ function setup:UpdateBonusBarVisibility()
             end
         end
     else
-        for _, bar in pairs(self.bars) do
-            for i = 1, table.getn(bar.buttons) do
-                local id = bar.buttons[i]:GetID()
-                if id >= 1 and id <= 12 then
-                    bar.buttons[i]:Show()
-                end
-            end
-        end
         for i = 1, 4 do
             self.bonusBars[i]:Hide()
         end
