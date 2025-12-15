@@ -28,6 +28,3 @@ AU.date = {}
 AU.common = {}
 AU.timers = {}
 AU.animations = {}
-
--- tview(AU)
--- tview(_G.AU_GlobalDB)

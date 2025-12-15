@@ -75,6 +75,13 @@ AU:NewModule('cooldowns', 1, function()
     end
 
     AU.hooks.HookSecureFunc('CooldownFrame_SetTimer', function(cooldownFrame, start, duration, enable)
+        local parent = cooldownFrame.GetParent and cooldownFrame:GetParent()
+        if parent and parent:GetWidth() / 36 > 0 then
+            cooldownFrame:SetScale(parent:GetWidth() / 36)
+            cooldownFrame:SetPoint('TOPLEFT', parent, 'TOPLEFT', -1, 1)
+            cooldownFrame:SetPoint('BOTTOMRIGHT', parent, 'BOTTOMRIGHT', 1, -1)
+        end
+
         if not AU.profile.cooldowns.showText then
             if cooldownFrame.cdText then cooldownFrame.cdText:Hide() end
             return

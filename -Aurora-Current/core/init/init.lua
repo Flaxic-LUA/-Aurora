@@ -1,15 +1,15 @@
 UNLOCKAURORA()
 
-local init = {eventGroups = {}, pendingEvents = {}}
-
-AU.others.dbversion = 2
+local init = {eventGroups = {}, pendingEvents = {}, loadingBar = nil, loadingQueue = {}}
 
 AU.others.blacklist = {
     'DragonflightReloaded',
-    'MatrixMaps',
+    '--Debugger',
 }
 
 AU.others.blacklistFound = false
+
+AU.others.dbversion = 2
 
 -- private
 function init:DetectServer()
@@ -43,6 +43,22 @@ function init:ApplyDefaults(profileName)
     end
 end
 
+function init:SetupProfile()
+    local charName = UnitName('player')
+    local realmName = GetRealmName()
+    local charKey = charName .. '-' .. realmName
+    local profileName = AU_GlobalDB.meta.characterProfiles[charKey]
+    if not profileName and not AU_GlobalDB.meta.autoAssigned[charKey] then
+        profileName = charKey
+        init:ApplyDefaults(profileName)
+        AU_GlobalDB.meta.characterProfiles[charKey] = profileName
+        AU_GlobalDB.meta.autoAssigned[charKey] = true
+    end
+    AU.profile = AU_GlobalDB.profiles[profileName]
+    AU_GlobalDB.meta.activeProfile = profileName
+    AU.others.currentProfile = profileName
+end
+
 function init:CheckBlacklist()
     AU.others.blacklistedAddonsFound = {}
     for _, addonName in pairs(AU.others.blacklist) do
@@ -52,7 +68,10 @@ function init:CheckBlacklist()
                 'Blacklisted addon detected: ' .. addonName .. '\n\nContinue loading Aurora?',
                 'Continue',
                 function()
-                    ReloadUI()
+                    init:SetupProfile()
+                    if not init:CheckModuleVersions() then
+                        init:ExecModules(true)
+                    end
                 end,
                 'Cancel',
                 function()
@@ -133,41 +152,6 @@ function init:CheckModuleVersions()
     return false
 end
 
-function init:InitAU()
-    AU.others.server = init:DetectServer()
-
-    local charName = UnitName('player')
-    local realmName = GetRealmName()
-    local charKey = charName .. '-' .. realmName
-
-    AU_GlobalDB.meta = AU_GlobalDB.meta or {}
-    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
-    AU_GlobalDB.meta.characterProfiles = AU_GlobalDB.meta.characterProfiles or {}
-    AU_GlobalDB.meta.autoAssigned = AU_GlobalDB.meta.autoAssigned or {}
-
-    if not AU_GlobalDB.profiles['.defaults'] then
-        init:ApplyDefaults('.defaults')
-    end
-
-    if init:CheckBlacklist() then return end
-    if init:CheckDBVersion() then return end
-
-    local profileName = AU_GlobalDB.meta.characterProfiles[charKey]
-    if not profileName and not AU_GlobalDB.meta.autoAssigned[charKey] then
-        profileName = charKey
-        init:ApplyDefaults(profileName)
-        AU_GlobalDB.meta.characterProfiles[charKey] = profileName
-        AU_GlobalDB.meta.autoAssigned[charKey] = true
-    end
-
-    AU.profile = AU_GlobalDB.profiles[profileName]
-    AU_GlobalDB.meta.activeProfile = profileName
-    AU.others.currentProfile = profileName
-
-    if init:CheckModuleVersions() then return end
-    init:ExecModules(false)
-end
-
 function init:ExecModules(forceImmediate)
     local sorted = {}
     for name, module in pairs(AU.modules) do
@@ -178,11 +162,32 @@ function init:ExecModules(forceImmediate)
     table.sort(sorted, function(a, b) return a.module.priority < b.module.priority end)
 
     if forceImmediate then
-        for _, entry in pairs(sorted) do
-            print('ExecModules: Running ' .. entry.name)
-            entry.module.func()
-        end
-        init:Finalize()
+        local bar = AU.animations.CreateStatusBar(UIParent, 300, 20, {barAnim = false, pulse = false, cutout = false})
+        bar:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
+        bar:SetFillColor(0.2, 0.6, 1, 1)
+        bar:SetBgColor(0.1, 0.1, 0.1, 0.8)
+        bar.max = table.getn(sorted)
+        bar:SetValue(0, true)
+
+        bar.text = AU.ui.Font(bar, 12, 'Loading ' .. info.addonNameColor .. ' ...', {1, 1, 1}, 'CENTER')
+        bar.text:SetPoint('CENTER', bar, 'CENTER', 0, 0)
+
+        init.loadingBar = bar
+        init.loadingQueue = sorted
+        init.loadingIndex = 0
+        init.loadingTotal = table.getn(sorted)
+        init.loadingBar:SetScript('OnUpdate', function()
+            init.loadingIndex = init.loadingIndex + 1
+            if init.loadingIndex <= init.loadingTotal then
+                local entry = init.loadingQueue[init.loadingIndex]
+                entry.module.func()
+                init.loadingBar:SetValue(init.loadingIndex, true)
+            else
+                init.loadingBar:Hide()
+                init.loadingBar = nil
+                init:Finalize()
+            end
+        end)
         return
     end
 
@@ -211,20 +216,33 @@ function init:Finalize()
     init.pendingEvents = {}
 end
 
+function init:InitAU()
+    AU.others.server = init:DetectServer()
+
+    AU_GlobalDB.meta = AU_GlobalDB.meta or {}
+    AU_GlobalDB.profiles = AU_GlobalDB.profiles or {}
+    AU_GlobalDB.meta.characterProfiles = AU_GlobalDB.meta.characterProfiles or {}
+    AU_GlobalDB.meta.autoAssigned = AU_GlobalDB.meta.autoAssigned or {}
+
+    if not AU_GlobalDB.profiles['.defaults'] then
+        init:ApplyDefaults('.defaults')
+    end
+
+    if init:CheckBlacklist() then return end
+    if init:CheckDBVersion() then return end
+    init:SetupProfile()
+    if init:CheckModuleVersions() then return end
+    init:ExecModules(false)
+end
+
 -- public
 function AU:NewDefaults(module, defaults)
     AU.defaults[module] = defaults
 end
 
 function AU:NewModule(module, priority, event, func)
-    assert(module, 'Module name required')
-    assert(priority, 'Priority required')
-    assert(event, 'Event or function required')
-
-    -- if func is passed, its an event module
     if func then
         AU.modules[module] = {priority=priority, event=event, func=func}
-    -- else its a normal module
     else
         AU.modules[module] = {priority=priority, func=event}
     end
@@ -233,7 +251,6 @@ end
 function AU:NewCallbacks(module, callbacks)
     for option, callback in pairs(callbacks) do
         AU.callbacks[module .. '.' .. option] = callback
-        -- trigger all callbacks with current value
         if AU.profile[module] and AU.profile[module][option] ~= nil then
             callback(AU.profile[module][option])
         end
