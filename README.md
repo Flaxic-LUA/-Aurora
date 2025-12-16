@@ -14,19 +14,19 @@ A comprehensive UI overhaul for World of Warcraft Vanilla 1.12.1.
 
 <table>
 <tr>
-<td><img src="screenshots/prev0.PNG" width="300"></td>
-<td><img src="screenshots/prev1.PNG" width="300"></td>
-<td><img src="screenshots/prev2.PNG" width="300"></td>
+<td><img src="screenshots/prev0.PNG" width="300" height="200" style="object-fit: cover;"></td>
+<td><img src="screenshots/prev1.PNG" width="300" height="200" style="object-fit: cover;"></td>
+<td><img src="screenshots/prev2.PNG" width="300" height="200" style="object-fit: cover;"></td>
 </tr>
 <tr>
-<td><img src="screenshots/prev3.PNG" width="300"></td>
-<td><img src="screenshots/prev4.PNG" width="300"></td>
-<td><img src="screenshots/prev5.PNG" width="300"></td>
+<td><img src="screenshots/prev3.PNG" width="300" height="200" style="object-fit: cover;"></td>
+<td><img src="screenshots/prev4.PNG" width="300" height="200" style="object-fit: cover;"></td>
+<td><img src="screenshots/prev5.PNG" width="300" height="200" style="object-fit: cover;"></td>
 </tr>
 <tr>
-<td><img src="screenshots/prev6.PNG" width="300"></td>
-<td><img src="screenshots/prev7.PNG" width="300"></td>
-<td><img src="screenshots/prev8.PNG" width="300"></td>
+<td><img src="screenshots/prev6.PNG" width="300" height="200" style="object-fit: cover;"></td>
+<td><img src="screenshots/prev7.PNG" width="300" height="200" style="object-fit: cover;"></td>
+<td><img src="screenshots/prev8.PNG" width="300" height="200" style="object-fit: cover;"></td>
 </tr>
 </table>
 
