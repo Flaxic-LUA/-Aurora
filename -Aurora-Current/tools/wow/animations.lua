@@ -24,8 +24,10 @@ local CUTOUT_ALPHA = 1
 function StatusBars:UpdateBarAnimations()
     for bar in pairs(animations) do
         if bar.enableBarAnim then
-            -- check if animation is complete
-            if bar.instant or bar.val_ == bar.val then
+            -- check if animation is complete (with epsilon for floating point precision)
+            local diff = bar.val - bar.val_
+            if diff < 0 then diff = -diff end
+            if bar.instant or bar.val_ == bar.val or diff < 0.5 then
                 -- snap to final value
                 bar.val_ = bar.val
                 -- remove from animation table

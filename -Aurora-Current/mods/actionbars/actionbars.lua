@@ -220,7 +220,7 @@ end
 
 AU:NewDefaults('actionbars', defaults)
 
-AU:NewModule('actionbars', 1, 'PLAYER_ENTERING_WORLD', function()
+AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
     local setup = AU.setups.actionbars
 
     function _G.MultiActionBar_Update() end

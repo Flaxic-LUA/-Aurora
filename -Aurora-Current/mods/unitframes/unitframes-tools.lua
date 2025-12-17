@@ -661,7 +661,16 @@ function setup:UpdateClassificationBorder(unitFrame)
         unitFrame.border:SetTexture(self.textures.borderElite)
         unitFrame.border:SetTexCoord(0.25, 0.75, 0.25, 0.75)
     else
-        unitFrame.border:SetTexture(self.textures.portraitBorder)
+        local borderTexture = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes']['targetPortraitBorderTexture']) or 'portrait_border_edge'
+        local tex
+        if borderTexture == 'portrait_border_edge' then
+            tex = self.textures.portraitBorder
+        elseif borderTexture == 'portrait_border' then
+            tex = self.textures.portraitBorderAlt1
+        elseif borderTexture == 'portrait_border_base' then
+            tex = self.textures.portraitBorderAlt2
+        end
+        unitFrame.border:SetTexture(tex)
         local flipKey = 'targetFlipPortraitBorder'
         local shouldFlip = AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][flipKey]
         if shouldFlip then
