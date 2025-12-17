@@ -13,14 +13,14 @@ AU.tables["classcolors"] = {
 }
 
 AU.tables["factioncolors"] = {
-  {0.8, 0.13, 0.13},  -- 1: Hated
-  {0.8, 0.13, 0.13},  -- 2: Hostile
-  {0.75, 0.27, 0},    -- 3: Unfriendly
-  {0.9, 0.7, 0},      -- 4: Neutral
-  {0, 0.6, 0.1},      -- 5: Friendly
-  {0, 0.6, 0.1},      -- 6: Honored
-  {0, 0.6, 0.1},      -- 7: Revered
-  {0, 0.6, 0.1},      -- 8: Exalted
+  {0.8, 0.13, 0.13},  -- 1: hated
+  {0.8, 0.13, 0.13},  -- 2: hostile
+  {0.75, 0.27, 0},    -- 3: unfriendly
+  {0.9, 0.7, 0},      -- 4: neutral
+  {0, 0.6, 0.1},      -- 5: friendly
+  {0, 0.6, 0.1},      -- 6: honored
+  {0, 0.6, 0.1},      -- 7: revered
+  {0, 0.6, 0.1},      -- 8: exalted
 }
 
 -- credit to shagu v1.0

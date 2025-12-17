@@ -129,8 +129,8 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
     repFactionText:SetTextColor(factionColor[1], factionColor[2], factionColor[3], factionColor[4])
 
     local lastXP = UnitXP('player')
-    local name, standing, min, max, value = GetWatchedFactionInfo()
-    local lastRep = value or 0
+    local repName, repStanding, repMin, repMax, repValue = GetWatchedFactionInfo()
+    local lastRep = repValue or 0
     local xpTextHideTimer = nil
     local repTextHideTimer = nil
 
@@ -227,8 +227,8 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
             end
 
             if AU.profile['xprep']['repBarOverrideColour'] then
-                local color = AU.profile['xprep']['repBarCustomColour']
-                repbar:SetFillColor(color[1], color[2], color[3], color[4])
+                local customColor = AU.profile['xprep']['repBarCustomColour']
+                repbar:SetFillColor(customColor[1], customColor[2], customColor[3], customColor[4])
             else
                 if standing == 1 or standing == 2 then
                     repbar:SetFillColor(0.8, 0, 0, 1)
@@ -340,25 +340,21 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
                     end
                     UIFrameFadeIn(frame, 0.2, frame:GetAlpha(), AU.profile['xprep'][alphaKey])
                     if isXP then
-                        local xp = UnitXP('player')
-                        local maxxp = UnitXPMax('player')
-                        local percent = math.floor((xp / maxxp) * 100)
-                        local remaining = maxxp - xp
-                        -- AU.lib.ShowSimpleTooltip(frame, xp..' / '..maxxp..' ('..percent..'%)\nRemaining: '..remaining)
+                        xpText:Show()
+                        xpRestedText:Show()
                     else
-                        local name, standing, min, max, value = GetWatchedFactionInfo()
-                        if name then
-                            local current = value - min
-                            local total = max - min
-                            local percent = math.floor((current / total) * 100)
-                            local remaining = total - current
-                            local standingText = getglobal('FACTION_STANDING_LABEL'..standing) or 'Unknown'
-                            -- AU.lib.ShowSimpleTooltip(frame, name..'\n'..standingText..'\n'..current..' / '..total..' ('..percent..'%)\nRemaining: '..remaining)
-                        end
+                        repText:Show()
+                        repFactionText:Show()
                     end
                 end)
                 frame:SetScript('OnLeave', function()
-                    -- AU.lib.HideActionTooltip()
+                    if isXP then
+                        xpText:Hide()
+                        xpRestedText:Hide()
+                    else
+                        repText:Hide()
+                        repFactionText:Hide()
+                    end
                     frame.fadeTimer = delay
                     frame:SetScript('OnUpdate', function()
                         if frame.fadeTimer then
@@ -378,25 +374,21 @@ AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
             else
                 frame:SetScript('OnEnter', function()
                     if isXP then
-                        local xp = UnitXP('player')
-                        local maxxp = UnitXPMax('player')
-                        local percent = math.floor((xp / maxxp) * 100)
-                        local remaining = maxxp - xp
-                        -- AU.lib.ShowSimpleTooltip(frame, xp..' / '..maxxp..' ('..percent..'%)\nRemaining: '..remaining)
+                        xpText:Show()
+                        xpRestedText:Show()
                     else
-                        local name, standing, min, max, value = GetWatchedFactionInfo()
-                        if name then
-                            local current = value - min
-                            local total = max - min
-                            local percent = math.floor((current / total) * 100)
-                            local remaining = total - current
-                            local standingText = getglobal('FACTION_STANDING_LABEL'..standing) or 'Unknown'
-                            -- AU.lib.ShowSimpleTooltip(frame, name..'\n'..standingText..'\n'..current..' / '..total..' ('..percent..'%)\nRemaining: '..remaining)
-                        end
+                        repText:Show()
+                        repFactionText:Show()
                     end
                 end)
                 frame:SetScript('OnLeave', function()
-                    -- AU.lib.HideActionTooltip()
+                    if isXP then
+                        xpText:Hide()
+                        xpRestedText:Hide()
+                    else
+                        repText:Hide()
+                        repFactionText:Hide()
+                    end
                 end)
                 frame:SetScript('OnUpdate', nil)
                 frame.fadeTimer = nil

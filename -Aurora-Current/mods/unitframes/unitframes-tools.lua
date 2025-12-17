@@ -7,6 +7,7 @@ local setup = {
     combatGlowElapsed = 0,
     lastTargetColor = {0, 1, 0},
     lastPlayerColor = {0, 1, 0},
+    portrait2DTimer = 5, -- TODO find a better way this is total trash, unitframes needs rework
 
     textures = {
         portraitBorderBg = media['tex:unitframes:portrait_border_bg.blp'],
@@ -26,7 +27,8 @@ local setup = {
         classIcons = media['tex:interface:UI-Classes-Circles.tga'],
         borderElite = media['tex:unitframes:uf_elite.blp'],
         borderRare = media['tex:unitframes:uf_rare.blp'],
-        borderBoss = media['tex:unitframes:uf_boss.blp']
+        borderBoss = media['tex:unitframes:uf_boss.blp'],
+        groupLeader = media['tex:unitframes:groupleader.blp']
     },
 
 
@@ -109,6 +111,17 @@ function setup:CreateUnitFrame(unit, width, height)
     unitFrame.classBorderOverlay:SetPoint('CENTER', unitFrame.border, 'CENTER', 0, 0)
     unitFrame.classBorderOverlay:SetSize(96, 96)
     unitFrame.classBorderOverlay:Hide()
+
+    if string.find(unit, 'party') or unit == 'player' then
+        local leaderFrame = CreateFrame('Frame', nil, unitFrame.portraitFrame)
+        leaderFrame:SetFrameLevel(borderFrame:GetFrameLevel() + 1)
+        leaderFrame:SetAllPoints(unitFrame.portraitFrame)
+        unitFrame.leaderIcon = leaderFrame:CreateTexture(nil, 'OVERLAY')
+        unitFrame.leaderIcon:SetTexture(self.textures.groupLeader)
+        unitFrame.leaderIcon:SetSize(16, 16)
+        unitFrame.leaderIcon:SetPoint('TOP', unitFrame.portraitFrame, 'TOP', -25, 2)
+        unitFrame.leaderIcon:Hide()
+    end
 
     unitFrame:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
     unitFrame:SetScript('OnClick', function()
@@ -549,6 +562,25 @@ function setup:UpdatePvPIcon(unitFrame)
     end
 end
 
+function setup:UpdateLeaderIcon(unitFrame)
+    if not unitFrame.leaderIcon then return end
+    if unitFrame.unit == 'player' then
+        if GetPartyLeaderIndex() == 0 then
+            unitFrame.leaderIcon:Show()
+        else
+            unitFrame.leaderIcon:Hide()
+        end
+    else
+        local idStr = string.gsub(unitFrame.unit, 'party', '')
+        local id = tonumber(idStr)
+        if GetPartyLeaderIndex() == id then
+            unitFrame.leaderIcon:Show()
+        else
+            unitFrame.leaderIcon:Hide()
+        end
+    end
+end
+
 function setup:UpdateLevelColor(unitFrame)
     local level = UnitLevel(unitFrame.unit)
     if level == -1 or level >= 63 then
@@ -927,6 +959,18 @@ function setup:OnUpdate()
                 end
             end
         end
+        if setup.portrait2DTimer > 0 then
+            setup.portrait2DTimer = setup.portrait2DTimer - arg1
+            for i = 1, table.getn(setup.portraits) do
+                local portrait = setup.portraits[i]
+                local modeKey = string.find(portrait.unit, 'party') and 'partyPortraitMode' or portrait.unit..'PortraitMode'
+                local mode = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][modeKey]) or '3D Model'
+                if mode == '2D Portrait' then
+                    portrait.portrait2D:Show()
+                    SetPortraitTexture(portrait.portrait2D, portrait.unit)
+                end
+            end
+        end
         setup.combatGlowElapsed = setup.combatGlowElapsed + arg1
         for i = 1, table.getn(setup.portraits) do
             local portrait = setup.portraits[i]
@@ -947,12 +991,18 @@ function setup:OnUpdate()
                                 portrait.model:Hide()
                                 portrait.portrait2D:Hide()
                             elseif not UnitIsVisible(portrait.unit) or not UnitIsConnected(portrait.unit) then
-                                portrait.model:Hide()
-                                SetPortraitTexture(portrait.portrait2D, portrait.unit)
-                                portrait.portrait2D:Show()
+                                local modeKey = 'partyPortraitMode'
+                                local mode = (AU_GlobalDB and AU.profile['unitframes'] and AU.profile['unitframes'][modeKey]) or '3D Model'
+                                if mode == '3D Model' then
+                                    portrait.model:Hide()
+                                    portrait.classIcon:Hide()
+                                    SetPortraitTexture(portrait.portrait2D, portrait.unit)
+                                    portrait.portrait2D:Show()
+                                else
+                                    setup:UpdatePortraitMode(portrait, portrait.unit)
+                                end
                             else
-                                portrait.portrait2D:Hide()
-                                portrait.model:Show()
+                                setup:UpdatePortraitMode(portrait, portrait.unit)
                                 local name = UnitName(portrait.unit)
                                 if portrait.model.lastUnit ~= name then
                                     portrait.model.update = portrait.unit
@@ -1169,9 +1219,13 @@ function setup:OnEvent()
             portrait.powerBar:SetValue(UnitMana(portrait.unit))
             setup:UpdatePowerBarColor(portrait)
             setup:UpdateHealthBarColor(portrait, portrait.unit)
+            setup:UpdatePortraitMode(portrait, portrait.unit)
             setup:UpdateNameText(portrait)
             setup:UpdateLevelColor(portrait)
             setup:UpdatePvPIcon(portrait)
+            if string.find(portrait.unit, 'party') or portrait.unit == 'player' then
+                setup:UpdateLeaderIcon(portrait)
+            end
             setup:UpdateBarText(portrait)
             setup:UpdateBarTextNumbers(portrait)
             local visibleBuffs = setup:UpdateBuffs(portrait)
@@ -1298,7 +1352,9 @@ function setup:OnEvent()
     elseif event == 'PARTY_MEMBERS_CHANGED' or event == 'PARTY_MEMBER_ENABLE' or event == 'PARTY_MEMBER_DISABLE' or event == 'PARTY_LEADER_CHANGED' or event == 'PARTY_LOOT_METHOD_CHANGED' or event == 'RAID_ROSTER_UPDATE' then
         for i = 1, table.getn(setup.portraits) do
             local portrait = setup.portraits[i]
-            if string.find(portrait.unit, 'party') then
+            if portrait.unit == 'player' then
+                setup:UpdateLeaderIcon(portrait)
+            elseif string.find(portrait.unit, 'party') then
                 if not AU.profile['unitframes']['partyEnabled'] then
                     portrait:Hide()
                 elseif UnitInRaid('player') then
@@ -1314,6 +1370,7 @@ function setup:OnEvent()
                         setup:UpdateNameText(portrait)
                         setup:UpdateLevelColor(portrait)
                         setup:UpdatePvPIcon(portrait)
+                        setup:UpdateLeaderIcon(portrait)
                         setup:UpdateBarText(portrait)
                         setup:UpdateBarTextNumbers(portrait)
                         local visibleBuffs = setup:UpdateBuffs(portrait)
@@ -1384,6 +1441,8 @@ function setup:GenerateDefaults()
             -- Party frames need name abbreviation
             hasNameAbbreviation = true,
             hasPvPIcon = true,
+            portraitBorderTexture = 'portrait_border_base',
+            scale = 0.8,
         },
     }
 
@@ -1792,8 +1851,8 @@ function setup:GenerateCallbacks()
                     portrait.portraitFrame:SetSize(value, value)
                     portrait.borderBg:SetSize(value, value)
                     portrait.model:SetSize(value - offset, value - offset)
-                    portrait.portrait2D:SetSize(value - offset, value - offset)
-                    portrait.classIcon:SetSize(value - offset, value - offset)
+                    -- portrait.portrait2D:SetSize(value - offset, value - offset)
+                    -- portrait.classIcon:SetSize(value - offset, value - offset)
                     portrait.border:SetSize(value, value)
                     if portrait.model.combatGlow then
                         portrait.model.combatGlow:SetPoint('TOPLEFT', portrait.model, 'TOPLEFT', -glowOffset, glowOffset)

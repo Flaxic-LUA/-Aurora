@@ -20,7 +20,7 @@ AU:NewModule('unitframes', 1, 'PLAYER_LOGIN', function()
     petTargetPortrait:SetPoint('TOPLEFT', petPortrait, 'BOTTOMRIGHT', 10, 0)
 
     for i = 1, 4 do
-        local partyFrame = setup:CreateUnitFrame('party'..i, 180, 60)
+        local partyFrame = setup:CreateUnitFrame('party'..i, 180, 70)
         if i == 1 then
             partyFrame:SetPoint('TOPLEFT', UIParent, 'LEFT', 10, 170)
         else

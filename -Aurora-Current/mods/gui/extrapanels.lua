@@ -12,7 +12,7 @@ AU:NewModule('gui-extrapanels', 2, function()
     local homePanel = setup.panels['home']
     homePanel:SetHeight(450)
     local homeText = AU.ui.Font(homePanel, 20, info.addonNameColor)
-    homeText:SetPoint('CENTER', setup.mainframe, 'CENTER', 0, 100)
+    homeText:SetPoint('CENTER', setup.mainframe, 'CENTER', 50, 100)
 
     local timeText = AU.ui.Font(homePanel, 25, '')
     timeText:SetPoint('TOP', homeText, 'BOTTOM', 0, -20)

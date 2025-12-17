@@ -1,4 +1,6 @@
-UNLOCKAURORA()
+-- UNLOCKAURORA()
+-- too lazy for now
+
 
 -- AU.tables['profiles'] = {
 -- 	['Aurora'] = {
