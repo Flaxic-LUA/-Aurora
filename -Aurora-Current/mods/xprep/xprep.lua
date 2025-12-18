@@ -61,7 +61,7 @@ AU:NewDefaults('xprep', {
     repBarFactionNameOffsetY = {value = 0, metadata = {element = 'slider', category = 'Rep Faction', indexInCategory = 7, description = 'Y offset for faction name', min = -100, max = 100, stepSize = 1, dependency = {key = 'repBarShowFactionName', state = true}}},
 })
 
-AU:NewModule('xprep', 1, 'PLAYER_ENTERING_WORLD', function()
+AU:NewModule('xprep', 1, 'PLAYER_LOGIN', function()
     local xpbar = AU.animations.CreateStatusBar(UIParent, AU.profile['xprep']['xpBarWidth'], AU.profile['xprep']['xpBarHeight'], {pulse = AU.profile['xprep']['xpBarPulse']}, 'AU_XPBar')
     xpbar:SetTextures(media['tex:generic:xpbar_1.blp'], media['tex:generic:xpbar_1_bg.blp'])
     xpbar:SetPoint('BOTTOM', UIParent, 'BOTTOM', -0, 135)

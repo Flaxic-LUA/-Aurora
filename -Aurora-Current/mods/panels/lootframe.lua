@@ -12,14 +12,6 @@ AU:NewDefaults('lootframe', {
 })
 
 AU:NewModule('lootframe', 1, function()
-        -- Aurora Module System Flow:
-    -- ApplyDefaults() populates AU.profile[module][option] with default values from AU.defaults
-    -- ExecModules() loads modules by calling each enabled module's func() based on priority
-    -- Module's func() creates UI/features and calls NewCallbacks() as its last step
-    -- NewCallbacks() registers callbacks and immediately executes them with current AU_GlobalDB values to initialize module state
-    -- GUI changes trigger SetConfig() which updates AU_GlobalDB then re-executes the callback with new value
-
-
     local regions = {LootFrame:GetRegions()}
     for i = 1, table.getn(regions) do
         local region = regions[i]
@@ -82,7 +74,6 @@ AU:NewModule('lootframe', 1, function()
 
     local callbacks = {}
     callbacks.positionAtMouse = function(value)
-        -- Callback executes when setting changes, no action needed here
     end
 
     callbacks.lootBgAlpha = function(value)

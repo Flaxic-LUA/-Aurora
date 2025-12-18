@@ -236,6 +236,8 @@ AU:NewModule('editmode', 1, 'PLAYER_ENTERING_WORLD', function()
     gridFrame = DrawGrid()
     RestoreFramePositions()
 
+    AU.setups.RestoreFramePositions = RestoreFramePositions
+
     editFrame:SetScript('OnShow', function()
         gridFrame:Show()
         registry.frames = {}

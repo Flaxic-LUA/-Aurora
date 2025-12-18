@@ -905,6 +905,10 @@ AU:NewModule('gui-profiles', 2, function()
                 callback(AU.profile[mod][opt])
             end
         end
+
+        if AU.setups.RestoreFramePositions then
+            AU.setups.RestoreFramePositions()
+        end
     end
 
     local callbacks = {}

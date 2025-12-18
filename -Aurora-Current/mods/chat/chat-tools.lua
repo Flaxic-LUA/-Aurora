@@ -37,17 +37,17 @@
 --     self.container:SetBackdropBorderColor(0, 0, 0, .5)
 --     self.container:Hide()
 
+--     ChatFrameEditBox:ClearAllPoints()
+--     ChatFrameEditBox:SetPoint('CENTER', self.container, 'CENTER', 0, 0)
+--     ChatFrameEditBox:SetWidth(300)
+--     ChatFrameEditBox:SetAltArrowKeyMode(false)
+
 --     self.indicator = CreateFrame('Frame', nil, self.container)
 --     self.indicator:SetSize(15, 15)
 --     self.indicator:SetPoint('BOTTOMLEFT', ChatFrameEditBox, 'BOTTOMLEFT', 0, -3)
 --     local indBg = self.indicator:CreateTexture(nil, 'OVERLAY')
 --     indBg:SetAllPoints()
 --     indBg:SetTexture(self.textures.indicator)
-
---     ChatFrameEditBox:ClearAllPoints()
---     ChatFrameEditBox:SetPoint('CENTER', self.container, 'CENTER', 0, 0)
---     ChatFrameEditBox:SetWidth(300)
---     ChatFrameEditBox:SetAltArrowKeyMode(false)
 
 --     self.suggestionFrame = CreateFrame('Frame', nil, UIParent)
 --     self.suggestionFrame:SetFrameStrata('TOOLTIP')
@@ -108,6 +108,28 @@
 
 -- -- LOGIC ----------
 
+-- -- main handler: orchestrates prediction pipeline and calls logic methods
+-- function setup:UpdateSuggestion()
+--     local text = ChatFrameEditBox:GetText()
+--     self:BasicPrefixLogic(text)
+
+--     -- -- Step 1: Analyze input
+--     -- local context = self:AnalyzeInput(text)
+
+--     -- -- Step 2: Find matches
+--     -- local matches = self:FindMatches(text, context)
+
+--     -- -- Step 3: Rank suggestions
+--     -- local bestMatch = self:RankSuggestions(matches, context)
+
+--     -- -- Step 4: Display
+--     -- if bestMatch then
+--     --     self:DisplaySuggestion(text, bestMatch)
+--     -- else
+--     --     self.suggestionFrame:Hide()
+--     -- end
+-- end
+
 -- -- basic prefix logic: searches autocomplete list for prefix match, calculates position and displays suggestion
 -- function setup:BasicPrefixLogic(text)
 --     local match = nil
@@ -133,28 +155,6 @@
 --     else
 --         setup.suggestionFrame:Hide()
 --     end
--- end
-
--- -- main handler: orchestrates prediction pipeline and calls logic methods
--- function setup:UpdateSuggestion()
---     local text = ChatFrameEditBox:GetText()
---     self:BasicPrefixLogic(text)
-
---     -- -- Step 1: Analyze input
---     -- local context = self:AnalyzeInput(text)
-
---     -- -- Step 2: Find matches
---     -- local matches = self:FindMatches(text, context)
-
---     -- -- Step 3: Rank suggestions
---     -- local bestMatch = self:RankSuggestions(matches, context)
-
---     -- -- Step 4: Display
---     -- if bestMatch then
---     --     self:DisplaySuggestion(text, bestMatch)
---     -- else
---     --     self.suggestionFrame:Hide()
---     -- end
 -- end
 
 -- -- expose

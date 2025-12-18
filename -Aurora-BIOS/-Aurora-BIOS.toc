@@ -8,7 +8,7 @@
 
 ## X-Version-BIOS:      1.0
 ## X-Version-Current:   1.0.0
-## X-Current-Patch:     Alpha BUILD 7
+## X-Current-Patch:     Alpha BUILD 8
 ## X-Version-LTS:       N/A
 ## X-LTS-Patch:         N/A
 

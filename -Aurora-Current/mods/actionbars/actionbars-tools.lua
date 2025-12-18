@@ -442,7 +442,8 @@ function setup:ShowAllButtons()
 
             barFrame.expandFrame:Show()
         elseif not skipBar and barFrame then
-            for i = 1, 12 do
+            local buttonsToShow = AU.profile['actionbars'][barName..'ButtonsToShow'] or 12
+            for i = 1, buttonsToShow do
                 barFrame.buttons[i]:Show()
             end
         end
@@ -535,6 +536,7 @@ function setup:UpdateButtonKeybind(button)
 
         if key then
             key = GetBindingText(key, 'KEY_')
+            key = string.gsub(key, 'Middle Mouse', 'M3')
             key = string.gsub(key, 'Mouse Wheel Up', 'MWU')
             key = string.gsub(key, 'Mouse Wheel Down', 'MWD')
             key = string.gsub(key, 'Mouse Button ', 'M')

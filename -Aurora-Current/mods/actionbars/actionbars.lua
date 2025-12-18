@@ -545,7 +545,6 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
                     local currentX = data.startX + (data.targetX - data.startX) * progress
                     data.button:ClearAllPoints()
                     data.button:SetPoint('TOPLEFT', this.anchorFrame, 'TOPLEFT', currentX, 0)
-                    -- debugprint('Concatenate anim: btn parent='..tostring(data.button:GetParent():GetName())..' anchor='..tostring(this.anchorFrame:GetName()))
                     if data.shouldShow then
                         data.button:Show()
                     end
