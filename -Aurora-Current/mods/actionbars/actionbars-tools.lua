@@ -819,6 +819,20 @@ function setup:UpdateBonusBarVisibility()
         for i = 1, 4 do
             self.bonusBars[i]:Hide()
         end
+        if self.mainBar then
+            for i = 1, table.getn(self.mainBar.buttons) do
+                if i <= AU.profile['actionbars']['mainBarButtonsToShow'] then
+                    self.mainBar.buttons[i]:Show()
+                end
+            end
+        end
+        if self.currentPageBar and self.currentPageBar ~= self.mainBar then
+            for i = 1, table.getn(self.currentPageBar.buttons) do
+                if i <= AU.profile['actionbars']['mainBarButtonsToShow'] then
+                    self.currentPageBar.buttons[i]:Show()
+                end
+            end
+        end
     end
 end
 

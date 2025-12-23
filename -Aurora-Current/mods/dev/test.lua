@@ -1,6 +1,6 @@
 ---@diagnostic disable: duplicate-set-field
 -- AU Test file
--- UNLOCKAURORA()
+UNLOCKAURORA()
 
 -- local combat = {active = false, start = 0, log = {}}
 -- local playerGUID = nil
@@ -52,3 +52,20 @@
 --         end
 --     end
 -- end)
+
+-- local testFrame = CreateFrame('Frame')
+-- testFrame:RegisterEvent('UNIT_AURA')
+-- testFrame:SetScript('OnEvent', function()
+--     if event == 'UNIT_AURA' and arg1 == 'target' then
+--         debugprint('=== Testing UnitDebuff on target ===')
+--         for i = 1, 16 do
+--             local a, b, c, d, e, f, g, h, j, k = UnitDebuff('target', i)
+--             if a then
+--                 debugprint('Debuff '..i..': a='..(a or 'nil')..' b='..(b or 'nil')..' c='..(c or 'nil')..' d='..(d or 'nil')..' e='..(e or 'nil')..' f='..(f or 'nil')..' g='..(g or 'nil')..' h='..(h or 'nil')..' j='..(j or 'nil')..' k='..(k or 'nil'))
+--             else
+--                 break
+--             end
+--         end
+--     end
+-- end)
+

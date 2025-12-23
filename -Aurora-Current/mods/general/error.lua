@@ -22,9 +22,9 @@ AU:NewModule('error', 1, function()
         source = source or 'unknown source'
 
         if errorCache[msg] == 1 then
-            print('|cffff0000[Error]|r - ' .. source .. ': ' .. msg)
+            print('|cffff0000[Error] - ' .. source .. ': ' .. msg)
         elseif errorCache[msg] == 2 then
-            print('|cffff0000[Error Throttled]|r - ' .. source)
+            print('|cffff0000[Error Throttled] - ' .. source)
         end
     end
 
