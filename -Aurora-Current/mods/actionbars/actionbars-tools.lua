@@ -811,11 +811,15 @@ function setup:UpdateBonusBarVisibility()
         for i = 1, 4 do
             if i == offset then
                 self.bonusBars[i]:Show()
+                self.mainBar.decorationLeftFrame:SetParent(self.bonusBars[i])
+                self.mainBar.decorationRightFrame:SetParent(self.bonusBars[i])
             else
                 self.bonusBars[i]:Hide()
             end
         end
     else
+        self.mainBar.decorationLeftFrame:SetParent(self.mainBar)
+        self.mainBar.decorationRightFrame:SetParent(self.mainBar)
         for i = 1, 4 do
             self.bonusBars[i]:Hide()
         end

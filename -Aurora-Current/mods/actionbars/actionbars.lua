@@ -949,6 +949,11 @@ AU:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
 
         callbacks[barName..'FadeOutDelay'] = function(value)
             helpers.SetupBarFadeAndHighlight(barFrame, barFrame.buttons, barName..'FadeOutDelay', barName..'Alpha', barName..'ButtonsToShow')
+            if barName == 'mainBar' then
+                for i = 1, 4 do
+                    helpers.SetupBarFadeAndHighlight(setup.bonusBars[i], setup.bonusBars[i].buttons, barName..'FadeOutDelay', barName..'Alpha', barName..'ButtonsToShow')
+                end
+            end
         end
 
         callbacks[barName..'GradientDirection'] = function(value)
