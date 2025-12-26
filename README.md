@@ -2,9 +2,9 @@
 
 A comprehensive UI overhaul for World of Warcraft Vanilla 1.12.1.
 
-> **⚠️ Disclaimer: Solo developer, no affiliations with any server or organization, no monetization. Free and open-source for all Vanilla 1.12.1 clients.**
+**⚠️ Disclaimer: Solo developer, no affiliations with any server or organization, no monetization. Free and open-source for all Vanilla 1.12.1 clients.**
 
-> **⚠️ Requires [SuperWoW 1.5+](https://github.com/balakethelock/SuperWoW) and [UnitXP SP3](https://codeberg.org/konaka/UnitXP_SP3)**
+**⚠️ Requires [SuperWoW 1.5+](https://github.com/balakethelock/SuperWoW) and [UnitXP SP3](https://codeberg.org/konaka/UnitXP_SP3)**
 
 ## Features
 
