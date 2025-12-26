@@ -161,7 +161,7 @@ DF:NewModule('gamemenu', 1, function()
         frame:Hide()
     end)
 
-    local creditText = DF.ui.Font(frame, 7, 'made by guzruul', {.7, .7, .7}, 'CENTER')
+    local creditText = DF.ui.Font(frame, 7, 'made by ' .. info.author, {.7, .7, .7}, 'CENTER')
     creditText:SetPoint('BOTTOM', frame, 'BOTTOM', 33, 5)
 
     frame:SetScript('OnShow', function()

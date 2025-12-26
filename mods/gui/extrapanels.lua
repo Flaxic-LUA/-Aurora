@@ -19,6 +19,11 @@ DF:NewModule('gui-extrapanels', 2, function()
     local dateText = DF.ui.Font(homePanel, 12, '')
     dateText:SetPoint('TOP', timeText, 'BOTTOM', 0, -10)
 
+    local githubLabel = DF.ui.Font(homePanel, 9, 'Official Github:', {0.8, 0.8, 0.8})
+    githubLabel:SetPoint('TOP', dateText, 'BOTTOM', 0, -55)
+    local githubText = DF.ui.Font(homePanel, 10, info.github, {1, 1, 1})
+    githubText:SetPoint('TOP', githubLabel, 'BOTTOM', 0, -6)
+
     DF.timers.every(1, function()
         timeText:SetText(DF.date.currentTimeWithSeconds)
         dateText:SetText(DF.date.currentDate)

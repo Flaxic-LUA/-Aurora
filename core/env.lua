@@ -23,6 +23,8 @@ local ENV = setmetatable({
             path = 'Interface\\AddOns\\' .. addonName .. '\\',
             version = GetAddOnMetadata(addonName, 'X-Version'),
             patch = GetAddOnMetadata(addonName, 'X-Patch'),
+            author = GetAddOnMetadata(addonName, 'Author'),
+            github = 'github.com/Flaxic-LUA/-Dragonflight3',
         },
         media = setmetatable({
             fonts = {
