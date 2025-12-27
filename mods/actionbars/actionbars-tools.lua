@@ -706,11 +706,17 @@ function setup:UpdatePage(direction)
     local numPages = table.getn(self.pageableBars)
     if numPages <= 1 then return end
 
+    -- Get the currently active bar (bonus bar if active, otherwise main bar)
+    local bonusOffset = GetBonusBarOffset()
+    local activeBar = bonusOffset > 0 and self.bonusBars[bonusOffset] or self.mainBar
+    
+    if not activeBar then return end
+
     if self.currentPageBar then
         for i = 1, table.getn(self.currentPageBar.buttons) do
             self.currentPageBar.buttons[i]:Hide()
         end
-        if self.currentPageBar ~= self.mainBar then
+        if self.currentPageBar ~= activeBar then
             for i = 1, table.getn(self.currentPageBar.buttons) do
                 self.currentPageBar.buttons[i]:SetParent(self.currentPageBar)
             end
@@ -726,17 +732,17 @@ function setup:UpdatePage(direction)
 
     self.pagingNumber:SetText(self.currentPage)
 
-    if not self.mainBar then return end
-
-    for i = 1, table.getn(self.mainBar.buttons) do
-        self.mainBar.buttons[i]:Hide()
+    for i = 1, table.getn(activeBar.buttons) do
+        activeBar.buttons[i]:Hide()
     end
 
+    -- Rebuild pageable bars to reflect current bonus bar state
+    self:UpdatePageableBars()
+    
     local pagedBar = self.pageableBars[self.currentPage]
     if pagedBar then
         self.currentPageBar = pagedBar
         self.activeMainButtons = pagedBar.buttons
-        assert(self.currentPageBar, 'UpdatePage: currentPageBar must be set')
 
         local mainSize = DF.profile['actionbars']['mainBarButtonSize']
         local mainSpacing = DF.profile['actionbars']['mainBarButtonSpacing']
@@ -747,14 +753,14 @@ function setup:UpdatePage(direction)
             btn:SetWidth(mainSize)
             btn:SetHeight(mainSize)
             btn:ClearAllPoints()
-            btn:SetParent(self.mainBar)
+            btn:SetParent(activeBar)
 
             local row = math.floor((i - 1) / mainPerRow)
             local col = math.mod(i - 1, mainPerRow)
             if i == 1 then
-                btn:SetPoint('TOPLEFT', self.mainBar, 'TOPLEFT', 0, 0)
+                btn:SetPoint('TOPLEFT', activeBar, 'TOPLEFT', 0, 0)
             else
-                btn:SetPoint('TOPLEFT', self.mainBar, 'TOPLEFT', col * (mainSize + mainSpacing), -row * (mainSize + mainSpacing))
+                btn:SetPoint('TOPLEFT', activeBar, 'TOPLEFT', col * (mainSize + mainSpacing), -row * (mainSize + mainSpacing))
             end
 
             if i <= DF.profile['actionbars']['mainBarButtonsToShow'] then
@@ -771,9 +777,7 @@ function setup:UpdatePage(direction)
             self:UpdateButtonUsable(btn)
             self:UpdateButtonBorder(btn)
         end
-        if pagedBar ~= self.mainBar then
-            assert(pagedBar.buttons[1]:GetParent() == self.mainBar, 'UpdatePage: paged buttons must be parented to mainBar')
-        end
+        
         if DF_Profiles and DF.profile['actionbars'] and DF.profile['actionbars']['mainBarConcatenateEnabled'] then
             if DF.setups.helpers and DF.setups.helpers.actionbars and DF.setups.helpers.actionbars.UpdateBarConcatenate then
                 DF.setups.helpers.actionbars.UpdateBarConcatenate(pagedBar, 'mainBar')
@@ -784,7 +788,10 @@ end
 
 function setup:UpdatePageableBars()
     self.pageableBars = {}
-    if self.mainBar then
+    local bonusOffset = GetBonusBarOffset()
+    if bonusOffset > 0 and self.bonusBars[bonusOffset] then
+        table.insert(self.pageableBars, self.bonusBars[bonusOffset])
+    elseif self.mainBar then
         table.insert(self.pageableBars, self.mainBar)
     end
     for i = 1, table.getn(self.multiBars) do
@@ -941,8 +948,6 @@ function setup:OnEvent()
                 local targetFrame = barFrames[idx]
                 if barNames[idx] == 'mainBar' and setup.currentPageBar and setup.currentPageBar ~= setup.mainBar then
                     targetFrame = setup.currentPageBar
-                    assert(targetFrame == setup.currentPageBar, 'ACTIONBAR_SLOT_CHANGED: targetFrame must be currentPageBar when paged')
-                    assert(targetFrame.buttons[1]:GetParent() == setup.mainBar, 'ACTIONBAR_SLOT_CHANGED: paged buttons must be parented to mainBar')
                 end
                 -- debugprint('ACTIONBAR_SLOT_CHANGED calling UpdateBarConcatenate for '..barNames[idx]..' targetFrame='..tostring(targetFrame:GetName()))
                 DF.setups.helpers.actionbars.UpdateBarConcatenate(targetFrame, barNames[idx])

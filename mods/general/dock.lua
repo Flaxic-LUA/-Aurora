@@ -81,7 +81,7 @@ DF:NewModule('dock', 1, function()
         -- debugframe(bottomSector)
     end
 
-    local leftFrame = CreateFrame'Frame'
+    local leftFrame = CreateFrame('Frame', nil, mainFrame)
     leftFrame:SetSize(90, 20)
     leftFrame:SetPoint('RIGHT', mainFrame, 'LEFT', 3, 0)
     leftFrame:EnableMouse(true)
@@ -102,7 +102,7 @@ DF:NewModule('dock', 1, function()
     leftGlowBottom:SetTexCoord(0, 1, 1, 0)
     leftGlowBottom:SetAlpha(0)
 
-    local leftBtn = CreateFrame'Button'
+    local leftBtn = CreateFrame('Button', nil, mainFrame)
     leftBtn:SetSize(25, 25)
     leftBtn:SetPoint('RIGHT', leftFrame, 'CENTER', 5, 0)
     leftBtn:SetFrameLevel(mainFrame:GetFrameLevel() + 1)
@@ -114,7 +114,7 @@ DF:NewModule('dock', 1, function()
     leftBtnHighlight:SetAllPoints(leftBtn)
     leftBtnHighlight:SetBlendMode('ADD')
 
-    local rightFrame = CreateFrame'Frame'
+    local rightFrame = CreateFrame('Frame', nil, mainFrame)
     rightFrame:SetSize(90, 20)
     rightFrame:SetPoint('LEFT', mainFrame, 'RIGHT', -3, 0)
     rightFrame:EnableMouse(true)
@@ -136,7 +136,7 @@ DF:NewModule('dock', 1, function()
     rightGlowBottom:SetTexCoord(0, 1, 1, 0)
     rightGlowBottom:SetAlpha(0)
 
-    local rightBtn = CreateFrame'Button'
+    local rightBtn = CreateFrame('Button', nil, mainFrame)
     rightBtn:SetSize(25, 25)
     rightBtn:SetPoint('LEFT', rightFrame, 'CENTER', -5, 0)
     rightBtn:SetFrameLevel(mainFrame:GetFrameLevel() + 1)

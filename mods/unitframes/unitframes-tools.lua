@@ -50,7 +50,8 @@ function setup:ShowRightClickMenu(unit)
     elseif unit == 'pet' then
         ToggleDropDownMenu(1, nil, PetFrameDropDown, this, 0, 0)
     elseif strfind(unit, 'party%d') then
-        ToggleDropDownMenu(1, nil, getglobal('PartyMemberFrame' .. this.id .. 'DropDown'), this, 0, 0)
+        local partyId = string.gsub(unit, 'party', '')
+        ToggleDropDownMenu(1, nil, getglobal('PartyMemberFrame' .. partyId .. 'DropDown'), this, 0, 0)
     end
 end
 

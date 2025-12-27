@@ -109,8 +109,14 @@ function DF.hooks.Unhook(tbl, name)
     if DF.hooks.registry[tbl] and DF.hooks.registry[tbl][name] then
         local orig = DF.hooks.registry[tbl][name]
 
-        -- Check if this is a frame script
-        if tbl.SetScript and tbl.GetScript then
+        -- Check if this is a frame script by testing if GetScript works
+        local isScript = false
+        if tbl.GetScript then
+            local success = pcall(function() tbl:GetScript(name) end)
+            isScript = success
+        end
+
+        if isScript then
             tbl:SetScript(name, orig)
         else
             tbl[name] = orig
