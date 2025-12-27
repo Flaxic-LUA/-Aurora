@@ -6,7 +6,7 @@
 -- })
 
 -- DF:NewModule('inspect', 1, function()
---     local frames = {InspectPaperDollFrame}
+--     local frames = {InspectPaperDollFrame, InspectHonorFrame}
 --     for _, frame in frames do
 --         if frame then
 --             local regions = {frame:GetRegions()}
@@ -14,7 +14,7 @@
 --                 local region = regions[i]
 --                 if region:GetObjectType() == 'Texture' then
 --                     local texture = region:GetTexture()
---                     if texture and string.find(texture, 'UI%-Character') then
+--                     if texture and (string.find(texture, 'UI%-Character') or string.find(texture, 'PaperDollInfoFrame')) then
 --                         region:Hide()
 --                     end
 --                 end
@@ -24,7 +24,6 @@
 
 --     InspectFrameTab1:Hide()
 --     InspectFrameTab2:Hide()
---     if InspectFrameTab3 then InspectFrameTab3:Hide() end
 --     InspectFrameCloseButton:Hide()
 
 --     local customBg = DF.ui.CreatePaperDollFrame('DF_InspectCustomBg', InspectFrame, 384, 512, 1)
@@ -42,16 +41,14 @@
 --     closeButton:SetFrameLevel(customBg:GetFrameLevel() + 3)
 
 --     customBg:AddTab('Character', function()
---         InspectFrameTab_OnClick(1)
+--         InspectFrame_ShowSubFrame('InspectPaperDollFrame')
 --     end, 70)
 
---     customBg:AddTab('Reputation', function()
---         InspectFrameTab_OnClick(2)
+--     customBg:AddTab('Honor', function()
+--         InspectFrame_ShowSubFrame('InspectHonorFrame')
 --     end, 75)
 
---     customBg:AddTab('Talents', function()
---         InspectFrameTab_OnClick(3)
---     end, 60)
+--     DF.mixins.AddInspectTalentTab(customBg)
 
 --     tinsert(UISpecialFrames, 'DF_InspectCustomBg')
 

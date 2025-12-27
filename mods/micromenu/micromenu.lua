@@ -4,7 +4,7 @@ DF:NewDefaults('micro', {
     version = {value = '1.0'},
     enabled = {value = true},
     gui = {
-        {tab = 'extras', subtab = 'micromenu', 'General', 'Appearance'},
+        {tab = 'micromenu', 'General', 'Appearance'},
     },
 
     buttonSize = {value = 29, metadata = {element = 'slider', category = 'General', indexInCategory = 1, description = 'Micro menu button size', min = 20, max = 50, stepSize = 1}},

@@ -64,6 +64,7 @@
     <Include file="panels\keybindingframe.lua"/>
     <Include file="panels\lootframe.lua"/>
     <Include file="panels\macroframe.lua"/>
+    <Include file="panels\mailopen.lua"/>
     <Include file="panels\mail.lua"/>
     <Include file="panels\map.lua"/>
     <Include file="panels\merchantframe.lua"/>

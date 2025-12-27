@@ -4,7 +4,7 @@ DF:NewDefaults('cooldowns', {
     enabled = {value = true},
     version = {value = '1.0'},
     gui = {
-        {tab = 'extras', subtab = 'cooldowns', 'General'},
+        {tab = 'general', subtab = 'cooldowns', 'General'},
     },
 
     showText = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 1, description = 'Show cooldown numbers on buttons'}},

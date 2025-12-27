@@ -31,6 +31,7 @@ DF:NewModule('gui-base', 1, function()
             -- {name = 'Chat', key = 'chat'},
             {name = 'Extras', key = 'extras'},
             {name = 'Loot', key = 'loot'},
+            {name = 'Micromenu', key = 'micromenu'},
             {name = 'Minimap', key = 'minimap'},
             -- {name = 'Nameplates', key = 'nameplates'},
             -- {name = 'Quests', key = 'quests'},
