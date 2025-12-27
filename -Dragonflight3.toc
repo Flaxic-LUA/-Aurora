@@ -1,0 +1,15 @@
+## Interface: 10200
+## Title: |cffffffffDragonflight|r |cffff00003
+## Notes: The Dragonflight |cffff00003|r UI for all 1.12.1 clients.
+## Author: Guzruul
+## X-Version: 1.0.0
+## X-Patch: Alpha BUILD 13
+## SavedVariables: DF_Profiles, DF_LearnedData
+## SavedVariablesPerCharacter:
+
+core\_core.xml
+tools\_tools.xml
+tables\_tables.xml
+libs\_libs.xml
+mixins\_mixins.xml
+mods\_mods.xml

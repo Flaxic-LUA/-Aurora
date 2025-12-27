@@ -144,11 +144,13 @@ function setup:CreateBagFrame(bagID, numSlots)
     bag.slots = {}
 
     if bagID == 0 then
-        local bigbag = bag:CreateTexture(nil, 'OVERLAY')
+        local bigbagFrame = CreateFrame('Frame', nil, bag)
+        bigbagFrame:SetFrameLevel(bag:GetFrameLevel() + 1)
+        bigbagFrame:SetSize(74, 74)
+        bigbagFrame:SetPoint('TOPLEFT', bag, 'TOPLEFT', -10, 15)
+        local bigbag = bigbagFrame:CreateTexture(nil, 'OVERLAY')
         bigbag:SetTexture(media['tex:bags:bigbag.blp'])
-        bigbag:SetPoint('TOPLEFT', bag, 'TOPLEFT', -10, 15)
-        bigbag:SetHeight(74)
-        bigbag:SetWidth(74)
+        bigbag:SetAllPoints(bigbagFrame)
     else
         local portrait = bag:CreateTexture(nil, 'BORDER')
         portrait:SetWidth(55)
@@ -381,11 +383,13 @@ function setup:CreateOneBag()
     bag.slots = {}
     bag.isUnified = true
 
-    local bigbag = bag:CreateTexture(nil, 'OVERLAY')
+    local bigbagFrame = CreateFrame('Frame', nil, bag)
+    bigbagFrame:SetFrameLevel(bag:GetFrameLevel() + 1)
+    bigbagFrame:SetSize(74, 74)
+    bigbagFrame:SetPoint('TOPLEFT', bag, 'TOPLEFT', -10, 15)
+    local bigbag = bigbagFrame:CreateTexture(nil, 'OVERLAY')
     bigbag:SetTexture(media['tex:bags:bigbag.blp'])
-    bigbag:SetPoint('TOPLEFT', bag, 'TOPLEFT', -10, 15)
-    bigbag:SetHeight(74)
-    bigbag:SetWidth(74)
+    bigbag:SetAllPoints(bigbagFrame)
 
     local closeBtn = DF.ui.CreateRedButton(bag, 'close', function() bag:Hide() end)
     closeBtn:SetPoint('TOPRIGHT', bag, 'TOPRIGHT', -1, -1)
