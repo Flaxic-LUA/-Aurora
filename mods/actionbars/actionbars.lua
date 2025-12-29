@@ -623,6 +623,7 @@ DF:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 bar.buttons[i].keybind:SetFont(media[DF.profile['actionbars']['hotkeyFont']], value, 'OUTLINE')
+                -- bar.buttons[i].rangeDot:SetFont(media[DF.profile['actionbars']['hotkeyFont']], value +4, 'OUTLINE')
             end
         end
     end

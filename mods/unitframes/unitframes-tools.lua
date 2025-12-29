@@ -247,9 +247,9 @@ function setup:CreateUnitFrame(unit, width, height)
     unitFrame.model.combatGlow2:Hide()
 
     if unit == 'pet' then
-        unitFrame.happinessIcon = CreateFrame('Frame', nil, unitFrame)
+        unitFrame.happinessIcon = CreateFrame('Frame', 'DF_PetHappinessIcon', unitFrame)
         unitFrame.happinessIcon:SetSize(22, 22)
-        unitFrame.happinessIcon:SetPoint('LEFT', unitFrame.model, 'RIGHT', 7, 7)
+        unitFrame.happinessIcon:SetPoint('RIGHT', unitFrame.model, 'LEFT', -3, 25)
         unitFrame.happinessIcon.bg = unitFrame.happinessIcon:CreateTexture(nil, 'BACKGROUND')
         unitFrame.happinessIcon.bg:SetAllPoints(unitFrame.happinessIcon)
         unitFrame.happinessIcon.bg:SetTexture(media['tex:generic:combo_empty.blp'])

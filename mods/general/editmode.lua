@@ -412,6 +412,7 @@ DF:NewModule('editmode', 2, 'PLAYER_ENTERING_WORLD', function()
                 if frame.infoBg then frame.infoBg.GetName = function() return 'DF_'..unit..'Frame.infoBg' end RegisterFrame(frame.infoBg, 'elements') end
                 if frame.hpBar then frame.hpBar.GetName = function() return 'DF_'..unit..'Frame.hpBar' end RegisterFrame(frame.hpBar, 'elements') end
                 if frame.powerBar then frame.powerBar.GetName = function() return 'DF_'..unit..'Frame.powerBar' end RegisterFrame(frame.powerBar, 'elements') end
+                if frame.happinessIcon then frame.happinessIcon.GetName = function() return 'DF_'..unit..'Frame.happinessIcon' end RegisterFrame(frame.happinessIcon, 'elements') end
             end
             ActivateMode('elements')
         end)

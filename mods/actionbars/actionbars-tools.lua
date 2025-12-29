@@ -115,6 +115,12 @@ function setup:CreateActionButton(parent, name, actionID)
     button.keybind:SetFont('Fonts\\FRIZQT__.TTF', 11, 'OUTLINE')
     button.keybind:SetPoint('TOPRIGHT', button, 'TOPRIGHT', -3, -3)
 
+    button.rangeDot = button.textFrame:CreateFontString(nil, 'OVERLAY')
+    button.rangeDot:SetFont('Fonts\\FRIZQT__.TTF', 16, 'OUTLINE')
+    button.rangeDot:SetPoint('TOPRIGHT', button, 'TOPRIGHT', -2, 1)
+    button.rangeDot:SetText('•')
+    button.rangeDot:Hide()
+
     button.macroText = button.textFrame:CreateFontString(nil, 'OVERLAY')
     button.macroText:SetFont('Fonts\\FRIZQT__.TTF', 10, 'OUTLINE')
     button.macroText:SetPoint('BOTTOM', button, 'BOTTOM', 0, 2)
@@ -616,9 +622,18 @@ function setup:UpdateButtonUsable(button)
     if self.rangeIndicator == 'keybind' then
         if outOfRange then
             button.keybind:SetTextColor(rangeColor[1], rangeColor[2], rangeColor[3], rangeColor[4])
+            local keybindText = button.keybind:GetText()
+            local hasAction = HasAction(id)
+            if hasAction and (not keybindText or keybindText == '') then
+                button.rangeDot:SetTextColor(rangeColor[1], rangeColor[2], rangeColor[3], rangeColor[4])
+                button.rangeDot:Show()
+            else
+                button.rangeDot:Hide()
+            end
         else
             local color = DF.profile['actionbars']['hotkeyColour']
             button.keybind:SetTextColor(color[1], color[2], color[3], color[4])
+            button.rangeDot:Hide()
         end
 
         if oom then
@@ -709,7 +724,7 @@ function setup:UpdatePage(direction)
     -- Get the currently active bar (bonus bar if active, otherwise main bar)
     local bonusOffset = GetBonusBarOffset()
     local activeBar = bonusOffset > 0 and self.bonusBars[bonusOffset] or self.mainBar
-    
+
     if not activeBar then return end
 
     if self.currentPageBar then
@@ -738,7 +753,7 @@ function setup:UpdatePage(direction)
 
     -- Rebuild pageable bars to reflect current bonus bar state
     self:UpdatePageableBars()
-    
+
     local pagedBar = self.pageableBars[self.currentPage]
     if pagedBar then
         self.currentPageBar = pagedBar
@@ -777,7 +792,7 @@ function setup:UpdatePage(direction)
             self:UpdateButtonUsable(btn)
             self:UpdateButtonBorder(btn)
         end
-        
+
         if DF_Profiles and DF.profile['actionbars'] and DF.profile['actionbars']['mainBarConcatenateEnabled'] then
             if DF.setups.helpers and DF.setups.helpers.actionbars and DF.setups.helpers.actionbars.UpdateBarConcatenate then
                 DF.setups.helpers.actionbars.UpdateBarConcatenate(pagedBar, 'mainBar')

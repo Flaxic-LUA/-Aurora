@@ -3,7 +3,7 @@ UNLOCKDRAGONFLIGHT()
 local DragonflightAPI = {}
 
 -- addon: Puppeteer
--- reason: needs access to actionbars eventFrame to manage UPDATE_BINDINGS in bulk with other frames
+-- reason: spams events, needs access to eventFrame to manage updates
 function DragonflightAPI:PuppeteerGetActionbarsEventFrame()
     if DF.setups.actionbars and DF.setups.actionbars.eventFrame then
         return DF.setups.actionbars.eventFrame
