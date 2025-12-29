@@ -218,9 +218,6 @@ function DF.lib.CreateMinimapUI()
     minimap:SetupTimeUpdater(timeText)
     minimap:SetupBlizzardIcons()
 
-    -- RegisterFont(timeText)
-    -- RegisterFont(zoneText)
-
     return cluster, border, shadow, topPanel, timeText, zoneText, zoomIn, zoomOut
 end
 

@@ -52,9 +52,9 @@ function DF.math.abbreviate(number)
     number = math.abs(number)
 
     if number > 1000000 then
-        return DF.math.round(number/1000000*sign, 2) .. 'm'
+        return DF.math.round(number/1000000*sign, 1) .. 'm'
     elseif number > 1000 then
-        return DF.math.round(number/1000*sign, 2) .. 'k'
+        return DF.math.round(number/1000*sign, 1) .. 'k'
     end
 
     return number * sign

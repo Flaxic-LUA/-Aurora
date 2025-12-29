@@ -207,7 +207,6 @@ function setup:CreateUnitFrame(unit, width, height)
         end
         unitFrame.hpBar.fill:SetTexture(media['tex:unitframes:aurora_hpbar_reversed.tga'])
         unitFrame.powerBar.fill:SetTexture(media['tex:unitframes:aurora_hpbar_reversed.tga'])
-        -- debugframe(unitFrame)
     else
         unitFrame.portraitFrame:SetPoint('LEFT', unitFrame, 'LEFT', 0, 0)
         unitFrame.hpBar:SetFillDirection('RIGHT_TO_LEFT')
@@ -226,7 +225,7 @@ function setup:CreateUnitFrame(unit, width, height)
             unitFrame.pvpIcon:SetPoint('CENTER', unitFrame.portraitFrame, 'LEFT', 5, -3)
         end
     end
-    -- debugframe(unitFrame)
+
     local glowFrame = CreateFrame('Frame', nil, unitFrame)
     glowFrame:SetFrameLevel(unitFrame.model:GetFrameLevel() + 2)
     glowFrame:SetAllPoints(unitFrame)
@@ -1437,60 +1436,44 @@ end
 
 -- init
 function setup:GenerateDefaults()
-    -- Frame-specific overrides - customize individual frames here because easier to edit than loop exceptions
     local frameOverrides = {
         player = {
-            -- Player gets mirror color mode because it can mirror health to mana
             hasPlayerFeatures = true,
-            -- Player doesn't need name abbreviation because it's always you
             hasNameAbbreviation = false,
-            -- Player doesn't need reaction coloring because it's always friendly
             hasNameReactionColoring = false,
-            -- Player gets special resting and energy features
             hasRestingFeatures = true,
-            -- Player has PvP icon
             hasPvPIcon = true,
         },
         target = {
-            -- Target fills right to left because it's on the right side
             healthBarFillDirection = 'RIGHT_TO_LEFT',
             manaBarFillDirection = 'RIGHT_TO_LEFT',
-            -- Target border is flipped because it faces player
             flipPortraitBorder = true,
-            -- Target needs name abbreviation and reaction coloring
             hasNameAbbreviation = true,
             hasNameReactionColoring = true,
             hasPvPIcon = true,
         },
         targettarget = {
-            -- Target of target needs name abbreviation and reaction coloring
             hasNameAbbreviation = true,
             hasNameReactionColoring = true,
             hasPvPIcon = true,
-            -- Target of target uses base border and smaller scale because it's secondary
             portraitBorderTexture = 'portrait_border_base',
             scale = 0.8,
         },
         pet = {
-            -- Pet doesn't have PvP icon but has happiness icon
             hasPvPIcon = false,
             hasHappinessIcon = true,
             hasNameAbbreviation = true,
-            -- Pet uses base border and smaller scale because it's secondary
             portraitBorderTexture = 'portrait_border_base',
             scale = 0.8,
         },
         pettarget = {
-            -- Pet target needs name abbreviation and reaction coloring
             hasNameAbbreviation = true,
             hasNameReactionColoring = true,
             hasPvPIcon = true,
-            -- Pet target uses base border and smaller scale because it's secondary
             portraitBorderTexture = 'portrait_border_base',
             scale = 0.8,
         },
         party = {
-            -- Party frames need name abbreviation
             hasNameAbbreviation = true,
             hasPvPIcon = true,
             portraitBorderTexture = 'portrait_border_base',
@@ -1521,7 +1504,6 @@ function setup:GenerateDefaults()
         local catBuffsDebuffs = frame.name..' Buffs & Debuffs'
         local catEffects = frame.name..' Effects & Icons'
         table.insert(defaults.gui, {tab = 'unitframes', subtab = frame.key, catGeneral, catHealthBar, catPowerBar, catBuffsDebuffs, catEffects})
-        -- Get default values because all frames start with same base settings
         local healthBarFillDirection = 'LEFT_TO_RIGHT'
         local manaBarFillDirection = 'LEFT_TO_RIGHT'
         local flipPortraitBorder = false
@@ -1534,7 +1516,6 @@ function setup:GenerateDefaults()
         local portraitBorderTexture = 'portrait_border_edge'
         local scale = 1
 
-        -- Apply frame-specific overrides because individual frames need custom settings
         local overrides = frameOverrides[frame.key]
         if overrides then
             healthBarFillDirection = overrides.healthBarFillDirection or healthBarFillDirection
@@ -1557,7 +1538,6 @@ function setup:GenerateDefaults()
         defaults[frame.key..'PortraitSize'] = {value = 80, metadata = {element = 'slider', category = catGeneral, indexInCategory = 5, description = 'Portrait size', min = 40, max = 120, step = 1, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ShowLevel'] = {value = true, metadata = {element = 'checkbox', category = catGeneral, indexInCategory = 6, description = 'Show level text', dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ShowName'] = {value = true, metadata = {element = 'checkbox', category = catGeneral, indexInCategory = 7, description = 'Show name text', dependency = {key = frame.key..'Enabled', state = true}}}
-        -- Add name abbreviation settings because most frames need them except player
         if hasNameAbbreviation then
             defaults[frame.key..'NameAbbreviation'] = {value = 'truncated', metadata = {element = 'dropdown', category = catGeneral, indexInCategory = 8, description = 'Name abbreviation mode', options = {'none', 'initials', 'truncated'}, dependency = {key = frame.key..'Enabled', state = true}}}
             defaults[frame.key..'NameMaxLength'] = {value = 14, metadata = {element = 'slider', category = catGeneral, indexInCategory = 9, description = 'Max name length (truncated mode)', min = 3, max = 20, step = 1, dependency = {{key = frame.key..'Enabled', state = true}, {key = frame.key..'NameAbbreviation', state = 'truncated'}}}}
@@ -1593,7 +1573,6 @@ function setup:GenerateDefaults()
         defaults[frame.key..'NameTextFont'] = {value = 'font:FRIZQT__.TTF', metadata = {element = 'dropdown', category = catGeneral, indexInCategory = 14, description = 'Name text font', options = media.fonts, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'NameTextSize'] = {value = 10, metadata = {element = 'slider', category = catGeneral, indexInCategory = 15, description = 'Name text size', min = 6, max = 20, step = 1, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'NameTextColor'] = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker', category = catGeneral, indexInCategory = 16, description = 'Name text color', dependency = {key = frame.key..'Enabled', state = true}}}
-        -- Add name reaction coloring because some frames need it
         if hasNameReactionColoring then
             defaults[frame.key..'NameReactionColoring'] = {value = false, metadata = {element = 'checkbox', category = catGeneral, indexInCategory = 17, description = 'Use reaction coloring for name', dependency = {key = frame.key..'Enabled', state = true}}}
         end
@@ -1636,19 +1615,16 @@ function setup:GenerateDefaults()
         defaults[frame.key..'CombatGlowColor'] = {value = {1, 0, 0, 1}, metadata = {element = 'colorpicker', category = catEffects, indexInCategory = 5, description = 'Combat glow color', dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'CombatGlowMaxAlpha'] = {value = 0.7, metadata = {element = 'slider', category = catEffects, indexInCategory = 6, description = 'Combat glow max alpha (portrait)', min = 0, max = 1, step = 0.05, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'CombatGlow2MaxAlpha'] = {value = 0.7, metadata = {element = 'slider', category = catEffects, indexInCategory = 7, description = 'Combat glow max alpha (bar)', min = 0, max = 1, step = 0.05, dependency = {key = frame.key..'Enabled', state = true}}}
-        -- Add PvP icon settings because most frames need them except pet
         if hasPvPIcon then
             defaults[frame.key..'ShowPvPIcon'] = {value = true, metadata = {element = 'checkbox', category = catEffects, indexInCategory = 8, description = 'Show PvP icon', dependency = {key = frame.key..'Enabled', state = true}}}
             defaults[frame.key..'PvPIconSize'] = {value = 45, metadata = {element = 'slider', category = catEffects, indexInCategory = 9, description = 'PvP icon size', min = 20, max = 80, step = 1, dependency = {{key = frame.key..'Enabled', state = true}, {key = frame.key..'ShowPvPIcon', state = true}}}}
             defaults[frame.key..'PvPIconColor'] = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker', category = catEffects, indexInCategory = 10, description = 'PvP icon color', dependency = {{key = frame.key..'Enabled', state = true}, {key = frame.key..'ShowPvPIcon', state = true}}}}
         end
 
-        -- Add happiness icon because only pet needs it
         if hasHappinessIcon then
             defaults['petHappinessIconSize'] = {value = 22, metadata = {element = 'slider', category = catEffects, indexInCategory = 11, description = 'Happiness icon size', min = 8, max = 40, step = 2, dependency = {key = 'petEnabled', state = true}}}
         end
 
-        -- Add resting features because only player needs them
         if hasRestingFeatures then
             defaults['playerShowRestingZZZ'] = {value = true, metadata = {element = 'checkbox', category = catEffects, indexInCategory = 11, description = 'Show resting ZZZ animation', dependency = {key = 'playerEnabled', state = true}}}
             defaults['playerRestingZZZColor'] = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker', category = catEffects, indexInCategory = 12, description = 'Resting ZZZ color', dependency = {key = 'playerEnabled', state = true}}}
@@ -2630,7 +2606,6 @@ function setup:GenerateCallbacks()
             end
         end
     end
-
     return callbacks
 end
 

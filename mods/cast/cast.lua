@@ -1,5 +1,5 @@
 UNLOCKDRAGONFLIGHT()
-if not RequireDependency('SuperWoW') then return end
+if not dependency('SuperWoW') then return end
 
 DF:NewDefaults('castbar', {
     version = {value = '1.0'},

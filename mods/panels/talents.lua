@@ -531,11 +531,5 @@ DF:NewModule('talents', 1, function()
     local helpers = {}
     local callbacks = {}
 
-    callbacks.talentsprint = function(value)
-        if value then
-            -- print('talents print from AU!')
-        end
-    end
-
     DF:NewCallbacks('talents', callbacks)
 end)

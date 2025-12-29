@@ -1140,6 +1140,58 @@ function DF.ui.MinimalScrollFrame(parent, startAtBottom)
     return scroll, content, scrollbar
 end
 
+function DF.ui.CreateSelectiveBorder(frame, edges, size, r, g, b, a, layer)
+    size = size or 2
+    r, g, b, a = r or 1, g or 1, b or 1, a or 1
+    layer = layer or 'BORDER'
+
+    local leftInset = edges.left and size or 0
+    local rightInset = edges.right and size or 0
+    local textures = {}
+
+    if edges.top then
+        local t = frame:CreateTexture(nil, layer)
+        t:SetTexture('Interface\\Buttons\\WHITE8x8')
+        t:SetPoint('TOPLEFT', frame, 'TOPLEFT', leftInset, 0)
+        t:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', -rightInset, 0)
+        t:SetHeight(size)
+        t:SetVertexColor(r, g, b, a)
+        textures.top = t
+    end
+
+    if edges.bottom then
+        local t = frame:CreateTexture(nil, layer)
+        t:SetTexture('Interface\\Buttons\\WHITE8x8')
+        t:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', leftInset, 0)
+        t:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -rightInset, 0)
+        t:SetHeight(size)
+        t:SetVertexColor(r, g, b, a)
+        textures.bottom = t
+    end
+
+    if edges.left then
+        local t = frame:CreateTexture(nil, layer)
+        t:SetTexture('Interface\\Buttons\\WHITE8x8')
+        t:SetPoint('TOPLEFT', frame, 'TOPLEFT', 0, 0)
+        t:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', 0, 0)
+        t:SetWidth(size)
+        t:SetVertexColor(r, g, b, a)
+        textures.left = t
+    end
+
+    if edges.right then
+        local t = frame:CreateTexture(nil, layer)
+        t:SetTexture('Interface\\Buttons\\WHITE8x8')
+        t:SetPoint('TOPRIGHT', frame, 'TOPRIGHT', 0, 0)
+        t:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', 0, 0)
+        t:SetWidth(size)
+        t:SetVertexColor(r, g, b, a)
+        textures.right = t
+    end
+
+    return textures
+end
+
 -- advanced elements -- TODO v1
 function DF.ui.CreatePaperDollFrame(name, parent, width, height, frameStyle)
     local frame = CreateFrame("Frame", name, parent)

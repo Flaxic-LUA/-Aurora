@@ -33,7 +33,7 @@ DF:NewModule('gui-base', 1, function()
             {name = 'Loot', key = 'loot'},
             {name = 'Micromenu', key = 'micromenu'},
             {name = 'Minimap', key = 'minimap'},
-            -- {name = 'Nameplates', key = 'nameplates'},
+            {name = 'Nameplates', key = 'nameplates'},
             -- {name = 'Quests', key = 'quests'},
             {name = 'Tooltip', key = 'tooltip'},
             {name = 'Unitframes', key = 'unitframes'},

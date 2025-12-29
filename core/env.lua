@@ -66,14 +66,13 @@ local ENV = setmetatable({
         end}),
 }, {__index = getfenv()})
 
-local originalDebugstack = debugstack
-
 local oldErrorHandler = geterrorhandler()
 seterrorhandler(function(err)
     table.insert(ENV.errors, {time = GetTime(), msg = err, stack = debugstack(2)})
     oldErrorHandler(err)
 end)
 
+local originalDebugstack = debugstack
 function ENV:GetEnv()
     if debugstack ~= originalDebugstack then return end
 
@@ -86,15 +85,19 @@ function ENV:GetEnv()
     setfenv(3, self)
 end
 
-function ENV.redprint(msg)
-    DEFAULT_CHAT_FRAME:AddMessage(ENV.info.addonNameColor .. ': ' .. tostring(msg), 1, 0, 0)
-end
-
 function ENV.print(msg)
     DEFAULT_CHAT_FRAME:AddMessage(ENV.info.addonNameColor .. ': ' .. tostring(msg))
 end
 
-function ENV.RequireDependency(depName)
+function ENV.redprint(msg)
+    DEFAULT_CHAT_FRAME:AddMessage(ENV.info.addonNameColor .. ': ' .. tostring(msg), 1, 0, 0)
+end
+
+function ENV.export(key, value)
+    getfenv(2)[key] = value
+end
+
+function ENV.dependency(depName)
     if not ENV.dependencies[depName] then
         ENV.dependencies.skippedModules = ENV.dependencies.skippedModules + 1
         return false
@@ -115,7 +118,7 @@ do
     if not ENV.dependencies.SuperWoW then table.insert(missing, 'SuperWoW') end
     if not ENV.dependencies.UnitXP then table.insert(missing, 'UnitXP SP3') end
     if table.getn(missing) > 0 then
-        ENV.redprint('Missing: ' .. table.concat(missing, ' / '))
+        ENV.redprint('Missing: ' .. table.concat(missing, ' + '))
         ENV.redprint('Some modules are disabled.')
     end
 end
