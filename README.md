@@ -52,5 +52,5 @@ A comprehensive UI overhaul for World of Warcraft Vanilla 1.12.1.
 
 ## Usage
 
-/df help
-/dragonflight help
+- /df help
+- /dragonflight help
