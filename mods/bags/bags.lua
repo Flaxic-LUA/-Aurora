@@ -15,7 +15,8 @@ table.insert(defaults.gui, {tab = 'bags', subtab = 'bags', catGeneral, catDispla
 
 defaults.oneBagMode = {value = false, metadata = {element = 'checkbox', category = catGeneral, indexInCategory = 1, description = 'Use unified bag instead of separate bags'}}
 defaults.oneBagButtonsPerRow = {value = 6, metadata = {element = 'slider', category = catGeneral, indexInCategory = 2, description = 'Buttons per row in unified bag', min = 5, max = 16, stepSize = 1, dependency = {key = 'oneBagMode', state = true}}}
-defaults.bagScale = {value = 0.75, metadata = {element = 'slider', category = catGeneral, indexInCategory = 3, description = 'Bag scale', min = 0.5, max = 1.5, stepSize = 0.05}}
+defaults.oneBagMoveMode = {value = 'none', metadata = {element = 'dropdown', category = catGeneral, indexInCategory = 3, description = 'Move unified bag with mouse', options = {'none', 'click', 'shiftclick'}, dependency = {key = 'oneBagMode', state = true}}}
+defaults.bagScale = {value = 0.75, metadata = {element = 'slider', category = catGeneral, indexInCategory = 4, description = 'Bag scale', min = 0.5, max = 1.5, stepSize = 0.05}}
 
 defaults.showItemRarity = {value = true, metadata = {element = 'checkbox', category = catDisplay, indexInCategory = 1, description = 'Show colored borders around items by quality'}}
 defaults.showQuestItems = {value = true, metadata = {element = 'checkbox', category = catDisplay, indexInCategory = 2, description = 'Show icon on quest items'}}
@@ -646,6 +647,29 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
         end
         if oneBag and oneBag.sellBtn then
             if value then oneBag.sellBtn:Show() else oneBag.sellBtn:Hide() end
+        end
+    end
+
+    callbacks.oneBagMoveMode = function(value)
+        if not oneBag then return end
+        oneBag:SetMovable(value ~= 'none')
+        if value == 'none' then
+            oneBag:SetScript('OnMouseDown', nil)
+            oneBag:SetScript('OnMouseUp', nil)
+        else
+            oneBag:SetScript('OnMouseDown', function()
+                if value == 'click' and arg1 == 'LeftButton' then
+                    oneBag:StartMoving()
+                elseif value == 'shiftclick' and arg1 == 'LeftButton' and IsShiftKeyDown() then
+                    oneBag:StartMoving()
+                end
+            end)
+            oneBag:SetScript('OnMouseUp', function()
+                oneBag:StopMovingOrSizing()
+                if DF.setups.SaveFramePosition then
+                    DF.setups.SaveFramePosition(oneBag)
+                end
+            end)
         end
     end
 

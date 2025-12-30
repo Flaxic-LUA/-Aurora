@@ -89,6 +89,12 @@ DF:NewModule('editmode', 1, 'PLAYER_AFTER_ENTERING_WORLD', function()
     local function SaveFramePosition(frame)
         local name = frame:GetName()
         if not name then return end
+        if name == 'DF_BagAnchor' and DF_Profiles and DF.profile['bags'] then
+            local moveMode = DF.profile['bags']['oneBagMoveMode']
+            if moveMode == 'click' or moveMode == 'shiftclick' then
+                return
+            end
+        end
         local parent = frame:GetParent()
         if parent and parent ~= UIParent then
             local px, py = parent:GetCenter()
@@ -104,14 +110,23 @@ DF:NewModule('editmode', 1, 'PLAYER_AFTER_ENTERING_WORLD', function()
         for name, pos in pairs(DF.profile['editmode']['framePositions']) do
             local frame = getglobal(name)
             if frame then
-                frame:ClearAllPoints()
-                if pos.parent and pos.rx and pos.ry then
-                    local parent = getglobal(pos.parent)
-                    if parent then
-                        frame:SetPoint('CENTER', parent, 'CENTER', pos.rx, pos.ry)
+                local skipRestore = false
+                if name == 'DF_BagAnchor' and DF_Profiles and DF.profile['bags'] then
+                    local moveMode = DF.profile['bags']['oneBagMoveMode']
+                    if moveMode == 'click' or moveMode == 'shiftclick' then
+                        skipRestore = true
                     end
-                elseif pos.x and pos.y then
-                    frame:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', pos.x, pos.y)
+                end
+                if not skipRestore then
+                    frame:ClearAllPoints()
+                    if pos.parent and pos.rx and pos.ry then
+                        local parent = getglobal(pos.parent)
+                        if parent then
+                            frame:SetPoint('CENTER', parent, 'CENTER', pos.rx, pos.ry)
+                        end
+                    elseif pos.x and pos.y then
+                        frame:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', pos.x, pos.y)
+                    end
                 end
             end
         end
@@ -237,6 +252,7 @@ DF:NewModule('editmode', 1, 'PLAYER_AFTER_ENTERING_WORLD', function()
     RestoreFramePositions()
 
     DF.setups.RestoreFramePositions = RestoreFramePositions
+    DF.setups.SaveFramePosition = SaveFramePosition
 
     editFrame:SetScript('OnShow', function()
         gridFrame:Show()
