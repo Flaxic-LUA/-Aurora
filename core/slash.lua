@@ -1,17 +1,21 @@
 UNLOCKDRAGONFLIGHT()
 
+local function ShowHelp()
+    redprint('COMMANDS:')
+    print('/df - Toggle Dragonflight GUI')
+    print('/df reset - Wipe DB and reload')
+    print('/df edit or /df editmode - Toggle Edit Mode')
+    print('/df gm - Open GM Help')
+    print('/df safeboot - Disable all addons except Dragonflight')
+    print('/load ADDONNAME - Load addon')
+    print('/unload ADDONNAME - Unload addon')
+end
+
 _G.SLASH_DRAGONFLIGHT1 = '/df'
 _G.SLASH_DRAGONFLIGHT2 = '/dragonflight'
 _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
     if msg == 'help' then
-        redprint('COMMANDS:')
-        print('/df - Toggle Dragonflight GUI')
-        print('/df reset - Wipe DB and reload')
-        print('/df edit or /df editmode - Toggle Edit Mode')
-        print('/df gm - Open GM Help')
-        print('/df safeboot - Disable all addons except Dragonflight')
-        print('/load ADDONNAME - Load addon')
-        print('/unload ADDONNAME - Unload addon')
+        ShowHelp()
     elseif msg == 'safeboot' then
         DF.ui.StaticPopup_Show(
             'Disable all addons except Dragonflight and reload?',
@@ -49,8 +53,10 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
                 frame:Show()
             end
         end
-    else
+    elseif msg == '' then
         DRAGONFLIGHTToggleGUI()
+    else
+        ShowHelp()
     end
 end
 

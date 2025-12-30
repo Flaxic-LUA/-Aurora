@@ -317,7 +317,7 @@ function plates:SetupOnUpdate(frame) -- v1
     local origBar = frame.original.healthbar
     local healthbar = frame.custom.healthbar
 
-    frame.custom.frame:SetScript('OnUpdate', function()
+    frame.custom.frame:SetScript('OnUpdate', function() -- stupid design double setscrpt, but idk for now, will rewrite anyways
         -- hide friendly NPCs check
         local currentGuid = frame:GetName(1)
         if plates.hideFriendlyNpcs and currentGuid then

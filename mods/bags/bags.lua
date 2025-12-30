@@ -43,11 +43,12 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
     local setup = DF.setups.bags
     local bag0, bag1, bag2, bag3, bag4 = setup:InitializeBags()
     local oneBag = setup:InitializeOneBag()
+    local bank5, bank6, bank7, bank8, bank9, bank10 = setup:InitializeBankBags()
 
     local helpers = {
         CreateQualityBorders = function()
-            for i = 0, 4 do
-                local bag = DF.setups.bags[i]
+            for i = 0, 10 do
+                local bag = setup[i]
                 if bag and bag.slots then
                     for _, btn in pairs(bag.slots) do
                         if not btn.qualityBorder then
@@ -80,8 +81,8 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
         end,
         UpdateQualityBorders = function(enabled)
             local colors = {{0.62,0.62,0.62},{1,1,1},{0,1,0},{0,0.44,0.87},{0.64,0.21,0.93},{1,0.5,0}}
-            for i = 0, 4 do
-                local bag = DF.setups.bags[i]
+            for i = 0, 10 do
+                local bag = setup[i]
                 if bag and bag.slots then
                     for _, btn in pairs(bag.slots) do
                         if btn.qualityBorder then
@@ -148,8 +149,8 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
             end
         end,
         ForEachBag = function(func)
-            for i = 0, 4 do
-                local bag = DF.setups.bags[i]
+            for i = 0, 10 do
+                local bag = setup[i]
                 if bag then func(bag) end
             end
             if DF.setups.bags.unified then func(DF.setups.bags.unified) end
@@ -210,54 +211,128 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
 
     local initFrame = CreateFrame('Frame')
     initFrame:RegisterEvent('BAG_UPDATE')
+    initFrame:RegisterEvent('PLAYERBANKBAGSLOTS_CHANGED')
+    initFrame:RegisterEvent('BANKFRAME_OPENED')
     initFrame:SetScript('OnEvent', function()
-        if event == 'BAG_UPDATE' and arg1 >= 1 and arg1 <= 4 and not setup[arg1] then
-            local slots = GetContainerNumSlots(arg1)
-            if slots and slots > 0 then
-                setup:CreateBagFrame(arg1, slots)
-                setup[arg1]:SetFrameStrata('HIGH')
-                setup[arg1]:Hide()
-                setup[arg1]:RegisterEvent('BAG_UPDATE')
-                setup[arg1]:RegisterEvent('BAG_UPDATE_COOLDOWN')
-                setup[arg1]:RegisterEvent('ITEM_LOCK_CHANGED')
-                setup[arg1]:SetScript('OnEvent', setup.bagEventHandler)
-                helpers.CreateQualityBorders()
-                if DF_Profiles and DF.profile['bags'] then
-                    local p = DF.profile['bags']
-                    setup[arg1]:SetScale(p['bagScale'] or 0.75)
-                    if setup[arg1].Bg then
-                        setup[arg1].Bg:SetAlpha(p['backgroundAlpha'] or 1)
-                        local bc = p['backgroundColour'] or {1,1,1,1}
-                        setup[arg1].Bg:SetVertexColor(bc[1], bc[2], bc[3], bc[4])
-                    end
-                    if setup[arg1].edges then
-                        local fc = p['frameColour'] or {1,1,1,1}
-                        for _, edge in pairs(setup[arg1].edges) do
-                            edge:SetVertexColor(fc[1], fc[2], fc[3], fc[4])
+        if event == 'BAG_UPDATE' then
+            if arg1 >= 1 and arg1 <= 4 and not setup[arg1] then
+                local slots = GetContainerNumSlots(arg1)
+                if slots and slots > 0 then
+                    setup:CreateBagFrame(arg1, slots)
+                    setup[arg1]:SetFrameStrata('HIGH')
+                    setup[arg1]:Hide()
+                    setup[arg1]:RegisterEvent('BAG_UPDATE')
+                    setup[arg1]:RegisterEvent('BAG_UPDATE_COOLDOWN')
+                    setup[arg1]:RegisterEvent('ITEM_LOCK_CHANGED')
+                    setup[arg1]:SetScript('OnEvent', setup.bagEventHandler)
+                    helpers.CreateQualityBorders()
+                    if DF_Profiles and DF.profile['bags'] then
+                        local p = DF.profile['bags']
+                        setup[arg1]:SetScale(p['bagScale'] or 0.75)
+                        if setup[arg1].Bg then
+                            setup[arg1].Bg:SetAlpha(p['backgroundAlpha'] or 1)
+                            local bc = p['backgroundColour'] or {1,1,1,1}
+                            setup[arg1].Bg:SetVertexColor(bc[1], bc[2], bc[3], bc[4])
                         end
-                    end
-                    if setup[arg1].slots then
-                        for _, btn in pairs(setup[arg1].slots) do
-                            btn:SetAlpha(p['slotAlpha'] or 1)
-                            if btn.highlightTex then
-                                local hc = p['highlightColour'] or {1,1,1,1}
-                                btn.highlightTex:SetVertexColor(hc[1], hc[2], hc[3], hc[4])
+                        if setup[arg1].edges then
+                            local fc = p['frameColour'] or {1,1,1,1}
+                            for _, edge in pairs(setup[arg1].edges) do
+                                edge:SetVertexColor(fc[1], fc[2], fc[3], fc[4])
                             end
-                            if btn.border then
-                                local borderTex = btn.border:GetRegions()
-                                if borderTex then
-                                    local bdc = p['borderColour'] or {1,1,1,1}
-                                    borderTex:SetVertexColor(bdc[1], bdc[2], bdc[3], bdc[4])
+                        end
+                        if setup[arg1].slots then
+                            for _, btn in pairs(setup[arg1].slots) do
+                                btn:SetAlpha(p['slotAlpha'] or 1)
+                                if btn.highlightTex then
+                                    local hc = p['highlightColour'] or {1,1,1,1}
+                                    btn.highlightTex:SetVertexColor(hc[1], hc[2], hc[3], hc[4])
+                                end
+                                if btn.border then
+                                    local borderTex = btn.border:GetRegions()
+                                    if borderTex then
+                                        local bdc = p['borderColour'] or {1,1,1,1}
+                                        borderTex:SetVertexColor(bdc[1], bdc[2], bdc[3], bdc[4])
+                                    end
+                                end
+                                if btn.unusableBorder or btn.qualityBorder or btn.checked then
+                                    local oa = p['overlayAlpha'] or 1
+                                    if btn.unusableBorder then btn.unusableBorder:SetAlpha(oa) end
+                                    if btn.qualityBorder then btn.qualityBorder:SetAlpha(oa) end
+                                    if btn.checked then btn.checked:SetAlpha(oa) end
                                 end
                             end
-                            if btn.unusableBorder or btn.qualityBorder or btn.checked then
-                                local oa = p['overlayAlpha'] or 1
-                                if btn.unusableBorder then btn.unusableBorder:SetAlpha(oa) end
-                                if btn.qualityBorder then btn.qualityBorder:SetAlpha(oa) end
-                                if btn.checked then btn.checked:SetAlpha(oa) end
-                            end
                         end
                     end
+                end
+            end
+        elseif event == 'PLAYERBANKBAGSLOTS_CHANGED' or event == 'BANKFRAME_OPENED' then
+            for i = 5, 10 do
+                local slots = GetContainerNumSlots(i)
+                if slots and slots > 0 then
+                    if setup[i] and table.getn(setup[i].slots) ~= slots then
+                        setup[i]:Hide()
+                        setup[i] = nil
+                    end
+                    if not setup[i] then
+                        setup:CreateBagFrame(i, slots)
+                        setup[i]:SetFrameStrata('HIGH')
+                        setup[i]:Hide()
+                        setup[i]:RegisterEvent('BAG_UPDATE')
+                        setup[i]:RegisterEvent('BAG_UPDATE_COOLDOWN')
+                        setup[i]:RegisterEvent('ITEM_LOCK_CHANGED')
+                        setup[i]:SetScript('OnEvent', setup.bagEventHandler)
+                        helpers.CreateQualityBorders()
+                        if DF_Profiles and DF.profile['bags'] then
+                            local p = DF.profile['bags']
+                            setup[i]:SetScale(p['bagScale'] or 0.75)
+                            if setup[i].Bg then
+                                setup[i].Bg:SetAlpha(p['backgroundAlpha'] or 1)
+                                local bc = p['backgroundColour'] or {1,1,1,1}
+                                setup[i].Bg:SetVertexColor(bc[1], bc[2], bc[3], bc[4])
+                            end
+                            if setup[i].edges then
+                                local fc = p['frameColour'] or {1,1,1,1}
+                                for _, edge in pairs(setup[i].edges) do
+                                    edge:SetVertexColor(fc[1], fc[2], fc[3], fc[4])
+                                end
+                            end
+                            if setup[i].slots then
+                                for _, btn in pairs(setup[i].slots) do
+                                    btn:SetAlpha(p['slotAlpha'] or 1)
+                                    if btn.highlightTex then
+                                        local hc = p['highlightColour'] or {1,1,1,1}
+                                        btn.highlightTex:SetVertexColor(hc[1], hc[2], hc[3], hc[4])
+                                    end
+                                    if btn.border then
+                                        local borderTex = btn.border:GetRegions()
+                                        if borderTex then
+                                            local bdc = p['borderColour'] or {1,1,1,1}
+                                            borderTex:SetVertexColor(bdc[1], bdc[2], bdc[3], bdc[4])
+                                        end
+                                    end
+                                    if btn.unusableBorder or btn.qualityBorder or btn.checked then
+                                        local oa = p['overlayAlpha'] or 1
+                                        if btn.unusableBorder then btn.unusableBorder:SetAlpha(oa) end
+                                        if btn.qualityBorder then btn.qualityBorder:SetAlpha(oa) end
+                                        if btn.checked then btn.checked:SetAlpha(oa) end
+                                    end
+                                end
+                            end
+                            if p['showItemRarity'] then
+                                helpers.UpdateQualityBorders(true)
+                            end
+                            if p['showQuestItems'] then
+                                helpers.ProcessQuestIcons(setup[i].slots, true)
+                            end
+                            if p['showUnusableItems'] and p['showUnusableItems'] ~= 'none' then
+                                setup:UpdateUnusableItems(setup[i])
+                            end
+                            debugprint('Bank bag '..i..' profile applied. Checking: Bg alpha='..tostring(setup[i].Bg and setup[i].Bg:GetAlpha() or 'nil')..' slot1 alpha='..tostring(setup[i].slots[1] and setup[i].slots[1]:GetAlpha() or 'nil'))
+                        end
+                    end
+                elseif setup[i] then
+                    setup[i]:Hide()
+                    setup[i] = nil
                 end
             end
         end
@@ -296,6 +371,15 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
         end)
     end
 
+    _G.ToggleBag = function(id)
+        local gameMenu = getglobal('DF_GameMenuFrame')
+        if gameMenu and gameMenu:IsVisible() then return end
+        local bag = setup[id]
+        if bag then
+            if bag:IsShown() then bag:Hide() else bag:Show() end
+        end
+    end
+
     local callbacks = {}
 
     callbacks.oneBagMode = function(value)
@@ -308,23 +392,16 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
             if oneBag then oneBag:SetScale(scale) end
             _G.ToggleBackpack = function()
                 local gameMenu = getglobal('DF_GameMenuFrame')
-                if gameMenu and gameMenu:IsVisible() then
-                    return
-                end
+                if gameMenu and gameMenu:IsVisible() then return end
                 if oneBag:IsShown() then
                     oneBag:Hide()
                 else
                     oneBag:Show()
                 end
             end
-            _G.ToggleBag = function(id)
-                _G.ToggleBackpack()
-            end
             _G.OpenAllBags = function()
                 local gameMenu = getglobal('DF_GameMenuFrame')
-                if gameMenu and gameMenu:IsVisible() then
-                    return
-                end
+                if gameMenu and gameMenu:IsVisible() then return end
                 if oneBag:IsShown() then
                     oneBag:Hide()
                 else
@@ -339,9 +416,7 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
             end
             _G.ToggleBackpack = function()
                 local gameMenu = getglobal('DF_GameMenuFrame')
-                if gameMenu and gameMenu:IsVisible() then
-                    return
-                end
+                if gameMenu and gameMenu:IsVisible() then return end
                 if bag0:IsShown() then
                     for i = 0, 4 do
                         local bag = DF.setups.bags[i]
@@ -351,25 +426,9 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
                     bag0:Show()
                 end
             end
-            _G.ToggleBag = function(id)
-                local gameMenu = getglobal('DF_GameMenuFrame')
-                if gameMenu and gameMenu:IsVisible() then
-                    return
-                end
-                local bag = DF.setups.bags[id]
-                if bag then
-                    if bag:IsShown() then
-                        bag:Hide()
-                    else
-                        bag:Show()
-                    end
-                end
-            end
             _G.OpenAllBags = function()
                 local gameMenu = getglobal('DF_GameMenuFrame')
-                if gameMenu and gameMenu:IsVisible() then
-                    return
-                end
+                if gameMenu and gameMenu:IsVisible() then return end
                 local allShown = true
                 for i = 0, 4 do
                     local hasBag = i == 0 or GetInventoryItemTexture('player', ContainerIDToInventoryID(i))
@@ -377,6 +436,16 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
                     if hasBag and bag and not bag:IsShown() then
                         allShown = false
                         break
+                    end
+                end
+                if BankFrame:IsVisible() then
+                    for i = 5, 10 do
+                        local hasBag = GetContainerNumSlots(i) and GetContainerNumSlots(i) > 0
+                        local bag = setup[i]
+                        if hasBag and bag and not bag:IsShown() then
+                            allShown = false
+                            break
+                        end
                     end
                 end
                 for i = 0, 4 do
@@ -390,7 +459,21 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
                         end
                     end
                 end
+                if BankFrame:IsVisible() then
+                    for i = 5, 10 do
+                        local hasBag = GetContainerNumSlots(i) and GetContainerNumSlots(i) > 0
+                        local bag = setup[i]
+                        if bag and hasBag then
+                            if allShown then
+                                bag:Hide()
+                            else
+                                bag:Show()
+                            end
+                        end
+                    end
+                end
             end
+
         end
     end
 
@@ -571,8 +654,8 @@ DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
         if oneBagMode then
             if oneBag then oneBag:SetScale(value) end
         else
-            for i = 0, 4 do
-                local bag = DF.setups.bags[i]
+            for i = 0, 10 do
+                local bag = setup[i]
                 if bag then bag:SetScale(value) end
             end
         end

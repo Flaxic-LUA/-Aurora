@@ -730,7 +730,7 @@ end
 
 function setup:RepositionBags()
     local visibleBags = {}
-    for i = 0, 4 do
+    for i = 0, 10 do
         if self[i] and self[i]:IsShown() then
             table.insert(visibleBags, self[i])
         end
@@ -913,6 +913,20 @@ function setup:InitializeOneBag()
     self.unified:Hide()
 
     return self.unified
+end
+
+function setup:InitializeBankBags()
+    for i = 5, 10 do
+        local slots = GetContainerNumSlots(i) or 0
+        if slots > 0 and not self[i] then
+            self:CreateBagFrame(i, slots)
+            self[i]:SetFrameStrata('HIGH')
+            self[i]:Hide()
+            self[i]:SetScale(.85)
+        end
+    end
+
+    return self[5], self[6], self[7], self[8], self[9], self[10]
 end
 
 -- expose
