@@ -54,7 +54,7 @@ DF:NewModule('firstrun', 1, function()
         local block3 = DF.ui.Font(contentFrame, 12, '|cffffcc00Please Do NOT:|r\n\n- Report addon conflicts or compatibility issues.\n- Ask for advanced features.', {1, 1, 1}, 'LEFT')
         block3:SetPoint('TOPLEFT', block2, 'BOTTOMLEFT', 0, -20)
 
-        local block4 = DF.ui.Font(contentFrame, 12, '|cffffcc00Update frequently|r and |cffffcc00enjoy|r!\n\nGuzruul.', {1, 1, 1}, 'CENTER')
+        local block4 = DF.ui.Font(contentFrame, 12, 'So |cffffcc00UPDATE frequently|r or |cffffcc00suffer|r,\n\nGuzruul.', {1, 1, 1}, 'CENTER')
         block4:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 0, 60)
 
 
