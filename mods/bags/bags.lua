@@ -40,7 +40,7 @@ defaults.frameColour = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker
 
 DF:NewDefaults('bags', defaults)
 
-DF:NewModule('bags', 1, 'PLAYER_ENTERING_WORLD', function()
+DF:NewModule('bags', 1, 'PLAYER_AFTER_ENTERING_WORLD', function()
     local setup = DF.setups.bags
     local bag0, bag1, bag2, bag3, bag4 = setup:InitializeBags()
     local oneBag = setup:InitializeOneBag()

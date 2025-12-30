@@ -10,7 +10,7 @@ DF:NewDefaults('editmode', {
     framePositions = {value = {}},
 })
 
-DF:NewModule('editmode', 1, 'PLAYER_AFTER_ENTERING_WORLD', function()
+DF:NewModule('editmode', 2, 'PLAYER_AFTER_ENTERING_WORLD', function()
     local registry = {frames = {}, panels = {}, elements = {}}
     local overlays = {}
     local gridFrame = nil
