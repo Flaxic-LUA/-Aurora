@@ -731,7 +731,11 @@ function setup:UpdateBarTextNumbers(unitFrame)
         return tostring(num)
     end
     unitFrame.hpBar.text:SetText(abbrev(health)..'/'..abbrev(maxHealth))
-    unitFrame.powerBar.text:SetText(abbrev(mana)..'/'..abbrev(maxMana))
+    if unitFrame.unit ~= 'player' and not UnitIsPlayer(unitFrame.unit) and maxMana == 0 then
+        unitFrame.powerBar.text:SetText('')
+    else
+        unitFrame.powerBar.text:SetText(abbrev(mana)..'/'..abbrev(maxMana))
+    end
 end
 
 function setup:UpdateHealthBarColor(portrait, unit)
