@@ -28,7 +28,7 @@ DF:NewModule('firstrun', 1, function()
 
         local contentFrame = CreateFrame('Frame', nil, installFrame)
         contentFrame:SetPoint('TOPLEFT', installFrame, 'TOPLEFT', 20, -20)
-        contentFrame:SetPoint('BOTTOMRIGHT', installFrame, 'BOTTOMRIGHT', -20, 20)
+        contentFrame:SetPoint('BOTTOMRIGHT', installFrame, 'BOTTOMRIGHT', -20, 10)
         -- debugframe(contentFrame)
 
         local subtitle = DF.ui.Font(contentFrame, 14, 'ALPHA PHASE GUIDELINES', {1, 0, 0}, 'CENTER')
@@ -48,14 +48,14 @@ DF:NewModule('firstrun', 1, function()
         local block1 = DF.ui.Font(contentFrame, 12, '|cffff0000ALPHA BUILD|r - Expect bugs, missing features and frequent changes.', {1, 1, 1}, 'LEFT')
         block1:SetPoint('CENTER', contentFrame, 'TOP', 0, -70)
 
-        local block2 = DF.ui.Font(contentFrame, 12, '|cffffcc00Bug Reports:|r\n- You must use |cffffcc00/df safeboot|r before reporting.\n- This proves the bug is caused by Dragonflight only.\n\n- Focus on core functionality during alpha.', {1, 1, 1}, 'LEFT')
+        local block2 = DF.ui.Font(contentFrame, 12, '|cffffcc00Bug Reports:|r\n\n- You must use |cffffcc00/df safeboot|r before reporting.\n- This proves the bug is caused by Dragonflight only.\n- Focus on core functionality during alpha.', {1, 1, 1}, 'LEFT')
         block2:SetPoint('TOPLEFT', block1, 'BOTTOMLEFT', 0, -20)
 
-        local block3 = DF.ui.Font(contentFrame, 12, '|cffffcc00Please Do NOT:|r\n- Report addon conflicts or compatibility issues.\n\n- Ask for advanced features.', {1, 1, 1}, 'LEFT')
+        local block3 = DF.ui.Font(contentFrame, 12, '|cffffcc00Please Do NOT:|r\n\n- Report addon conflicts or compatibility issues.\n- Ask for advanced features.', {1, 1, 1}, 'LEFT')
         block3:SetPoint('TOPLEFT', block2, 'BOTTOMLEFT', 0, -20)
 
         local block4 = DF.ui.Font(contentFrame, 12, '|cffffcc00Update frequently|r and |cffffcc00enjoy|r!\n\nGuzruul.', {1, 1, 1}, 'CENTER')
-        block4:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 0, 70)
+        block4:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 0, 60)
 
 
 
@@ -110,7 +110,7 @@ DF:NewModule('firstrun', 1, function()
 
         local countdown = 15
         local okBtn = DF.ui.Button(contentFrame, countdown..'', 100, 30)
-        okBtn:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 0, 20)
+        okBtn:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 0, 8)
         okBtn:Disable()
 
         DF.timers.every(1, function()
