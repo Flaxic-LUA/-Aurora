@@ -199,6 +199,7 @@ function minimap:SetupBlizzardIcons()
 
     MiniMapTrackingFrame:ClearAllPoints()
     MiniMapTrackingFrame:SetPoint('BOTTOMRIGHT', Minimap, 'TOPLEFT', 35, -35)
+    MiniMapTrackingFrame:SetFrameLevel(Minimap:GetFrameLevel() + 1)
     MiniMapTrackingFrame:SetScale(.8)
     MiniMapTrackingBorder:Hide()
 

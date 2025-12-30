@@ -1,7 +1,6 @@
 UNLOCKDRAGONFLIGHT()
 
 -- credit to shagu v1.0
-
 local libdebuff = CreateFrame('Frame', 'AUDebuffScanner', UIParent)
 local scanner = DF.lib.libtipscan:GetScanner('libdebuff')
 local _, playerClass = UnitClass('player')

@@ -1,7 +1,6 @@
 UNLOCKDRAGONFLIGHT()
 
 -- credit to shagu v1.0
-
 local scanner = {}
 local libtipscan = {}
 
