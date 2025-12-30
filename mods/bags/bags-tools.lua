@@ -738,7 +738,8 @@ function setup:RepositionBags()
 
     if table.getn(visibleBags) == 0 then return end
 
-    local anchor = getglobal('DF_BagAnchor')
+    local oneBagMode = DF_Profiles and DF.profile['bags'] and DF.profile['bags']['oneBagMode']
+    local anchor = oneBagMode and self.unified or getglobal('DF_BagAnchor')
     if not anchor then return end
 
     local screenHeight = UIParent:GetHeight()
@@ -747,8 +748,7 @@ function setup:RepositionBags()
     local spacing = 20
     local columnOffset = 0
     local currentHeight = 0
-
-    -- debugprint('RepositionBags: screenHeight='..screenHeight..' anchorY='..anchorY..' maxColumnHeight='..maxColumnHeight)
+    local anchorPoint = oneBagMode and 'BOTTOMLEFT' or 'BOTTOMRIGHT'
 
     for i = 1, table.getn(visibleBags) do
         local bag = visibleBags[i]
@@ -756,20 +756,18 @@ function setup:RepositionBags()
 
         if i == 1 then
             bag:ClearAllPoints()
-            bag:SetPoint('BOTTOMRIGHT', anchor, 'BOTTOMRIGHT', 0 - columnOffset, 0)
+            bag:SetPoint('BOTTOMRIGHT', anchor, anchorPoint, -8 - columnOffset, 0)
             currentHeight = bagHeight
         else
             if currentHeight + bagHeight + spacing > maxColumnHeight then
-                -- debugprint('Bag'..bag:GetID()..' would exceed max ('..currentHeight..'+'..bagHeight..'>'..maxColumnHeight..'), starting new column at offset='..columnOffset + 200)
                 columnOffset = columnOffset + 200
                 bag:ClearAllPoints()
-                bag:SetPoint('BOTTOMRIGHT', anchor, 'BOTTOMRIGHT', 0 - columnOffset, 0)
+                bag:SetPoint('BOTTOMRIGHT', anchor, anchorPoint, 0 - columnOffset, 0)
                 currentHeight = bagHeight
             else
                 bag:ClearAllPoints()
                 bag:SetPoint('BOTTOMLEFT', visibleBags[i-1], 'TOPLEFT', 0, spacing)
                 currentHeight = currentHeight + bagHeight + spacing
-                -- debugprint('Bag'..bag:GetID()..' stacked, currentHeight='..currentHeight..' (still under '..maxColumnHeight..')')
             end
         end
     end
@@ -909,7 +907,7 @@ function setup:InitializeOneBag()
     self:CreateOneBag()
     local anchor = getglobal('DF_BagAnchor')
     self.unified:SetPoint('BOTTOMRIGHT', anchor, 'BOTTOMRIGHT', 0, 0)
-    self.unified:SetFrameStrata('MEDIUM')
+    self.unified:SetFrameStrata('HIGH')
     self.unified:Hide()
 
     return self.unified

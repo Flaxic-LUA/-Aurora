@@ -10,21 +10,22 @@ DF:NewDefaults('tooltip', {
     tooltipMouseAnchor = {value = false, metadata = {element = 'checkbox', category = 'General', indexInCategory = 1, description = 'Anchor tooltip to mouse cursor'}},
     tooltipOffsetX = {value = 35, metadata = {element = 'slider', category = 'General', indexInCategory = 2, description = 'Tooltip X offset', min = -100, max = 100, stepSize = 1, dependency = {key = 'tooltipMouseAnchor', state = true}}},
     tooltipOffsetY = {value = 10, metadata = {element = 'slider', category = 'General', indexInCategory = 3, description = 'Tooltip Y offset', min = -100, max = 100, stepSize = 1, dependency = {key = 'tooltipMouseAnchor', state = true}}},
-    tooltipHideHealthBar = {value = false, metadata = {element = 'checkbox', category = 'General', indexInCategory = 4, description = 'Hide tooltip healthbar'}},
-    tooltipHealthText = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 5, description = 'Show HP text on healthbar', dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
-    tooltipBorderColor = {value = {0.2, 0.4, 0.8}, metadata = {element = 'colorpicker', category = 'General', indexInCategory = 6, description = 'Tooltip border color'}},
-    tooltipScale = {value = .8, metadata = {element = 'slider', category = 'General', indexInCategory = 7, description = 'Tooltip scale', min = 0.5, max = 2.0, stepSize = 0.05}},
-    tooltipBorderAlpha = {value = .8, metadata = {element = 'slider', category = 'General', indexInCategory = 8, description = 'Tooltip border alpha', min = 0.0, max = 1.0, stepSize = 0.05}},
-    tooltipBgAlpha = {value = 1, metadata = {element = 'slider', category = 'General', indexInCategory = 9, description = 'Tooltip background alpha', min = 0.0, max = 1.0, stepSize = 0.05}},
-    tooltipBarTexture = {value = 'Dragonflight', metadata = {element = 'dropdown', category = 'General', indexInCategory = 10, description = 'Healthbar texture', options = {'Default', 'Dragonflight'}, dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
-    tooltipBarHeight = {value = 15, metadata = {element = 'slider', category = 'General', indexInCategory = 11, description = 'Healthbar height', min = 4, max = 20, stepSize = 1, dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
-    tooltipBarWidth = {value = -5, metadata = {element = 'slider', category = 'General', indexInCategory = 12, description = 'Healthbar width offset', min = -50, max = 50, stepSize = 1, dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
-    tooltipTextFont = {value = 'font:Hooge.ttf', metadata = {element = 'dropdown', category = 'General', indexInCategory = 13, description = 'HP text font', options = media.fonts, dependency = {key = 'tooltipHealthText', state = true}}},
-    tooltipTextColor = {value = {1, 1, 1}, metadata = {element = 'colorpicker', category = 'General', indexInCategory = 14, description = 'HP text color', dependency = {key = 'tooltipHealthText', state = true}}},
-    tooltipTextPosition = {value = 'CENTER', metadata = {element = 'dropdown', category = 'General', indexInCategory = 15, description = 'HP text position', options = {'LEFT', 'CENTER', 'RIGHT'}, dependency = {key = 'tooltipHealthText', state = true}}},
-    tooltipTextFormat = {value = 'cur/max', metadata = {element = 'dropdown', category = 'General', indexInCategory = 16, description = 'HP text format', options = {'cur', 'cur/max', 'cur/max/percent'}, dependency = {key = 'tooltipHealthText', state = true}}},
-    tooltipShowTarget = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 17, description = 'Show unit target'}},
-    tooltipShowDistance = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 18, description = 'Show distance'}},
+    tooltipHideCombat = {value = false, metadata = {element = 'checkbox', category = 'General', indexInCategory = 4, description = 'Hide tooltips during combat'}},
+    tooltipHideHealthBar = {value = false, metadata = {element = 'checkbox', category = 'General', indexInCategory = 5, description = 'Hide tooltip healthbar'}},
+    tooltipHealthText = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 6, description = 'Show HP text on healthbar', dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
+    tooltipBorderColor = {value = {0.2, 0.4, 0.8}, metadata = {element = 'colorpicker', category = 'General', indexInCategory = 7, description = 'Tooltip border color'}},
+    tooltipScale = {value = .8, metadata = {element = 'slider', category = 'General', indexInCategory = 8, description = 'Tooltip scale', min = 0.5, max = 2.0, stepSize = 0.05}},
+    tooltipBorderAlpha = {value = .8, metadata = {element = 'slider', category = 'General', indexInCategory = 9, description = 'Tooltip border alpha', min = 0.0, max = 1.0, stepSize = 0.05}},
+    tooltipBgAlpha = {value = 1, metadata = {element = 'slider', category = 'General', indexInCategory = 10, description = 'Tooltip background alpha', min = 0.0, max = 1.0, stepSize = 0.05}},
+    tooltipBarTexture = {value = 'Dragonflight', metadata = {element = 'dropdown', category = 'General', indexInCategory = 11, description = 'Healthbar texture', options = {'Default', 'Dragonflight'}, dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
+    tooltipBarHeight = {value = 15, metadata = {element = 'slider', category = 'General', indexInCategory = 12, description = 'Healthbar height', min = 4, max = 20, stepSize = 1, dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
+    tooltipBarWidth = {value = -5, metadata = {element = 'slider', category = 'General', indexInCategory = 13, description = 'Healthbar width offset', min = -50, max = 50, stepSize = 1, dependency = {key = 'tooltipHideHealthBar', stateNot = true}}},
+    tooltipTextFont = {value = 'font:Hooge.ttf', metadata = {element = 'dropdown', category = 'General', indexInCategory = 14, description = 'HP text font', options = media.fonts, dependency = {key = 'tooltipHealthText', state = true}}},
+    tooltipTextColor = {value = {1, 1, 1}, metadata = {element = 'colorpicker', category = 'General', indexInCategory = 15, description = 'HP text color', dependency = {key = 'tooltipHealthText', state = true}}},
+    tooltipTextPosition = {value = 'CENTER', metadata = {element = 'dropdown', category = 'General', indexInCategory = 16, description = 'HP text position', options = {'LEFT', 'CENTER', 'RIGHT'}, dependency = {key = 'tooltipHealthText', state = true}}},
+    tooltipTextFormat = {value = 'cur/max', metadata = {element = 'dropdown', category = 'General', indexInCategory = 17, description = 'HP text format', options = {'cur', 'cur/max', 'cur/max/percent'}, dependency = {key = 'tooltipHealthText', state = true}}},
+    tooltipShowTarget = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 18, description = 'Show unit target'}},
+    tooltipShowDistance = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 19, description = 'Show distance'}},
 
 })
 
@@ -48,8 +49,14 @@ DF:NewModule('tooltip', 1, 'PLAYER_ENTERING_WORLD', function()
     local textFont, textColor, textPosition, textFormat
     local showTarget, showDistance
     local distanceLineIndex
+    local hideCombat, inCombat
+    local combatFrame = CreateFrame('Frame')
 
     DF.hooks.HookScript(GameTooltip, 'OnShow', function()
+        if hideCombat and inCombat then
+            GameTooltip:Hide()
+            return
+        end
         if borderColor and borderAlpha then
             GameTooltip:SetBackdropBorderColor(borderColor[1], borderColor[2], borderColor[3], borderAlpha)
         end
@@ -241,6 +248,29 @@ DF:NewModule('tooltip', 1, 'PLAYER_ENTERING_WORLD', function()
 
     callbacks.tooltipShowDistance = function(value)
         showDistance = value
+    end
+
+    callbacks.tooltipHideCombat = function(value)
+        hideCombat = value
+        if value then
+            combatFrame:SetScript('OnEvent', function()
+                if event == 'PLAYER_REGEN_DISABLED' then
+                    inCombat = true
+                    GameTooltip:Hide()
+                    cursorFrame:Hide()
+                elseif event == 'PLAYER_REGEN_ENABLED' then
+                    inCombat = false
+                    cursorFrame:Show()
+                end
+            end)
+            combatFrame:RegisterEvent('PLAYER_REGEN_DISABLED')
+            combatFrame:RegisterEvent('PLAYER_REGEN_ENABLED')
+        else
+            combatFrame:SetScript('OnEvent', nil)
+            combatFrame:UnregisterAllEvents()
+            inCombat = false
+            cursorFrame:Show()
+        end
     end
 
     DF:NewCallbacks('tooltip', callbacks)
