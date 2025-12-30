@@ -351,6 +351,16 @@ function DF.lib.CreateCastBar(unit)
         end
     end
 
+    function cast:SetColors(r, g, b, rText, gText, bText)
+        self.spark:SetVertexColor(r, g, b)
+        if self.spark2 then self.spark2:SetVertexColor(r, g, b) end
+        for i = 1, self.config.trailMaxCount do
+            if self.sparkTrails[i] then self.sparkTrails[i]:SetVertexColor(r, g, b) end
+        end
+        self.text:SetTextColor(rText, gText, bText)
+        self.rankText:SetTextColor(rText, gText, bText)
+    end
+
     function cast:UpdateFrame(elapsed)
         local castName, rank, text, icon, startTime, endTime = UnitCastingInfo(self.unit)
         local channelName, channelRank, channelText, channelIcon, channelStart, channelEnd = UnitChannelInfo(self.unit)
@@ -371,6 +381,8 @@ function DF.lib.CreateCastBar(unit)
             self.state.fadeOut = false
             self.frame:SetAlpha(1)
             self.bar:SetVertexColor(self.config.barColor[1], self.config.barColor[2], self.config.barColor[3])
+            self:SetColors(1, 1, 1, 1, 1, 1)
+            self.rankText:SetTextColor(0.9, 0.9, 0.9)
             self.flash:Hide()
 
             local now = GetTime() * 1000
@@ -421,6 +433,8 @@ function DF.lib.CreateCastBar(unit)
             self.state.fadeOut = false
             self.frame:SetAlpha(1)
             self.bar:SetVertexColor(self.config.barColor[1], self.config.barColor[2], self.config.barColor[3])
+            self:SetColors(1, 1, 1, 1, 1, 1)
+            self.rankText:SetTextColor(0.9, 0.9, 0.9)
             self.flash:Hide()
 
             local now = GetTime() * 1000
@@ -467,8 +481,10 @@ function DF.lib.CreateCastBar(unit)
             if self.state.interrupted then
                 self.bar:SetVertexColor(1, 0, 0)
                 self.flash:SetVertexColor(1, 0, 0)
+                self:SetColors(1, 0, 0, 1, 0, 0)
             else
                 self.flash:SetVertexColor(0, 1, 0)
+                self:SetColors(0, 1, 0, 0, 1, 0)
             end
             self.flash:SetAlpha(1)
             self.flash:Show()
