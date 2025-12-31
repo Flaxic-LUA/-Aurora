@@ -7,7 +7,7 @@ DF:NewDefaults('tweaks', {
     -- Named keys (tab, subtab) define panel location, array elements define categories within that panel
     -- Each category groups related settings with a header, settings use category + indexInCategory for ordering
     gui = {
-        {tab = 'general', subtab = 'automation', 'General'},
+        {tab = 'general', subtab = 'tweaks', 'General', 'Chat'},
     },
 
     -- defaults examples:
@@ -18,6 +18,7 @@ DF:NewDefaults('tweaks', {
     stanceDancing = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 1, description = 'Automatically switch stance when casting spells'}},
     autoForm = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 2, description = 'Extend stance dancing to cancel active forms for druids and rogues', dependency = {key = 'stanceDancing', state = true}}},
     autoDismount = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 3, description = 'Automatically dismount when casting spells'}},
+    chatClassColors = {value = true, metadata = {element = 'checkbox', category = 'Chat', indexInCategory = 1, description = 'Show class colors for player names in chat'}},
 
 })
 
@@ -39,6 +40,74 @@ DF:NewModule('tweaks', 1, function()
     dismount.shapeshiftTextures = {'ability_racial_bearform', 'ability_druid_catform', 'ability_druid_travelform', 'spell_nature_forceofnature', 'ability_druid_aquaticform', 'spell_nature_spiritwolf'}
     dismount.dismountErrors = {SPELL_FAILED_NOT_MOUNTED, ERR_ATTACK_MOUNTED, ERR_TAXIPLAYERALREADYMOUNTED, SPELL_FAILED_NOT_SHAPESHIFT, SPELL_FAILED_NO_ITEMS_WHILE_SHAPESHIFTED, SPELL_NOT_SHAPESHIFTED, SPELL_NOT_SHAPESHIFTED_NOSPACE, ERR_CANT_INTERACT_SHAPESHIFTED, ERR_NOT_WHILE_SHAPESHIFTED, ERR_NO_ITEMS_WHILE_SHAPESHIFTED, ERR_TAXIPLAYERSHAPESHIFTED, ERR_MOUNT_SHAPESHIFTED}
     dismount.scanner = DF.lib.libtipscan:GetScanner('dismount')
+
+    DF_PlayerCache.players = DF_PlayerCache.players or {}
+    local playerCache = DF_PlayerCache.players
+
+    local chatcolor = {}
+    chatcolor.hooked = {}
+    chatcolor.scanner = CreateFrame('Frame')
+    chatcolor.scanner:RegisterEvent('PLAYER_ENTERING_WORLD')
+    chatcolor.scanner:RegisterEvent('FRIENDLIST_UPDATE')
+    chatcolor.scanner:RegisterEvent('GUILD_ROSTER_UPDATE')
+    chatcolor.scanner:RegisterEvent('RAID_ROSTER_UPDATE')
+    chatcolor.scanner:RegisterEvent('PARTY_MEMBERS_CHANGED')
+    chatcolor.scanner:RegisterEvent('PLAYER_TARGET_CHANGED')
+    chatcolor.scanner:RegisterEvent('UPDATE_MOUSEOVER_UNIT')
+    chatcolor.scanner:RegisterEvent('WHO_LIST_UPDATE')
+    chatcolor.scanner:SetScript('OnEvent', function()
+        if event == 'PLAYER_ENTERING_WORLD' then
+            local name = UnitName('player')
+            local _, class = UnitClass('player')
+            playerCache[name] = class
+        elseif event == 'FRIENDLIST_UPDATE' then
+            for i = 1, GetNumFriends() do
+                local name, level, class = GetFriendInfo(i)
+                if name and class then
+                    playerCache[name] = class
+                end
+            end
+        elseif event == 'GUILD_ROSTER_UPDATE' then
+            for i = 1, GetNumGuildMembers() do
+                local name, _, _, _, class = GetGuildRosterInfo(i)
+                if name and class then
+                    playerCache[name] = class
+                end
+            end
+        elseif event == 'RAID_ROSTER_UPDATE' then
+            for i = 1, GetNumRaidMembers() do
+                local name, _, _, _, class = GetRaidRosterInfo(i)
+                if name and class then
+                    playerCache[name] = class
+                end
+            end
+        elseif event == 'PARTY_MEMBERS_CHANGED' then
+            for i = 1, GetNumPartyMembers() do
+                local unit = 'party'..i
+                local name = UnitName(unit)
+                local _, class = UnitClass(unit)
+                if name and class then
+                    playerCache[name] = class
+                end
+            end
+        elseif event == 'WHO_LIST_UPDATE' then
+            for i = 1, GetNumWhoResults() do
+                local name, _, _, _, class = GetWhoInfo(i)
+                if name and class then
+                    playerCache[name] = class
+                end
+            end
+        elseif event == 'PLAYER_TARGET_CHANGED' or event == 'UPDATE_MOUSEOVER_UNIT' then
+            local unit = event == 'PLAYER_TARGET_CHANGED' and 'target' or 'mouseover'
+            if UnitIsPlayer(unit) then
+                local name = UnitName(unit)
+                local _, class = UnitClass(unit)
+                if name and class then
+                    playerCache[name] = class
+                end
+            end
+        end
+    end)
 
     -- callbacks are options that show up for the user in the gui
     local callbacks = {}
@@ -106,6 +175,38 @@ DF:NewModule('tweaks', 1, function()
         else
             dismount:UnregisterEvent('UI_ERROR_MESSAGE')
             dismount:SetScript('OnEvent', nil)
+        end
+    end
+
+    callbacks.chatClassColors = function(value)
+        for i = 1, NUM_CHAT_WINDOWS do
+            local frame = getglobal('ChatFrame'..i)
+            if frame then
+                if value then
+                    if not DF.hooks.IsHooked(frame, 'AddMessage') then
+                        DF.hooks.Hook(frame, 'AddMessage', function(self, text, r, g, b, id, hold)
+                            if text then
+                                for name in string.gfind(text, '|Hplayer:(.-)|h') do
+                                    local parts = DF.data.split(name, ':')
+                                    local real = parts[1]
+                                    local class = playerCache[real]
+                                    local hex
+                                    if class and DF.tables.classcolors[class] then
+                                        local color = DF.tables.classcolors[class]
+                                        hex = string.format('|cff%02x%02x%02x', color[1]*255, color[2]*255, color[3]*255)
+                                    else
+                                        hex = '|cffbbbbbb'
+                                    end
+                                    text = string.gsub(text, '|Hplayer:'..name..'|h%['..real..'%]|h', '|r['..hex..'|Hplayer:'..name..'|h'..hex..real..'|h|r]|r')
+                                end
+                            end
+                            DF.hooks.registry[frame]['AddMessage'](self, text, r, g, b, id, hold)
+                        end)
+                    end
+                else
+                    DF.hooks.Unhook(frame, 'AddMessage')
+                end
+            end
         end
     end
 

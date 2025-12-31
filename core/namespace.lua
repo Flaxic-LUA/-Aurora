@@ -7,6 +7,7 @@ DF = CreateFrame'Frame'
 _G.DF_Profiles = {}
 _G.DF_LearnedData = {}
 _G.DF_GlobalData = {}
+_G.DF_PlayerCache = {}
 
 -- core
 DF.tables = {}

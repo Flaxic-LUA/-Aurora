@@ -5,4 +5,5 @@
     <Include file="slash.lua"/>
     <Include file="namespace.lua"/>
     <Include file="init.lua"/>
+    <Include file="compat.lua"/>
 </Ui>

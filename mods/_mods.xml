@@ -30,6 +30,7 @@
 
     <!-- GENERAL -->
     <Include file="general\addons.lua"/>
+    <Include file="general\colors.lua"/>
     <Include file="general\combopoints.lua"/>
     <Include file="general\cooldowns.lua"/>
     <Include file="general\distance.lua"/>

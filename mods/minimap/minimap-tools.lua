@@ -124,7 +124,6 @@ function minimap:SetupMinimap(cluster)
     Minimap:SetHeight(150)
     Minimap:SetWidth(150)
     Minimap:SetFrameStrata('MEDIUM')
-    Minimap:SetFrameLevel(5)
 
     local border = Minimap:CreateTexture(nil, 'ARTWORK')
     border:SetPoint('TOPLEFT', Minimap, 'TOPLEFT', -12, 13)

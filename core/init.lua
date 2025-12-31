@@ -259,6 +259,8 @@ function init:Finalize()
 end
 
 function init:InitDF()
+    if not DF.others.syncActive then return end
+
     DF.others.server = init:DetectServer()
 
     -- initialize saved variable structure if first time

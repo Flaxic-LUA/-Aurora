@@ -1935,15 +1935,24 @@ function DF.ui.CollapsibleSection(parent, headerText, width, startExpanded)
     return section
 end
 
-function DF.ui.StaticPopup_Show(text, btn1Text, btn1Callback, btn2Text, btn2Callback, parent, width, height)
+function DF.ui.StaticPopup_Show(text, btn1Text, btn1Callback, btn2Text, btn2Callback, parent, width, height, title)
     if not DF.ui.staticPopup then
-        local frame = DF.ui.CreatePaperDollFrame('DF_StaticPopup', parent or UIParent, width or 280, height or 100, 3)
-        frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
+        local frameHeight = title and 120 or 100
+        local frameStyle = title and 2 or 3
+        local frame = DF.ui.CreatePaperDollFrame('DF_StaticPopup', parent or UIParent, width or 280, height or frameHeight, frameStyle)
+        frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 100)
         frame:SetFrameStrata('DIALOG')
         frame:Hide()
 
+        local titleText = nil
+        if title then
+            titleText = DF.ui.Font(frame, 12, '', {1, 0.82, 0}, 'CENTER')
+            titleText:SetPoint('TOP', frame, 'TOP', 0, -5)
+            titleText:SetWidth(240)
+        end
+
         local bodyText = DF.ui.Font(frame, 12, '', {1, 1, 1}, 'CENTER')
-        bodyText:SetPoint('CENTER', frame, 'CENTER', 0, 10)
+        bodyText:SetPoint('CENTER', frame, 'CENTER', 0, title and 5 or 10)
         bodyText:SetWidth(240)
 
         local button1 = DF.ui.Button(frame, '', 100, 28)
@@ -1951,6 +1960,7 @@ function DF.ui.StaticPopup_Show(text, btn1Text, btn1Callback, btn2Text, btn2Call
 
         DF.ui.staticPopup = {
             frame = frame,
+            titleText = titleText,
             bodyText = bodyText,
             button1 = button1,
             button2 = button2
@@ -1964,6 +1974,13 @@ function DF.ui.StaticPopup_Show(text, btn1Text, btn1Callback, btn2Text, btn2Call
                 end
             end
         end)
+    end
+
+    if DF.ui.staticPopup.titleText and title then
+        DF.ui.staticPopup.titleText:SetText(title)
+        DF.ui.staticPopup.titleText:Show()
+    elseif DF.ui.staticPopup.titleText then
+        DF.ui.staticPopup.titleText:Hide()
     end
 
     DF.ui.staticPopup.bodyText:SetText(text or '')

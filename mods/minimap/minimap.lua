@@ -66,7 +66,6 @@ DF:NewDefaults('minimap', {
 
 DF:NewModule('minimap', 1, 'PLAYER_LOGIN', function()
     local cluster, border, shadow, topPanel, timeText, zoneText, zoomIn, zoomOut = DF.lib.CreateMinimapUI()
-    cluster:SetFrameStrata('LOW')
 
     local gameTimeButton, gameTimeBorder, gameTimeIcon = DF.lib.CreateGameTimeButton(cluster)
     gameTimeButton:SetPoint('BOTTOMLEFT', Minimap, 'TOPRIGHT', -10, -20)
