@@ -6,6 +6,7 @@ DF = CreateFrame'Frame'
 -- saved variables
 _G.DF_Profiles = {}
 _G.DF_LearnedData = {}
+_G.DF_GlobalData = {}
 
 -- core
 DF.tables = {}

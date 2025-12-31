@@ -10,6 +10,12 @@ local customEvents = {
         condition = nil,
         fired = false
     },
+    ['SYNC_READY'] = {
+        triggerEvent = 'PLAYER_ENTERING_WORLD',
+        delay = 2,
+        condition = nil,
+        fired = false
+    },
     ['PLAYERMODEL_READY'] = {
         triggerEvent = nil,
         delay = nil,

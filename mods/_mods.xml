@@ -38,6 +38,7 @@
     <Include file="general\error.lua"/>
     <Include file="general\firstrun.lua"/>
     <Include file="general\nocontrol.lua"/>
+    <Include file="general\sync.lua"/>
     <Include file="general\tweaks.lua"/>
     <Include file="general\uiparent.lua"/>
 
