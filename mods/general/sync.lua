@@ -205,6 +205,7 @@ syncFrame:RegisterEvent('CHAT_MSG_ADDON')
 syncFrame:RegisterEvent('PARTY_MEMBERS_CHANGED')
 syncFrame:SetScript('OnEvent', function()
     if event == 'SYNC_READY' then
+        syncFrame:UnregisterEvent('SYNC_READY')
         syncFrame:OnPlayerEnteringWorld()
     end
 
