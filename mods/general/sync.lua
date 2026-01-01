@@ -3,8 +3,10 @@ UNLOCKDRAGONFLIGHT()
 -- dependent on: -Dragonflight3-SYNC
 -- sync gives dragonflight a custom hidden channel for communication, we can
 -- send update notify, do polls, sent admin message to all or single users
--- and see usercount online on realm. we only want to cache names for troubleshooting,
--- otherwise not invade peoples privacy.
+-- and see usercount online on realm. we only want to cache names for troubleshooting
+-- and future features maybe, otherwise not invade peoples privacy.
+
+-- TODO pending polls to protect against showing up during combat
 
 local syncFrame = CreateFrame('Frame')
 local addonUsers = {}
@@ -201,7 +203,7 @@ function syncFrame:OnChatMsgChannelDetected()
             end
         end
         -- admin request for user list
-        if string.find(arg1, '#ADMIN%-INFO') then
+        if string.find(arg1, '#ADMIN%-INFO') and arg2 == a() then
             if isAdmin and s() then
                 infoResponses = {}
                 if infoCountTimer then
@@ -253,7 +255,7 @@ function syncFrame:OnChatMsgChannelDetected()
             end
         end
         -- admin initiates poll
-        if string.find(arg1, '#ADMIN%-POLL ') and isAdmin and s() then
+        if string.find(arg1, '#ADMIN%-POLL ') and arg2 == a() and isAdmin and s() then
             local pollData = DF.lua.match(arg1, '#ADMIN%-POLL (.+)')
             if pollData then
                 local btn1, btn2, question = DF.lua.match(pollData, '%[([^|]+)|([^%]]+)%]%s*(.+)')
@@ -311,7 +313,7 @@ function syncFrame:OnChatMsgChannelDetected()
             end
         end
         -- admin views poll stats
-        if string.find(arg1, '#ADMIN%-POLLSTATS') and isAdmin and s() then
+        if string.find(arg1, '#ADMIN%-POLLSTATS') and arg2 == a() and isAdmin and s() then
             if activePollQuestion == '' then
                 print('|cffff0000[Admin] No active poll running|r')
             else
@@ -338,34 +340,18 @@ function syncFrame:OnChatMsgChannelDetected()
             end
         end
         -- admin toggle debug mode
-        if string.find(arg1, '#ADMIN%-DEBUG') and isAdmin and s() then
+        if string.find(arg1, '#ADMIN%-DEBUG') and arg2 == a() then
             local mode = DF.lua.match(arg1, '#ADMIN%-DEBUG%s*(.+)')
             if mode == 'on' then
-                for i = 1, 10 do
-                    local id, name = GetChannelName(i)
-                    if name and string.find(name, CHANNEL_NAME) then
-                        SendChatMessage('#DEBUGMODE-ON', 'CHANNEL', nil, id)
-                        break
-                    end
-                end
-                print('|cffff0000[Admin] Debug mode ON|r')
-            elseif mode == 'off' then
-                for i = 1, 10 do
-                    local id, name = GetChannelName(i)
-                    if name and string.find(name, CHANNEL_NAME) then
-                        SendChatMessage('#DEBUGMODE-OFF', 'CHANNEL', nil, id)
-                        break
-                    end
-                end
-                print('|cff00ff00[Admin] Debug mode OFF|r')
-            end
-        end
-        -- users receive debug mode toggle
-        if string.find(arg1, '#DEBUGMODE%-') and arg2 == a() then
-            if string.find(arg1, '#DEBUGMODE%-ON') then
                 debugMode = true
-            elseif string.find(arg1, '#DEBUGMODE%-OFF') then
+                if isAdmin and s() then
+                    print('|cffff0000[Admin] Debug mode ON|r')
+                end
+            elseif mode == 'off' then
                 debugMode = false
+                if isAdmin and s() then
+                    print('|cff00ff00[Admin] Debug mode OFF|r')
+                end
             end
         end
     end

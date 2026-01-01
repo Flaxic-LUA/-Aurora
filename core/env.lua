@@ -156,28 +156,3 @@ perfFrame:SetScript('OnEvent', function()
     ENV.performance[arg1] = {time = loadTime, memory = memUsed}
     lastMem = currentMem
 end)
-
-
-
-
-
-
------------------------------------------- v1
--- local allowedAddons = {
---     ['SomeAddon'] = true,
---     ['AnotherAddon'] = true
--- }
-
--- local originalDebugstack = debugstack
--- function ENV:GetEnv()
---     if debugstack ~= originalDebugstack then return end
-
---     local stack = debugstack()
---     local _, _, callerAddon = string.find(stack, 'AddOns\\([^\\]+)\\')
-
---     if not (callerAddon == addonName or allowedAddons[callerAddon]) then
---         error('DRAGONFLIGHT Access denied')
---         return
---     end
---     setfenv(3, self)
--- end
