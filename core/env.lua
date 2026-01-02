@@ -73,18 +73,31 @@ seterrorhandler(function(err)
 end)
 
 local originalDebugstack = debugstack
+local originalStringFind = string.find
+local originalStringSub = string.sub
 function ENV:GetEnv()
-    if debugstack ~= originalDebugstack then return end
+    if debugstack ~= originalDebugstack then
+        error('DRAGONFLIGHT Access denied')
+        return
+    end
+    if string.find ~= originalStringFind then
+        error('DRAGONFLIGHT Access denied')
+        return
+    end
+    if string.sub ~= originalStringSub then
+        error('DRAGONFLIGHT Access denied')
+        return
+    end
 
     local stack = debugstack(2)
 
     local pos = 1
     while pos do
         local lineStart = pos
-        local lineEnd = string.find(stack, '\n', pos)
-        local line = lineEnd and string.sub(stack, lineStart, lineEnd - 1) or string.sub(stack, lineStart)
+        local lineEnd = originalStringFind(stack, '\n', pos)
+        local line = lineEnd and originalStringSub(stack, lineStart, lineEnd - 1) or originalStringSub(stack, lineStart)
 
-        local _, _, foundAddon = string.find(line, 'Interface\\AddOns\\([^\\]+)\\')
+        local _, _, foundAddon = originalStringFind(line, 'Interface\\AddOns\\([^\\]+)\\')
         if foundAddon and foundAddon ~= addonName then
             error('DRAGONFLIGHT Access denied')
             return
