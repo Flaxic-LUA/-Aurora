@@ -1,5 +1,5 @@
 DRAGONFLIGHT()
-if IsAddOnLoaded'--Debugger' then redprint'ERROR LUA EXITED EARLY' return end
+if IsAddOnLoaded(info.debugger) then redprint'ERROR LUA EXITED EARLY' return end
 
 DF:NewDefaults('error', {
     enabled = {value = true},

@@ -3,10 +3,6 @@ DRAGONFLIGHT()
 DF:NewDefaults('editmode', {
     version = {value = '1.0'},
     enabled = {value = true},
-    gui = {
-        {indexRange = {1, 1}, tab = 'editmode', subtab = 1},
-    },
-
     framePositions = {value = {}},
 })
 
@@ -462,10 +458,4 @@ DF:NewModule('editmode', 2, 'PLAYER_AFTER_ENTERING_WORLD', function()
     exitBtn:SetScript('OnClick', function() editFrame:Hide() end)
 
     table.insert(UISpecialFrames, editFrame:GetName())
-
-    -- callbacks
-    local helpers = {}
-    local callbacks = {}
-
-    DF:NewCallbacks('editmode', callbacks)
 end)

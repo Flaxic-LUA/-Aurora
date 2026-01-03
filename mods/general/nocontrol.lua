@@ -36,8 +36,6 @@ DF:NewDefaults('nocontrol', {
 -- module info:
 -- /script for t=1,3 do for i=1,GetNumTalents(t) do local n,_,_,_,r=GetTalentInfo(t,i) if n=='Improved Sprint' then DEFAULT_CHAT_FRAME:AddMessage(t..' '..i..' '..r) end end end
 -- POUNCE BLEED EXCEPTION: Debuff lasts 18s (2s stun + 16s bleed), but we only show frame during stun phase.
--- Solution: Set display duration to 2s in FindHighestPriorityDebuff, store timestamp when shown, hide frame in OnUpdate after 2s elapsed.
--- This prevents frame from displaying during the bleed-only phase while maintaining normal behavior for actual stun duration.
 
 DF:NewModule('nocontrol', 1, function()
     local libdebuff = DF.lib.libdebuff
@@ -191,7 +189,6 @@ DF:NewModule('nocontrol', 1, function()
 
     local spellSlotCache = {}
     local trinketSlotCache = {}
-    local sharedCooldowns = {}
     local currentSpellID = nil
     local pounceBleedShowTime = nil
     local glowAlpha = 1

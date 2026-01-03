@@ -2444,7 +2444,7 @@ DF.tables["debuffs"] = {
 }
 
 -- custom entries not detected by DBC extractor
-DF.tables["debuffs"]['Cone of Cold']={[0]=8.0,} -- Cone of Cold
+DF.tables["debuffs"]['Cone of Cold']={[0]=8.0,}
 
 DF.tables["totems"] = {
   ["Disease Cleansing Totem"] = "spell_nature_diseasecleansingtotem",

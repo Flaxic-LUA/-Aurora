@@ -310,5 +310,3 @@ end
 
 -- expose
 DF.setups.buffs = setup
-DF.common.KillFrame(BuffFrame)
-DF.common.KillFrame(TemporaryEnchantFrame)

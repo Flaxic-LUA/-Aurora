@@ -46,6 +46,9 @@ end
 DF:NewDefaults('buffs', defaults)
 
 DF:NewModule('buffs', 1, 'PLAYER_LOGIN', function()
+    DF.common.KillFrame(BuffFrame)
+    DF.common.KillFrame(TemporaryEnchantFrame)
+
     local setup = DF.setups.buffs
     local frameSpacing = DF.profile['buffs']['frameSpacing'] or 15
 

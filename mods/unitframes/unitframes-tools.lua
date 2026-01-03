@@ -42,19 +42,6 @@ local setup = {
     },
 }
 
-function setup:ShowRightClickMenu(unit)
-    if unit == 'player' then
-        ToggleDropDownMenu(1, nil, PlayerFrameDropDown, this, 0, 0)
-    elseif unit == 'target' then
-        ToggleDropDownMenu(1, nil, TargetFrameDropDown, this, 0, 0)
-    elseif unit == 'pet' then
-        ToggleDropDownMenu(1, nil, PetFrameDropDown, this, 0, 0)
-    elseif strfind(unit, 'party%d') then
-        local partyId = string.gsub(unit, 'party', '')
-        ToggleDropDownMenu(1, nil, getglobal('PartyMemberFrame' .. partyId .. 'DropDown'), this, 0, 0)
-    end
-end
-
 -- create
 function setup:CreateUnitFrame(unit, width, height)
     local frameName = 'DF_'..string.gsub(unit, '^%l', string.upper)..'Frame'
@@ -348,6 +335,19 @@ function setup:CreateUnitFrame(unit, width, height)
     end
     table.insert(self.portraits, unitFrame)
     return unitFrame
+end
+
+function setup:ShowRightClickMenu(unit)
+    if unit == 'player' then
+        ToggleDropDownMenu(1, nil, PlayerFrameDropDown, this, 0, 0)
+    elseif unit == 'target' then
+        ToggleDropDownMenu(1, nil, TargetFrameDropDown, this, 0, 0)
+    elseif unit == 'pet' then
+        ToggleDropDownMenu(1, nil, PetFrameDropDown, this, 0, 0)
+    elseif strfind(unit, 'party%d') then
+        local partyId = string.gsub(unit, 'party', '')
+        ToggleDropDownMenu(1, nil, getglobal('PartyMemberFrame' .. partyId .. 'DropDown'), this, 0, 0)
+    end
 end
 
 -- updates

@@ -16,9 +16,9 @@ DF:NewDefaults('questtracker', {
 
 })
 
+-- we boot this module on player login due to pfquest being huge and i just want to be sure
+-- maybe we make a specific event for big addons like pfquest/aux etc in libevents to be extra safe
 DF:NewModule('questtracker', 1, 'PLAYER_LOGIN' ,function()
-    -- we boot this module on player login due to pfquest being huge and i just want to be sure
-    -- maybe we make a specific event for big addons like pfquest/aux etc in libevents to be extra safe
     local HEADER_TO_OBJECTIVE_SPACING = -2
     local QUEST_TO_QUEST_SPACING = -8
     local INITIAL_YOFFSET = -10

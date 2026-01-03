@@ -17,7 +17,6 @@ function DF.hooks.Hook(tbl, name, handler)
     local orig = tbl[name]
     if not orig then return end
 
-    -- store potential for unhooking
     DF.hooks.registry[tbl] = DF.hooks.registry[tbl] or {}
     DF.hooks.registry[tbl][name] = orig
 
@@ -38,7 +37,6 @@ function DF.hooks.HookSecureFunc(tbl, name, func)
     local orig = tbl[name]
     if not orig then return end
 
-    -- Store original for unhooking
     DF.hooks.registry[tbl] = DF.hooks.registry[tbl] or {}
     DF.hooks.registry[tbl][name] = orig
 
@@ -52,7 +50,7 @@ end
 -- WrapHandler: wrap callback registration functions
 -- getter (string) - function name that gets current handler
 -- setter (string) - function name that sets new handler
--- wrapper (function) - your function that wraps the original handler
+-- wrapper (function) - function that wraps the original handler
 -- returns: nothing
 function DF.hooks.WrapHandler(getter, setter, wrapper)
     local original = _G[getter]()
@@ -64,13 +62,12 @@ end
 -- HookScript: hook frame script that runs before or after original
 -- frame (frame) - frame object to hook script on
 -- script (string) - script name to hook
--- handler (function) - your hook function
+-- handler (function) - hook function
 -- runAfter (boolean) - if true, runs after original; if false/nil, runs before original
 -- returns: nothing
 function DF.hooks.HookScript(frame, script, handler, runAfter)
     local orig = frame:GetScript(script)
 
-    -- Store original for unhooking
     DF.hooks.registry[frame] = DF.hooks.registry[frame] or {}
     DF.hooks.registry[frame][script] = orig
 
@@ -109,7 +106,6 @@ function DF.hooks.Unhook(tbl, name)
     if DF.hooks.registry[tbl] and DF.hooks.registry[tbl][name] then
         local orig = DF.hooks.registry[tbl][name]
 
-        -- Check if this is a frame script by testing if GetScript works
         local isScript = false
         if tbl.GetScript then
             local success = pcall(function() tbl:GetScript(name) end)

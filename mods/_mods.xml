@@ -25,7 +25,7 @@
     <Include file="chat\chat.lua"/>
     <Include file="chat\intellisense.lua"/>
 
-    <!-- Fixes -->
+    <!-- FIXES -->
     <Include file="fixes\tempfixes.lua"/>
 
     <!-- GENERAL -->
@@ -43,6 +43,14 @@
     <Include file="general\sync.lua"/>
     <Include file="general\tweaks.lua"/>
     <Include file="general\uiparent.lua"/>
+
+    <!-- GUI -->
+    <Include file="gui\base.lua"/>
+    <Include file="gui\extrapanels.lua"/>
+    <Include file="gui\extrapanels2.lua"/>
+    <Include file="gui\profiles.lua"/>
+    <Include file="gui\extrapanels4.lua"/>
+    <Include file="gui\generator.lua"/>
 
     <!-- MICROMENU -->
     <Include file="micromenu\micromenu-tools.lua"/>
@@ -89,12 +97,4 @@
 
     <!-- XPREP -->
     <Include file="xprep\xprep.lua"/>
-
-    <!-- GUI -->
-    <Include file="gui\base.lua"/>
-    <Include file="gui\extrapanels.lua"/>
-    <Include file="gui\extrapanels2.lua"/>
-    <Include file="gui\profiles.lua"/>
-    <Include file="gui\extrapanels4.lua"/>
-    <Include file="gui\generator.lua"/>
 </Ui>

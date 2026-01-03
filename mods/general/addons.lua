@@ -6,6 +6,12 @@ DF:NewDefaults('addons', {
 })
 
 DF:NewModule('addons', 1, function()
+    local totalAddons = GetNumAddOns()
+    local initialStates = {}
+    local checkboxes = {}
+    local addonRows = {}
+    local pendingChanges = {}
+
     local addonsFrame = DF.ui.CreatePaperDollFrame('DF_AddonsFrame', UIParent, 550, 450, 2)
     addonsFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
     addonsFrame:EnableMouse(true)
@@ -13,12 +19,6 @@ DF:NewModule('addons', 1, function()
 
     local header = DF.ui.Font(addonsFrame, 12, 'Addons', {1, 1, 1}, 'CENTER')
     header:SetPoint('TOP', addonsFrame, 'TOP', 0, -6)
-
-    local totalAddons = GetNumAddOns()
-    local initialStates = {}
-    local checkboxes = {}
-    local addonRows = {}
-    local pendingChanges = {}
 
     local reloadBtn = DF.ui.Button(addonsFrame, 'Reload UI', 100, 30)
     reloadBtn:SetPoint('BOTTOM', addonsFrame, 'BOTTOM', 0, 10)
@@ -181,10 +181,4 @@ DF:NewModule('addons', 1, function()
     scrollFrame.updateScrollBar()
 
     table.insert(UISpecialFrames, addonsFrame:GetName())
-
-    -- callbacks
-    local helpers = {}
-    local callbacks = {}
-
-    DF:NewCallbacks('addons', callbacks)
 end)

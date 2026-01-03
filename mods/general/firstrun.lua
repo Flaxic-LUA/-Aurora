@@ -55,41 +55,37 @@ DF:NewModule('firstrun', 1, function()
     local block4 = DF.ui.Font(contentFrame, 12, 'So |cffffcc00UPDATE frequently|r or |cffffcc00suffer|r,\n\nGuzruul.', {1, 1, 1}, 'CENTER')
     block4:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 0, 60)
 
-    local function ApplyProfile(profileName)
-        local profile = DF.tables.profiles[profileName]
-        for option, value in pairs(profile) do
-            if option == 'framePositions' then
-                DF.profile['editmode']['framePositions'] = value
-                for name, pos in pairs(value) do
-                    local frame = getglobal(name)
-                    frame:ClearAllPoints()
-                    if pos.parent then
-                        frame:SetPoint('CENTER', getglobal(pos.parent), 'CENTER', pos.rx, pos.ry)
-                    else
-                        frame:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', pos.x, pos.y)
-                    end
-                end
-            else
-                for module, _ in pairs(DF.defaults) do
-                    if DF.defaults[module][option] then
-                        DF:SetConfig(module, option, value)
-                    end
-                end
-            end
-        end
-    end
+    -- local function ApplyProfile(profileName)
+    --     local profile = DF.tables.profiles[profileName]
+    --     for option, value in pairs(profile) do
+    --         for module, _ in pairs(DF.defaults) do
+    --             if DF.defaults[module][option] then
+    --                 DF:SetConfig(module, option, value)
+    --             end
+    --         end
+    --     end
 
-    local dragonflightBtn = DF.ui.Button(contentFrame, 'Dragonflight', 100, 30)
-    dragonflightBtn:SetPoint('BOTTOM', contentFrame, 'BOTTOM', -125, 8)
-    dragonflightBtn:SetScript('OnClick', function()
-        ApplyProfile('Dragonflight')
-    end)
+    --     local posData = profile.positions
+    --     for i = 1, table.getn(posData) do
+    --         local data = posData[i]
+    --         local f = getglobal(data[1])
+    --         f:ClearAllPoints()
+    --         f:SetPoint(data[2], data[3], data[4], data[5], data[6])
+    --         DF.setups.SaveFramePosition(f)
+    --     end
+    -- end
 
-    local pfuiBtn = DF.ui.Button(contentFrame, 'Pfui', 100, 30)
-    pfuiBtn:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 125, 8)
-    pfuiBtn:SetScript('OnClick', function()
-        ApplyProfile('Pfui')
-    end)
+    -- local dragonflightBtn = DF.ui.Button(contentFrame, 'Dragonflight', 100, 30)
+    -- dragonflightBtn:SetPoint('BOTTOM', contentFrame, 'BOTTOM', -125, 8)
+    -- dragonflightBtn:SetScript('OnClick', function()
+    --     ApplyProfile('Dragonflight')
+    -- end)
+
+    -- local pfuiBtn = DF.ui.Button(contentFrame, 'Pfui', 100, 30)
+    -- pfuiBtn:SetPoint('BOTTOM', contentFrame, 'BOTTOM', 125, 8)
+    -- pfuiBtn:SetScript('OnClick', function()
+    --     ApplyProfile('Pfui')
+    -- end)
 
     local countdown = 15
     local okBtn = DF.ui.Button(contentFrame, countdown..'', 100, 30)

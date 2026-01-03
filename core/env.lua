@@ -25,6 +25,7 @@ local ENV = setmetatable({
             patch = GetAddOnMetadata(addonName, 'X-Patch'),
             author = GetAddOnMetadata(addonName, 'Author'),
             github = 'github.com/Flaxic-LUA/-Dragonflight3',
+            debugger = '!!!Debugger'
         },
         media = setmetatable({
             fonts = {
@@ -66,12 +67,6 @@ local ENV = setmetatable({
         end}),
 }, {__index = getfenv()})
 
-local oldErrorHandler = geterrorhandler()
-seterrorhandler(function(err)
-    table.insert(ENV.errors, {time = GetTime(), msg = err, stack = debugstack(2)})
-    oldErrorHandler(err)
-end)
-
 function ENV.print(msg)
     DEFAULT_CHAT_FRAME:AddMessage(ENV.info.addonNameColor .. ': ' .. tostring(msg))
 end
@@ -102,6 +97,14 @@ end
 
 function DRAGONFLIGHT()
     setfenv(2, ENV)
+end
+
+do
+    local og = geterrorhandler()
+    seterrorhandler(function(err)
+        table.insert(ENV.errors, {time = GetTime(), msg = err, stack = debugstack(2)})
+        og(err)
+    end)
 end
 
 do
