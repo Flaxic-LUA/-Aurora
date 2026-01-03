@@ -124,29 +124,20 @@ DF:NewModule('gui-generator', 3, function()
         local guiBase = DF.setups.guiBase
         local widgets = {}
         local dependencies = {}
+        local allPanelElements = {}
 
         for moduleName, moduleData in pairs(collectedModules) do
-            if table.getn(moduleData.elements) == 0 then
-            else
-                table.sort(moduleData.elements, function(a, b)
-                    if a.category == b.category then
-                        return (a.indexInCategory or 0) < (b.indexInCategory or 0)
-                    end
-                    return (a.category or '') < (b.category or '')
-                end)
-
-                local panelElements = {}
-
+            if table.getn(moduleData.elements) > 0 then
                 for i = 1, table.getn(moduleData.elements) do
                     local element = moduleData.elements[i]
                     local tabKey, subtab = setup:FindPanelForCategory(moduleData.gui, element.category, element.key, moduleName)
 
                     if tabKey then
                         local panelKey = subtab and (tabKey .. '_' .. subtab) or tabKey
-                        if not panelElements[panelKey] then
-                            panelElements[panelKey] = {elements = {}}
+                        if not allPanelElements[panelKey] then
+                            allPanelElements[panelKey] = {}
                         end
-                        table.insert(panelElements[panelKey].elements, element)
+                        table.insert(allPanelElements[panelKey], element)
                     end
 
                     if element.dependency then
@@ -157,8 +148,8 @@ DF:NewModule('gui-generator', 3, function()
                             end
                             table.insert(dependencies[depKey], {mod = moduleName, key = element.key, state = element.dependency.state, stateNot = element.dependency.stateNot})
                         elseif element.dependency[1] then
-                            for i = 1, table.getn(element.dependency) do
-                                local singleDep = element.dependency[i]
+                            for j = 1, table.getn(element.dependency) do
+                                local singleDep = element.dependency[j]
                                 if singleDep.key then
                                     local depKey = moduleName .. '.' .. singleDep.key
                                     if not dependencies[depKey] then
@@ -170,31 +161,44 @@ DF:NewModule('gui-generator', 3, function()
                         end
                     end
                 end
+            end
+        end
 
-                for panelKey, panelData in pairs(panelElements) do
-                    if not guiBase.panels[panelKey] then
-                        local panel = CreateFrame('Frame', nil, guiBase.panelframe.content)
-                        panel:SetAllPoints(guiBase.panelframe.content)
-                        panel:Hide()
-                        guiBase.panels[panelKey] = panel
+        for panelKey, elements in pairs(allPanelElements) do
+            table.sort(elements, function(a, b)
+                if a.category ~= b.category then
+                    return (a.category or '') < (b.category or '')
+                end
+                if a.moduleName ~= b.moduleName then
+                    return (a.moduleName or '') < (b.moduleName or '')
+                end
+                return (a.indexInCategory or 0) < (b.indexInCategory or 0)
+            end)
+
+            if not guiBase.panels[panelKey] then
+                local panel = CreateFrame('Frame', nil, guiBase.panelframe.content)
+                panel:SetAllPoints(guiBase.panelframe.content)
+                panel:Hide()
+                guiBase.panels[panelKey] = panel
+            end
+
+            local panel = guiBase.panels[panelKey]
+            if panel then
+                local yOffset = setup.initialYOffset
+                local lastCategory = nil
+
+                for i = 1, table.getn(elements) do
+                    local element = elements[i]
+                    local moduleName = element.moduleName
+
+                    if element.category and element.category ~= lastCategory then
+                        local header = DF.ui.Font(panel, 13, element.category, {1, 0.82, 0}, 'LEFT')
+                        header:SetPoint('TOPLEFT', panel, 'TOPLEFT', setup.paddingLeft, yOffset)
+                        yOffset = yOffset - setup.spacingHeader
+                        lastCategory = element.category
                     end
 
-                    local panel = guiBase.panels[panelKey]
-                    if panel then
-                        local yOffset = setup.initialYOffset
-                        local lastCategory = nil
-
-                        for i = 1, table.getn(panelData.elements) do
-                            local element = panelData.elements[i]
-
-                            if element.category and element.category ~= lastCategory then
-                                local header = DF.ui.Font(panel, 13, element.category, {1, 0.82, 0}, 'LEFT')
-                                header:SetPoint('TOPLEFT', panel, 'TOPLEFT', setup.paddingLeft, yOffset)
-                                yOffset = yOffset - setup.spacingHeader
-                                lastCategory = element.category
-                            end
-
-                            if element.element == 'checkbox' then
+                    if element.element == 'checkbox' then
                                 local mod = moduleName
                                 local key = element.key
                                 local dep = element.dependency
@@ -247,7 +251,7 @@ DF:NewModule('gui-generator', 3, function()
                                 end
                                 yOffset = yOffset - setup.spacingCheckbox
 
-                            elseif element.element == 'slider' then
+                    elseif element.element == 'slider' then
                                 local mod = moduleName
                                 local key = element.key
                                 local dep = element.dependency
@@ -313,7 +317,7 @@ DF:NewModule('gui-generator', 3, function()
                                 end
                                 yOffset = yOffset - 40
 
-                            elseif element.element == 'dropdown' then
+                    elseif element.element == 'dropdown' then
                                 local mod = moduleName
                                 local key = element.key
                                 local dep = element.dependency
@@ -388,7 +392,7 @@ DF:NewModule('gui-generator', 3, function()
                                 end
                                 yOffset = yOffset - setup.spacingDropdown
 
-                            elseif element.element == 'colorpicker' then
+                    elseif element.element == 'colorpicker' then
                                 local mod = moduleName
                                 local key = element.key
                                 local dep = element.dependency
@@ -413,15 +417,13 @@ DF:NewModule('gui-generator', 3, function()
                                     end
                                 end
                                 yOffset = yOffset - setup.spacingColorpicker
-                            end
-                        end
-
-                        local panelHeight = math.abs(yOffset) + 10
-                        panel:SetHeight(panelHeight)
-                        guiBase.panelframe.content:SetHeight(panelHeight)
-                        guiBase.panelframe.updateScrollBar()
                     end
                 end
+
+                local panelHeight = math.abs(yOffset) + 10
+                panel:SetHeight(panelHeight)
+                guiBase.panelframe.content:SetHeight(panelHeight)
+                guiBase.panelframe.updateScrollBar()
             end
         end
     end

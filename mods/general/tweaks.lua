@@ -3,18 +3,9 @@ DRAGONFLIGHT()
 DF:NewDefaults('tweaks', {
     enabled = {value = true},
     version = {value = '1.0'},
-    -- defaults gui structure: {tab = 'tabname', subtab = 'subtabname', 'category1', 'category2', ...}
-    -- Named keys (tab, subtab) define panel location, array elements define categories within that panel
-    -- Each category groups related settings with a header, settings use category + indexInCategory for ordering
     gui = {
         {tab = 'general', subtab = 'tweaks', 'General', 'Chat'},
     },
-
-    -- defaults examples:
-    -- animationTexture = {value = 'Aura1', metadata = {element = 'dropdown', category = 'Animation', indexInCategory = 2, description = 'Animation texture style', options = {'Aura1', 'Aura2', 'Aura3', 'Aura4', 'Glow1', 'Glow2', 'Shock1', 'Shock2', 'Shock3'}, dependency = {key = 'minimapAnimation', state = true}}},
-    -- customPlayerArrow = {value = true, metadata = {element = 'checkbox', category = 'Arrow', indexInCategory = 1, description = 'Use Dragonflight\'s custom player arrow', dependency = {key = 'showMinimap', state = true}}},
-    -- playerArrowScale = {value = 1, metadata = {element = 'slider', category = 'Arrow', indexInCategory = 3, description = 'Size of the player arrow', min = 0.5, max = 2, stepSize = 0.1, dependency = {key = 'showMinimap', state = true}}},
-    -- playerArrowColor = {value = {1, 1, 1}, metadata = {element = 'colorpicker', category = 'Arrow', indexInCategory = 4, description = 'Color of the player arrow', dependency = {key = 'customPlayerArrow', state = true}}},
     stanceDancing = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 1, description = 'Automatically switch stance when casting spells'}},
     autoForm = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 2, description = 'Extend stance dancing to cancel active forms for druids and rogues', dependency = {key = 'stanceDancing', state = true}}},
     autoDismount = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 3, description = 'Automatically dismount when casting spells'}},
@@ -23,14 +14,6 @@ DF:NewDefaults('tweaks', {
 })
 
 DF:NewModule('tweaks', 1, function()
-    -- dragonflight module system flow:
-    -- ApplyDefaults() populates DF.profile[module][option] with default values from DF.defaults
-    -- ExecModules() loads modules by calling each enabled module's func() based on priority
-    -- module's func() creates UI/features and calls NewCallbacks() as its last step
-    -- NewCallbacks() registers callbacks and immediately executes them with current DF_Profiles values to initialize module state
-    -- gui changes trigger SetConfig() which updates DF_Profiles then re-executes the callback with new value
-
-    -- base structure area
     local stancedance = CreateFrame('Frame')
     stancedance.scanString = string.gsub(SPELL_FAILED_ONLY_SHAPESHIFT, '%%s', '(.+)')
     stancedance.formString = SPELL_FAILED_NOT_SHAPESHIFT
@@ -46,6 +29,7 @@ DF:NewModule('tweaks', 1, function()
 
     local chatcolor = {}
     chatcolor.hooked = {}
+    chatcolor.scanTimer = 0
     chatcolor.scanner = CreateFrame('Frame')
     chatcolor.scanner:RegisterEvent('PLAYER_ENTERING_WORLD')
     chatcolor.scanner:RegisterEvent('FRIENDLIST_UPDATE')
@@ -104,14 +88,40 @@ DF:NewModule('tweaks', 1, function()
                 local _, class = UnitClass(unit)
                 if name and class then
                     playerCache[name] = class
+                    -- debugprint('Scanned: '..name..' - '..class)
                 end
             end
         end
     end)
 
-    -- callbacks are options that show up for the user in the gui
+    -- chatcolor.tempCache = {}
+    -- chatcolor.scanner:SetScript('OnUpdate', function()
+    --     TargetByName('Ironforge Guard')
+        -- debugprint('OnUpdate running')
+        -- chatcolor.scanTimer = chatcolor.scanTimer + arg1
+        -- if chatcolor.scanTimer >= 0.5 then
+        --     chatcolor.scanTimer = 0
+        --     debugprint('Timer hit')
+        --     if not UnitExists('target') then
+        --         debugprint('Targeting...')
+        --         _G.PlaySound = function() end
+        --         debugprint('Target exists: '..tostring(UnitExists('target')))
+        --         if UnitIsPlayer('target') then
+        --             local name = UnitName('target')
+        --             debugprint('Player found: '..(name or 'nil'))
+        --             if name and not chatcolor.tempCache[name] then
+        --                 chatcolor.tempCache[name] = true
+        --                 debugprint('Auto-targeting: '..name)
+        --             end
+        --         end
+        --         ClearTarget()
+        --         _G.PlaySound = PlaySound
+        --     end
+        -- end
+    -- end)
+
+    -- callbacks
     local callbacks = {}
-    local callbackHelper = {} -- helper table for shared functions only
 
     callbacks.stanceDancing = function(value)
         if value then
@@ -138,7 +148,7 @@ DF:NewModule('tweaks', 1, function()
         end
     end
 
-    callbacks.autoForm = function(value)
+    callbacks.autoForm = function()
     end
 
     callbacks.autoDismount = function(value)

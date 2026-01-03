@@ -3,6 +3,10 @@ DRAGONFLIGHT()
 DF:NewDefaults('characterframe', {
     enabled = {value = true},
     version = {value = '1.0'},
+    gui = {
+        {tab = 'general', subtab = 'tweaks', 'Characterframe'},
+    },
+    showItemRarity = {value = true, metadata = {element = 'checkbox', category = 'Characterframe', indexInCategory = 1, description = 'Show colored borders around items by quality'}},
 })
 
 DF:NewModule('characterframe', 1,'PLAYER_ENTERING_WORLD',function()
@@ -142,9 +146,11 @@ DF:NewModule('characterframe', 1,'PLAYER_ENTERING_WORLD',function()
     end
 
     local slots = {'Head', 'Neck', 'Shoulder', 'Shirt', 'Chest', 'Waist', 'Legs', 'Feet', 'Wrist', 'Hands', 'Finger0', 'Finger1', 'Trinket0', 'Trinket1', 'Back', 'MainHand', 'SecondaryHand', 'Ranged', 'Tabard', 'Ammo'}
+    local slotButtons = {}
     for _, slot in slots do
         local button = getglobal('Character' .. slot .. 'Slot')
         if button then
+            table.insert(slotButtons, button)
             local icon = getglobal('Character' .. slot .. 'SlotIconTexture')
             if icon then
                 local highlight = button:CreateTexture(nil, 'HIGHLIGHT')
@@ -153,13 +159,54 @@ DF:NewModule('characterframe', 1,'PLAYER_ENTERING_WORLD',function()
                 highlight:SetTexture(media['tex:actionbars:btn_highlight_strong.blp'])
                 highlight:SetBlendMode('ADD')
                 button:SetHighlightTexture(highlight)
+
+                button.qualityBorder = CreateFrame('Frame', nil, button)
+                button.qualityBorder:SetAllPoints(icon)
+                button.qualityBorderTex = button.qualityBorder:CreateTexture(nil, 'OVERLAY')
+                button.qualityBorderTex:SetTexture('Interface\\Buttons\\UI-ActionButton-Border')
+                button.qualityBorderTex:SetBlendMode('ADD')
+                button.qualityBorderTex:SetPoint('TOPLEFT', button.qualityBorder, 'TOPLEFT', -14, 14)
+                button.qualityBorderTex:SetPoint('BOTTOMRIGHT', button.qualityBorder, 'BOTTOMRIGHT', 14, -14)
+                button.qualityBorder:Hide()
             end
         end
     end
 
-    -- callbacks
+    local function UpdateQualityBorders(enabled)
+        local colors = {{0.62,0.62,0.62},{1,1,1},{0,1,0},{0,0.44,0.87},{0.64,0.21,0.93},{1,0.5,0}}
+        for _, button in pairs(slotButtons) do
+            if button.qualityBorder then
+                if enabled then
+                    local quality = GetInventoryItemQuality('player', button:GetID())
+                    if quality and quality > 1 then
+                        local c = colors[quality + 1] or {1,1,1}
+                        button.qualityBorderTex:SetVertexColor(c[1], c[2], c[3], .7)
+                        button.qualityBorder:Show()
+                    else
+                        button.qualityBorder:Hide()
+                    end
+                else
+                    button.qualityBorder:Hide()
+                end
+            end
+        end
+    end
+
+    local inventoryFrame = CreateFrame('Frame')
+    inventoryFrame:RegisterEvent('UNIT_INVENTORY_CHANGED')
+    inventoryFrame:SetScript('OnEvent', function()
+        if event == 'UNIT_INVENTORY_CHANGED' and arg1 == 'player' then
+            if DF_Profiles and DF.profile['characterframe'] and DF.profile['characterframe']['showItemRarity'] then
+                UpdateQualityBorders(true)
+            end
+        end
+    end)
+
     local callbacks = {}
-    local callbackHelper = {definesomethinginheredirectly}
+
+    callbacks.showItemRarity = function(value)
+        UpdateQualityBorders(value)
+    end
 
     DF:NewCallbacks('characterframe', callbacks)
 end)

@@ -11,7 +11,7 @@ DF:NewModule('firstrun', 1, function()
     DF_Profiles.meta.secondInstallShown = DF_Profiles.meta.secondInstallShown or {}
     if DF_Profiles.meta.secondInstallShown[charKey] then return end
 
-    local installFrame = DF.ui.CreatePaperDollFrame('DF_InstallPanel', UIParent, 450, 400, 1)
+    local installFrame = DF.ui.CreatePaperDollFrame('DF_InstallPanel', UIParent, 400, 400, 1)
     installFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
     installFrame:SetFrameStrata('HIGH')
     installFrame:EnableMouse(true)

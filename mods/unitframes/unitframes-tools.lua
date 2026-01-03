@@ -1341,6 +1341,13 @@ function setup:OnEvent()
         for i = 1, table.getn(setup.portraits) do
             local portrait = setup.portraits[i]
             if arg1 == portrait.unit then
+                portrait.hpBar.max = UnitHealthMax(portrait.unit)
+                portrait.hpBar:SetValue(UnitHealth(portrait.unit))
+                portrait.powerBar.max = UnitManaMax(portrait.unit)
+                portrait.powerBar:SetValue(UnitMana(portrait.unit))
+                -- setup:UpdateHealthBarColor(portrait, portrait.unit)
+                -- setup:UpdatePowerBarColor(portrait)
+                setup:UpdateBarText(portrait)
                 local visibleBuffs = setup:UpdateBuffs(portrait)
                 setup:UpdateDebuffs(portrait, math.ceil(visibleBuffs / 5))
             end
