@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local setup = DF.setups.unitframes
 DF:NewDefaults('unitframes', setup:GenerateDefaults())

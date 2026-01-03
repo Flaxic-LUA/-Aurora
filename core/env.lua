@@ -72,43 +72,6 @@ seterrorhandler(function(err)
     oldErrorHandler(err)
 end)
 
-local originalDebugstack = debugstack
-local originalStringFind = string.find
-local originalStringSub = string.sub
-function ENV:GetEnv()
-    if debugstack ~= originalDebugstack then
-        error('DRAGONFLIGHT Access denied')
-        return
-    end
-    if string.find ~= originalStringFind then
-        error('DRAGONFLIGHT Access denied')
-        return
-    end
-    if string.sub ~= originalStringSub then
-        error('DRAGONFLIGHT Access denied')
-        return
-    end
-
-    local stack = debugstack(2)
-
-    local pos = 1
-    while pos do
-        local lineStart = pos
-        local lineEnd = originalStringFind(stack, '\n', pos)
-        local line = lineEnd and originalStringSub(stack, lineStart, lineEnd - 1) or originalStringSub(stack, lineStart)
-
-        local _, _, foundAddon = originalStringFind(line, 'Interface\\AddOns\\([^\\]+)\\')
-        if foundAddon and foundAddon ~= addonName then
-            error('DRAGONFLIGHT Access denied')
-            return
-        end
-
-        pos = lineEnd and lineEnd + 1 or nil
-    end
-
-    setfenv(3, self)
-end
-
 function ENV.print(msg)
     DEFAULT_CHAT_FRAME:AddMessage(ENV.info.addonNameColor .. ': ' .. tostring(msg))
 end
@@ -137,8 +100,8 @@ function ENV.dependency(depName)
     return true
 end
 
-function UNLOCKDRAGONFLIGHT()
-    ENV:GetEnv()
+function DRAGONFLIGHT()
+    setfenv(2, ENV)
 end
 
 do
@@ -156,14 +119,13 @@ do
 end
 
 local lastMem
-local perfFrame = CreateFrame'Frame'
-perfFrame:RegisterEvent'ADDON_LOADED'
-perfFrame:RegisterEvent'VARIABLES_LOADED'
-perfFrame:SetScript('OnEvent', function()
+local f = CreateFrame'Frame'
+f:RegisterEvent'ADDON_LOADED'
+f:RegisterEvent'VARIABLES_LOADED'
+f:SetScript('OnEvent', function()
     if event == 'VARIABLES_LOADED' then
-        perfFrame:UnregisterAllEvents()
-        perfFrame:SetScript('OnEvent', nil)
-        -- ENV.redprint('loaded in ' .. string.format('%.3f', GetTime() - startTime) .. 's')
+        f:UnregisterAllEvents()
+        f:SetScript('OnEvent', nil)
         return
     end
     if arg1 == ENV.info.addonName then

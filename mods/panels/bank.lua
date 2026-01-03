@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF:NewDefaults('bank', {
     version = {value = '1.0'},

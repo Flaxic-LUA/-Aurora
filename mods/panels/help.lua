@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF:NewDefaults('help', {
     version = {value = '1.0'},

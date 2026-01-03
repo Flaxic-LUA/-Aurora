@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF:NewDefaults('xprep', {
     version = {value = '1.0'},
@@ -412,10 +412,12 @@ DF:NewModule('xprep', 1, 'PLAYER_LOGIN', function()
 
     callbacks.xpBarWidth = function(value)
         xpbar:SetWidth(value)
+        xpbar:Update()
     end
 
     callbacks.xpBarHeight = function(value)
         xpbar:SetHeight(value)
+        xpbar:Update()
     end
 
     callbacks.xpBarAlpha = function(value)
@@ -436,10 +438,12 @@ DF:NewModule('xprep', 1, 'PLAYER_LOGIN', function()
 
     callbacks.repBarWidth = function(value)
         repbar:SetWidth(value)
+        repbar:Update()
     end
 
     callbacks.repBarHeight = function(value)
         repbar:SetHeight(value)
+        repbar:Update()
     end
 
     callbacks.repBarAlpha = function(value)

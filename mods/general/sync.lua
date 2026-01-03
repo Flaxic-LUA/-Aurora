@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 -- dependent on: -Dragonflight3-SYNC
 -- sync gives dragonflight a custom hidden channel for communication, we can
@@ -10,9 +10,7 @@ UNLOCKDRAGONFLIGHT()
 -- we wont do any polls for now could kill a hardcore player :(
 
 local syncFrame = CreateFrame('Frame')
-local addonUsers = {}
 local CHANNEL_NAME = 'DragonflightSync'
-local channelReady = false
 local updateShown = false
 local isAdmin = UnitName('player') == a()
 local major, minor, fix = DF.lua.match(info.version, '(%d+)%.(%d+)%.(%d+)')
@@ -24,6 +22,7 @@ local infoCountTimer = nil
 local pollResponses = {}
 local activePollQuestion = ''
 local debugMode = false
+local pendingPoll = nil
 
 -- filter messages right away, due to "Joined Channel" and other
 -- messages coming in before SYNC_READY
@@ -43,15 +42,15 @@ function syncFrame:OnPlayerEnteringWorld()
     if DF_GlobalData.highestVersion > localversion then
         local maj = math.floor(DF_GlobalData.highestVersion / 10000)
         local min = math.floor((DF_GlobalData.highestVersion - maj*10000) / 100)
-        local fix = DF_GlobalData.highestVersion - maj*10000 - min*100
-        print('New version available: ' .. maj .. '.' .. min .. '.' .. fix)
+        local fixVer = DF_GlobalData.highestVersion - maj*10000 - min*100
+        print('New version available: ' .. maj .. '.' .. min .. '.' .. fixVer)
         print('Download: ' .. info.github)
         updateShown = true
     end
 
     -- check if already in channel
     for i = 1, 10 do
-        local id, name = GetChannelName(i)
+        local _, name = GetChannelName(i)
         if name and string.find(name, CHANNEL_NAME) then
             isInChannel = true
             break
@@ -84,7 +83,7 @@ function syncFrame:OnPlayerEnteringWorld()
 
             -- check if it's a number (channel shortcut)
             if tonumber(name) then
-                local channelNum, channelName = GetChannelName(tonumber(name))
+                local _, channelName = GetChannelName(tonumber(name))
                 if channelName and string.find(string.lower(channelName), 'dragonflight') then
                     redprint('Blocked. System requires DragonflightSync.')
                     return
@@ -116,12 +115,12 @@ function syncFrame:OnPlayerEnteringWorld()
 
             local channel = gsub(text, '/([0-9]+).*', '%1')
             if string.len(channel) > 0 and channel >= '0' and channel <= '9' then
-                local channelNum, channelName = GetChannelName(channel)
+                local _, channelName = GetChannelName(channel)
                 if channelName and string.find(string.lower(channelName), 'dragonflight') then
                     local found = false
                     -- find first non-sync channel
                     for i = 1, 10 do
-                        local id, name = GetChannelName(i)
+                        local _, name = GetChannelName(i)
                         if name and not string.find(string.lower(name), 'dragonflight') then
                             editBox:SetText('/' .. i .. string.sub(text, string.len(channel) + 2))
                             found = true
@@ -176,12 +175,39 @@ function syncFrame:SendPlayerInfo()
     end
 end
 
+function syncFrame:ShowPendingPoll()
+    if not pendingPoll then return end
+    if UnitAffectingCombat('player') then return end
+
+    local btn1, btn2, question = pendingPoll.btn1, pendingPoll.btn2, pendingPoll.question
+    pendingPoll = nil
+
+    DF.ui.StaticPopup_Show(question, btn1, function()
+        for i = 1, 10 do
+            local id, name = GetChannelName(i)
+            if name and string.find(name, CHANNEL_NAME) then
+                SendChatMessage('#POLLRESPONSE-' .. btn1, 'CHANNEL', nil, id)
+                break
+            end
+        end
+        print('|cffff6600[Admin Message]|r: Thank you for participating!')
+    end, btn2, function()
+        for i = 1, 10 do
+            local id, name = GetChannelName(i)
+            if name and string.find(name, CHANNEL_NAME) then
+                SendChatMessage('#POLLRESPONSE-' .. btn2, 'CHANNEL', nil, id)
+                break
+            end
+        end
+        print('|cffff6600[Admin Message]|r: Thank you for participating!')
+    end, nil, nil, 160, 'Live Admin Poll')
+end
+
 function syncFrame:OnChatMsgChannelDetected()
     if arg9 and string.find(arg9, CHANNEL_NAME) then
         -- version broadcast detection
         if string.find(arg1, '#V') then
             local version = DF.lua.match(arg1, '#V(.+)')
-            addonUsers[arg2] = version
             self:CheckForUpdate(version)
         end
         -- admin help
@@ -212,7 +238,7 @@ function syncFrame:OnChatMsgChannelDetected()
                 end
                 infoCountTimer = DF.timers.delay(5, function()
                     local count = 0
-                    for name, _ in pairs(infoResponses) do
+                    for _, _ in pairs(infoResponses) do
                         count = count + 1
                     end
                     print('|cff00ff00[Admin] ' .. count .. ' users responded|r')
@@ -224,15 +250,15 @@ function syncFrame:OnChatMsgChannelDetected()
                 for i = 1, 10 do
                     local id, name = GetChannelName(i)
                     if name and string.find(name, CHANNEL_NAME) then
-                        SendChatMessage('#INFO' .. playerName, 'CHANNEL', nil, id)
+                        SendChatMessage('#REPLY' .. playerName .. ':' .. info.version, 'CHANNEL', nil, id)
                         break
                     end
                 end
             end
         end
         -- collect info responses for admin
-        if string.find(arg1, '#INFO') and isAdmin and s() then
-            local name = DF.lua.match(arg1, '#INFO(.+)')
+        if string.find(arg1, '#REPLY') and isAdmin and s() then
+            local name = DF.lua.match(arg1, '#REPLY([^:]+)')
             if name then
                 infoResponses[name] = true
             end
@@ -247,10 +273,10 @@ function syncFrame:OnChatMsgChannelDetected()
                         print('|cffff6600[Admin Message]|r: ' .. message)
                     end
                 else
-                    local message = DF.lua.match(arg1, '#ADMIN%-PUSHPRINT(.+)')
-                    if message then
+                    local msg = DF.lua.match(arg1, '#ADMIN%-PUSHPRINT(.+)')
+                    if msg then
                         if debugMode and not (isAdmin and s()) then return end
-                        print('|cffff6600[Admin Message]|r: ' .. message)
+                        print('|cffff6600[Admin Message]|r: ' .. msg)
                     end
                 end
             end
@@ -284,25 +310,8 @@ function syncFrame:OnChatMsgChannelDetected()
                 local btn1, btn2, question = DF.lua.match(pollData, '%[([^|]+)|([^%]]+)%]%s*(.+)')
                 if btn1 and btn2 and question then
                     btn2 = gsub(btn2, '|', '')
-                    DF.ui.StaticPopup_Show(question, btn1, function()
-                        for i = 1, 10 do
-                            local id, name = GetChannelName(i)
-                            if name and string.find(name, CHANNEL_NAME) then
-                                SendChatMessage('#POLLRESPONSE-' .. btn1, 'CHANNEL', nil, id)
-                                break
-                            end
-                        end
-                        print('|cffff6600[Admin Message]|r: Thank you for participating!')
-                    end, btn2, function()
-                        for i = 1, 10 do
-                            local id, name = GetChannelName(i)
-                            if name and string.find(name, CHANNEL_NAME) then
-                                SendChatMessage('#POLLRESPONSE-' .. btn2, 'CHANNEL', nil, id)
-                                break
-                            end
-                        end
-                        print('|cffff6600[Admin Message]|r: Thank you for participating!')
-                    end, nil, nil, 160, 'Live Admin Poll')
+                    pendingPoll = {btn1 = btn1, btn2 = btn2, question = question}
+                    self:ShowPendingPoll()
                 end
             end
         end
@@ -363,7 +372,6 @@ function syncFrame:OnAddonMessage()
         local v, remoteversion = DF.lua.match(arg2, '(.+):(.+)')
         remoteversion = tonumber(remoteversion)
         if v == 'VERSION' and remoteversion then
-            addonUsers[arg4] = remoteversion
             self:CheckForUpdate(remoteversion)
         end
     end
@@ -375,8 +383,8 @@ function syncFrame:CheckForUpdate(versionStr)
         DF_GlobalData.highestVersion = remoteversion
         local maj = math.floor(remoteversion / 10000)
         local min = math.floor((remoteversion - maj*10000) / 100)
-        local fix = remoteversion - maj*10000 - min*100
-        print('New version available: ' .. maj .. '.' .. min .. '.' .. fix)
+        local fixVer = remoteversion - maj*10000 - min*100
+        print('New version available: ' .. maj .. '.' .. min .. '.' .. fixVer)
         print('Download: ' .. info.github)
         updateShown = true
     end
@@ -395,6 +403,7 @@ syncFrame:RegisterEvent('SYNC_READY')
 syncFrame:RegisterEvent('CHAT_MSG_CHANNEL')
 syncFrame:RegisterEvent('CHAT_MSG_ADDON')
 syncFrame:RegisterEvent('PARTY_MEMBERS_CHANGED')
+syncFrame:RegisterEvent('PLAYER_REGEN_ENABLED')
 syncFrame:SetScript('OnEvent', function()
     if event == 'SYNC_READY' then
         syncFrame:UnregisterEvent('SYNC_READY')
@@ -414,6 +423,10 @@ syncFrame:SetScript('OnEvent', function()
 
     if event == 'PARTY_MEMBERS_CHANGED' then
         syncFrame:OnPartyMembersChanged()
+    end
+
+    if event == 'PLAYER_REGEN_ENABLED' then
+        syncFrame:ShowPendingPoll()
     end
 end)
 

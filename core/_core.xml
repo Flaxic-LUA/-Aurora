@@ -1,7 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <Include file="polyfill.lua"/>
     <Include file="env.lua"/>
-    <Include file="api.lua"/>
     <Include file="slash.lua"/>
     <Include file="namespace.lua"/>
     <Include file="init.lua"/>

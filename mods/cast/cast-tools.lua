@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local textures = {
     background = media['tex:castbar:CastingBarBackground.blp'],

@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF:NewDefaults('gui-extrapanels', {
     version = {value = '1.0'},

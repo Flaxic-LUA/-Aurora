@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF.tables['distancecolors_melee'] = {
   {min = 0, max = 5, color = {0, 1, 0}}, -- green

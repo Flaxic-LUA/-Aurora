@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF:NewDefaults('merchantframe', {
     enabled = {value = true},

@@ -1,10 +1,12 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 -- credit to shagu v1.0
 local scanner = DF.lib.libtipscan:GetScanner('libspell')
 local libspell = {}
-
 local spellmaxrank = {}
+local spellindex = {}
+local spellinfo = {}
+
 function libspell:GetSpellMaxRank(name)
     local cache = spellmaxrank[name]
     if cache then return cache[1], cache[2] end
@@ -29,7 +31,6 @@ function libspell:GetSpellMaxRank(name)
     return rank[2], rank[1]
 end
 
-local spellindex = {}
 function libspell:GetSpellIndex(name, rank)
     if not name then return end
     name = string.lower(name)
@@ -56,7 +57,6 @@ function libspell:GetSpellIndex(name, rank)
     return nil
 end
 
-local spellinfo = {}
 function libspell:GetSpellInfo(index, bookType)
     local cache = spellinfo[index]
     if cache then return cache[1], cache[2], cache[3], cache[4], cache[5], cache[6], cache[7], cache[8] end
@@ -114,21 +114,3 @@ resetcache:SetScript('OnEvent', function()
 end)
 
 DF.lib.libspell = libspell
-
--- local testFrame = CreateFrame('Frame')
--- testFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
--- testFrame:SetScript('OnEvent', function()
---     debugprint('=== Testing libspell ===')
-
---     -- Test Fireball
---     debugprint('Test: Fireball spell')
---     local name, rank, icon, castTime, minRange, maxRange, id, book = DF.lib.libspell:GetSpellInfo('Fireball')
---     debugprint('Name: ' .. (name or 'nil'))
---     debugprint('Rank: ' .. (rank or 'nil'))
---     debugprint('Icon: ' .. (icon or 'nil'))
---     debugprint('Cast Time: ' .. (castTime or 0) .. 'ms')
---     debugprint('Range: ' .. (minRange or 0) .. '-' .. (maxRange or 0) .. ' yards')
---     debugprint('ID: ' .. (id or 'nil'))
-
---     debugprint('=== libspell tests complete ===')
--- end)

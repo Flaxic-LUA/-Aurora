@@ -1,6 +1,6 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
--- quick force disabler for now
+-- quick force disabler for now -- TODO doesnt work this way disable needs reload -,-
 local disableList = {'Prat', 'TurtleChatColors', 'Chatter', 'ChatMOD', 'WorldFilter'}
 
 local detectList = {'pfQuest'}

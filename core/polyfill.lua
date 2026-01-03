@@ -1,5 +1,4 @@
 -- provide some global fills for all vanilla clients
-
 _G = getfenv(0)
 
 function print(msg)

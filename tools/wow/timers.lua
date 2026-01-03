@@ -1,12 +1,13 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
+local GetTime = GetTime
+local pairs = pairs
+local pcall = pcall
+
+-- timer operations
 DF.timers.registry = {}
 DF.timers.nextId = 1
 
--- timer operations
-local pairs = pairs
-local pcall = pcall
-local GetTime = GetTime
 local frame = CreateFrame'Frame'
 local registry = DF.timers.registry
 
@@ -38,8 +39,6 @@ local function OnUpdate()
         frame:SetScript('OnUpdate', nil)
     end
 end
-
--- public
 
 -- delay: executes function delay
 -- delay (number) - seconds to wait

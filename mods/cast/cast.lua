@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 if not dependency('SuperWoW') then return end
 
 DF:NewDefaults('castbar', {

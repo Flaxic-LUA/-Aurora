@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local init = {
     eventGroups = {},
@@ -12,6 +12,7 @@ DF.others.blacklist = {
     'ShaguTweaks',
     'ShaguTweaks-extras',
     'ShaguTweaks-mods',
+    -- '!!!Debugger',
 }
 
 DF.others.blacklistFound = false
@@ -54,9 +55,7 @@ function init:ApplyDefaults(profileName)
 end
 
 function init:SetupProfile()
-    local charName = UnitName('player')
-    local realmName = GetRealmName()
-    local charKey = charName .. '-' .. realmName
+    local charKey = UnitName('player') .. '-' .. GetRealmName()
     local profileName = DF_Profiles.meta.characterProfiles[charKey]
     if not profileName and not DF_Profiles.meta.autoAssigned[charKey] then
         profileName = charKey
@@ -75,19 +74,12 @@ function init:CheckBlacklist()
     for _, addonName in pairs(DF.others.blacklist) do
         if IsAddOnLoaded(addonName) then
             table.insert(DF.others.blacklistedAddonsFound, addonName)
-            DF.ui.StaticPopup_Show(
-                'Blacklisted addon detected: ' .. addonName .. '\n\nContinue loading Dragonflight?',
-                'Continue',
-                function()
-                    init:SetupProfile()
-                    if not init:CheckModuleVersions() then
-                        init:ExecModules(true)
-                    end
-                end,
-                'Cancel',
-                function()
+            DF.ui.StaticPopup_Show('Blacklisted addon detected: ' .. addonName .. '\n\nContinue loading Dragonflight?', 'Continue', function()
+                init:SetupProfile()
+                if not init:CheckModuleVersions() then
+                    init:ExecModules(true)
                 end
-            )
+            end, 'Cancel', function() end, nil, nil, 140)
             return true
         end
     end
@@ -100,41 +92,18 @@ function init:CheckDBVersion()
     DF_Profiles.meta.dbversion = DF_Profiles.meta.dbversion or DF.others.dbversion
 
     if DF_Profiles.meta.dbversion ~= DF.others.dbversion then
-        DF.ui.StaticPopup_Show(
-            'DB version mismatch.\n\nReset all settings?',
-            'Reset',
-            function()
-                local bar = DF.animations.CreateStatusBar(UIParent, 300, 20, {barAnim = false, pulse = false, cutout = false})
-                bar:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
-                bar:SetFillColor(0.2, 0.6, 1, 1)
-                bar:SetBgColor(0.1, 0.1, 0.1, 0.8)
-                bar:SetValue(0, true)
-                bar.text = DF.ui.Font(bar, 12, 'Resetting database...', {1, 1, 1}, 'CENTER')
-                bar.text:SetPoint('CENTER', bar, 'CENTER', 0, 0)
-
-                bar:SetScript('OnUpdate', function()
-                    bar:SetScript('OnUpdate', nil)
-                    -- reset entire database on version mismatch
-                    _G.DF_Profiles = {}
-                    _G.DF_Profiles.meta = {}
-                    _G.DF_Profiles.meta.dbversion = DF.others.dbversion
-                    DF_Profiles.profiles = {}
-                    DF_Profiles.meta.characterProfiles = {}
-                    DF_Profiles.meta.autoAssigned = {}
-                    DF_Profiles.profiles['.defaults'] = {}
-                    init:ApplyDefaults('.defaults')
-                    init:SetupProfile()
-                    bar:Hide()
-                    init:ExecModules(true)
-                end)
-            end,
-            'Cancel',
-            function()
-            end,
-            nil,
-            nil,
-            140
-        )
+        DF.ui.StaticPopup_Show('DB version mismatch.\n\nReset all settings?', 'Reset', function()
+            _G.DF_Profiles = {}
+            _G.DF_Profiles.meta = {}
+            _G.DF_Profiles.meta.dbversion = DF.others.dbversion
+            DF_Profiles.profiles = {}
+            DF_Profiles.meta.characterProfiles = {}
+            DF_Profiles.meta.autoAssigned = {}
+            DF_Profiles.profiles['.defaults'] = {}
+            init:ApplyDefaults('.defaults')
+            init:SetupProfile()
+            init:ExecModules(true)
+        end, 'Cancel', function() end, nil, nil, 140)
         return true
     end
     return false
@@ -151,43 +120,28 @@ function init:CheckModuleVersions()
             end
         end
     end
-
     if table.getn(mismatchModules) > 0 then
         local msg = 'Module version mismatch:\n'
         for _, mod in pairs(mismatchModules) do
             msg = msg .. '- ' .. mod .. '\n'
         end
         msg = msg .. '\nReset detected module(s)?'
-
-        DF.ui.StaticPopup_Show(msg,
-            'Reset',
-            function()
-                -- clear outdated module settings
-                for _, mod in pairs(mismatchModules) do
-                    DF.profile[mod] = {}
-                end
-                local charName = UnitName('player')
-                local realmName = GetRealmName()
-                local charKey = charName .. '-' .. realmName
-                local profileName = DF_Profiles.meta.characterProfiles[charKey] or charKey
-                init:ApplyDefaults(profileName)
-                DF.profile = DF_Profiles.profiles[profileName]
-                for name, callback in pairs(DF.callbacks) do
-                    local mod, opt = DF.lua.match(name, '(.*)%.(.*)')
-                    callback(DF.profile[mod][opt])
-                end
-                init:ExecModules(true)
-            end,
-            'Cancel',
-            function()
-            end,
-            nil,
-            nil,
-            140
-        )
+        DF.ui.StaticPopup_Show(msg, 'Reset', function()
+            for _, mod in pairs(mismatchModules) do
+                DF.profile[mod] = {}
+            end
+            local charKey = UnitName('player') .. '-' .. GetRealmName()
+            local profileName = DF_Profiles.meta.characterProfiles[charKey] or charKey
+            init:ApplyDefaults(profileName)
+            DF.profile = DF_Profiles.profiles[profileName]
+            for name, callback in pairs(DF.callbacks) do
+                local mod, opt = DF.lua.match(name, '(.*)%.(.*)')
+                callback(DF.profile[mod][opt])
+            end
+            init:ExecModules(true)
+        end, 'Cancel', function() end, nil, nil, 140)
         return true
     end
-
     return false
 end
 
@@ -205,12 +159,11 @@ function init:ExecModules(forceImmediate)
         bar:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
         bar:SetFillColor(0.2, 0.6, 1, 1)
         bar:SetBgColor(0.1, 0.1, 0.1, 0.8)
+        bar:SetFrameStrata('TOOLTIP')
         bar.max = table.getn(sorted)
         bar:SetValue(0, true)
-
         bar.text = DF.ui.Font(bar, 12, 'Loading ' .. info.addonNameColor .. ' ...', {1, 1, 1}, 'CENTER')
         bar.text:SetPoint('CENTER', bar, 'CENTER', 0, 0)
-
         init.loadingBar = bar
         init.loadingQueue = sorted
         init.loadingIndex = 0

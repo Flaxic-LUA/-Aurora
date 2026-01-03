@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF.tables["classicons"] = {
   ["WARRIOR"] = { 0, 0.25, 0, 0.25 },

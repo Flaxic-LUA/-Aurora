@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 if not dependency('UnitXP') then return end
 
 DF:NewDefaults('distance', {

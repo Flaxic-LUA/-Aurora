@@ -1,16 +1,13 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
--- basic animations
-
-
--- advanced animation objects
+local GetTime = GetTime
+local pairs = pairs
 
 -- statusbars
 local StatusBars = {}
 local animations = {}
 local pulses = {}
 local cutouts = {}
-local glows = {}
 
 local ANIMATION_SPEED = 0.1
 local PULSE_DURATION = 0.3
@@ -20,7 +17,6 @@ local PULSE_SCALE = 1.05
 local CUTOUT_DURATION = .3
 local CUTOUT_ALPHA = 1
 
--- core functions
 function StatusBars:UpdateBarAnimations()
     for bar in pairs(animations) do
         if bar.enableBarAnim then
@@ -110,25 +106,7 @@ function StatusBars:UpdateCutoutAnimations(now)
     end
 end
 
-function StatusBars:UpdateGlowAnimations(now)
-    for bar, endTime in pairs(glows) do
-        if bar.enableGlow and not bar.glowPermanentAlpha then
-            if now >= endTime then
-                bar.glow:SetAlpha(bar.glowDefaultAlpha)
-                glows[bar] = nil
-            else
-                local timeLeft = endTime - now
-                local progress = timeLeft / PULSE_DURATION
-                local alpha = DF.math.lerp(bar.glowDefaultAlpha, 1, progress)
-                bar.glow:SetAlpha(alpha)
-            end
-        else
-            glows[bar] = nil
-        end
-    end
-end
-
--- public functions
+-- public
 function DF.animations.CreateStatusBar(parent, width, height, animConfig, name)
     local bar = CreateFrame('Frame', name, parent)
     bar:SetSize(width or 200, height or 20)
@@ -144,11 +122,6 @@ function DF.animations.CreateStatusBar(parent, width, height, animConfig, name)
     bar.fill:SetTexture(media['tex:unitframes:aurora_hpbar.tga'])
     bar.fill:Hide()
 
-    bar.glow = bar:CreateTexture(nil, 'OVERLAY')
-    bar.glow:SetPoint('TOPLEFT', bar, 'TOPLEFT', 0, 0)
-    bar.glow:SetPoint('BOTTOMRIGHT', bar, 'BOTTOMRIGHT', 0, 0)
-    bar.glow:SetVertexColor(0, 0.9, 0.2, .3)
-
     bar.val = 0
     bar.val_ = 0
     bar.max = 1
@@ -159,10 +132,6 @@ function DF.animations.CreateStatusBar(parent, width, height, animConfig, name)
     bar.cutoutDuration = CUTOUT_DURATION
     bar.cutoutTexture = media['tex:unitframes:aurora_hpbar.tga']
     bar.fillDirection = 'LEFT_TO_RIGHT'
-    -- bar.glowTexture = media['tex:generic_bar_1_glow_1.tga']
-    bar.enableGlow = false
-    bar.glowDefaultAlpha = 0.3
-    bar.glowPermanentAlpha = nil
 
     animConfig = animConfig or {}
     bar.enableBarAnim = animConfig.barAnim ~= true
@@ -223,11 +192,6 @@ function DF.animations.CreateStatusBar(parent, width, height, animConfig, name)
                 cutouts[cutout] = {endTime = GetTime() + self.cutoutDuration, duration = self.cutoutDuration}
             end
 
-            -- trigger glow effect on value changes
-            if self.enableGlow and not self.glowPermanentAlpha then
-                glows[self] = GetTime() + PULSE_DURATION
-            end
-
             -- determine if we should use instant update
             local useInstant = instant or self.instant
             self.val = val
@@ -283,7 +247,6 @@ function DF.animations.CreateStatusBar(parent, width, height, animConfig, name)
     function bar:SetFillColor(r, g, b, a)
         self.baseColor = {r, g, b, a}
         self.fill:SetVertexColor(r, g, b, a)
-        self.glow:SetVertexColor(r, g, b) -- no alpha here
     end
 
     function bar:SetCutoutColor(r, g, b, a)
@@ -311,46 +274,14 @@ function DF.animations.CreateStatusBar(parent, width, height, animConfig, name)
         self:Update()
     end
 
-    function bar:SetGlowTexture(texturePath)
-        self.glowTexture = texturePath
-        self.glow:SetTexture(texturePath)
-    end
-
-    function bar:SetGlowEnabled(enabled)
-        self.enableGlow = enabled
-        if not enabled then
-            self.glow:SetAlpha(0)
-            glows[self] = nil
-        else
-            self.glow:SetAlpha(self.glowDefaultAlpha)
-        end
-    end
-
-    function bar:SetGlowPermanent(alpha)
-        if alpha then
-            self.glowPermanentAlpha = alpha
-            self.glow:SetAlpha(alpha)
-            glows[self] = nil
-        else
-            self.glowPermanentAlpha = nil
-            if self.enableGlow then
-                self.glow:SetAlpha(self.glowDefaultAlpha)
-            else
-                self.glow:SetAlpha(0)
-            end
-        end
-    end
-
     return bar
 end
 
-local animate = CreateFrame 'Frame'
-animate:SetScript('OnUpdate', function()
+CreateFrame'Frame':SetScript('OnUpdate', function()
     local now = GetTime()
     StatusBars:UpdateBarAnimations()
     StatusBars:UpdatePulseAnimations(now)
     StatusBars:UpdateCutoutAnimations(now)
-    StatusBars:UpdateGlowAnimations(now)
 end)
 
 -- -- loading bars

@@ -1,6 +1,6 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
-local eventSystem = CreateFrame('Frame')
+local libevents = CreateFrame('Frame')
 local registeredFrames = {}
 
 local customEvents = {
@@ -39,9 +39,9 @@ DF.RegisterEvent = function(self, event)
     end
 end
 
-for eventName, customEvent in pairs(customEvents) do
+for _, customEvent in pairs(customEvents) do
     if customEvent.triggerEvent then
-        eventSystem:RegisterEvent(customEvent.triggerEvent)
+        libevents:RegisterEvent(customEvent.triggerEvent)
     end
 end
 
@@ -70,8 +70,8 @@ CreateFrame = function(frameType, name, parent, template)
 end
 
 -- activate custom events when trigger fires
-eventSystem:SetScript('OnEvent', function()
-    for customEventName, customEvent in pairs(customEvents) do
+libevents:SetScript('OnEvent', function()
+    for _, customEvent in pairs(customEvents) do
         if customEvent.triggerEvent == event then
             customEvent.startTime = GetTime()
             customEvent.active = true
@@ -80,7 +80,7 @@ eventSystem:SetScript('OnEvent', function()
 end)
 
 -- check conditions and fire custom events
-eventSystem:SetScript('OnUpdate', function()
+libevents:SetScript('OnUpdate', function()
     for eventName, customEvent in pairs(customEvents) do
         if not customEvent.fired and (customEvent.active or not customEvent.triggerEvent) then
             local ready = false

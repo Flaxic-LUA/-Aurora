@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 function DF.mixins.pfQuestButtons(mainFrame)
     if not DF.others.pfQuest then return end

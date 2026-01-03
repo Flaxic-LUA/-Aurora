@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 function DF.common.KillFrame(frame)
     if not frame then return end

@@ -1,4 +1,5 @@
-UNLOCKDRAGONFLIGHT()
+---@diagnostic disable: duplicate-set-field
+DRAGONFLIGHT()
 
 local setup = {
     buttonSize = 28,
@@ -67,8 +68,6 @@ local setup = {
         pageDownHighlight = media['tex:actionbars:page_down_highlight.tga']
     }
 }
-
-local assert = assert
 
 -- create
 function setup:CreateActionButton(parent, name, actionID)
@@ -399,9 +398,6 @@ function setup:ShowAllButtons()
             if DF.profile['actionbars']['mainBarConcatenateEnabled'] then
                 barFrame = self.currentPageBar
                 anchorFrame = self.mainBar
-                assert(barFrame ~= self.mainBar, 'ShowAllButtons: when paged, barFrame must not be mainBar')
-                assert(anchorFrame == self.mainBar, 'ShowAllButtons: when paged, anchorFrame must be mainBar')
-                assert(barFrame.buttons[1]:GetParent() == anchorFrame, 'ShowAllButtons: paged buttons must be parented to mainBar')
             else
                 skipBar = true
             end
@@ -472,8 +468,6 @@ function setup:HideEmptyButtons()
                 local targetFrame = barFrame
                 if barName == 'mainBar' and self.currentPageBar and self.currentPageBar ~= self.mainBar then
                     targetFrame = self.currentPageBar
-                    assert(targetFrame == self.currentPageBar, 'HideEmptyButtons: targetFrame must be currentPageBar when paged')
-                    assert(targetFrame.buttons[1]:GetParent() == self.mainBar, 'HideEmptyButtons: paged buttons must be parented to mainBar')
                 end
                 DF.setups.helpers.actionbars.UpdateBarConcatenate(targetFrame, barName)
             end
@@ -755,7 +749,7 @@ function setup:UpdatePage(direction)
         activeBar.buttons[i]:Hide()
     end
 
-    -- Rebuild pageable bars to reflect current bonus bar state
+    -- rebuild pageable bars to reflect current bonus bar state
     self:UpdatePageableBars()
 
     local pagedBar = self.pageableBars[self.currentPage]

@@ -1,4 +1,4 @@
--- UNLOCKDRAGONFLIGHT()
+-- DRAGONFLIGHT()
 
 -- DF:NewDefaults('inspect', {
 --     enabled = {value = true},

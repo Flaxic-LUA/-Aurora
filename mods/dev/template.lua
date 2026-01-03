@@ -1,11 +1,11 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 DF:NewDefaults('template', {
     enabled = {value = true},
     version = {value = '1.0'},
     -- defaults gui structure: {tab = 'tabname', subtab = 'subtabname', 'category1', 'category2', ...}
-    -- Named keys (tab, subtab) define panel location, array elements define categories within that panel
-    -- Each category groups related settings with a header, settings use category + indexInCategory for ordering
+    -- named keys (tab, subtab) define panel location, array elements define categories within that panel
+    -- each category groups related settings with a header, settings use category + indexInCategory for ordering
     gui = {
         {tab = 'template', subtab = 'mainbar', 'General'},
     },
@@ -35,7 +35,7 @@ DF:NewModule('template', 1, function()
 
     -- callbacks area are options that show up for the user in the gui
     local callbacks = {}
-    local callbackHelper = {} -- helper table for shared functions only
+    local callbackHelper = {} -- helper table for shared functions
 
     callbacks.templateprint = function(value)
         if value then

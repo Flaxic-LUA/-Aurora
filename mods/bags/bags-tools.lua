@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local setup = {
     TITLE_MAX_WIDTH = 95,

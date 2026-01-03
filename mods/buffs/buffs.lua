@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local frameConfigs = {
     {prefix = 'buff', name = 'Buff', hasSorting = true, defaultSize = 25, defaultPerRow = 8, maxPerRow = 16},

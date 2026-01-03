@@ -1,6 +1,10 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
--- provide drift-free date and time to AU
+local GetGameTime = GetGameTime
+local format = string.format
+local date = date
+
+-- provide drift-free date and time
 DF.date.currentTime = '00:00'
 DF.date.currentTimeWithSeconds = '00:00:00'
 DF.date.currentDate = '01/01/2000'
@@ -10,30 +14,30 @@ DF.date.showSeconds = false
 DF.date.amPmColor = {0.7, 0.7, 0.7}
 
 DF.timers.every(1, function()
-    local format = DF.date.showSeconds and '%H:%M:%S' or '%H:%M'
+    local timeFormat = DF.date.showSeconds and '%H:%M:%S' or '%H:%M'
     if DF.date.timeFormat == '12h' then
-        format = DF.date.showSeconds and '%I:%M:%S %p' or '%I:%M %p'
-        local timeStr = date(format)
+        timeFormat = DF.date.showSeconds and '%I:%M:%S %p' or '%I:%M %p'
+        local timeStr = date(timeFormat)
         local timePart, ampm = DF.lua.match(timeStr, '(.+) (%a%a)')
         if timePart and ampm then
             local r, g, b = DF.date.amPmColor[1], DF.date.amPmColor[2], DF.date.amPmColor[3]
-            local colorCode = string.format('|cff%02x%02x%02x', r * 255, g * 255, b * 255)
+            local colorCode = format('|cff%02x%02x%02x', r * 255, g * 255, b * 255)
             DF.date.currentTime = timePart .. ' ' .. colorCode .. ampm .. '|r'
         else
             DF.date.currentTime = timeStr
         end
     else
-        DF.date.currentTime = date(format)
+        DF.date.currentTime = date(timeFormat)
     end
     DF.date.currentTimeWithSeconds = date('%H:%M:%S')
     DF.date.currentDate = date('%m/%d/%Y')
 
     local hour, minute = GetGameTime()
-    DF.date.serverTime = string.format('%02d:%02d', hour, minute)
+    DF.date.serverTime = format('%02d:%02d', hour, minute)
 end)
 
--- public
--- provide calendar data to vanilla client
+-- publics
+-- provide calendar data
 function DF.date.CalendarData()
     local daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
     local monthNames = {'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'}
@@ -96,7 +100,7 @@ function DF.date.CalendarData()
         local day = tonumber(date('%d'))
         local month = tonumber(date('%m'))
         local year = tonumber(date('%y'))
-        return year .. string.format('%02d', month) .. string.format('%02d', day)
+        return year .. format('%02d', month) .. format('%02d', day)
     end
 
     local function addDays(dateStr, days)
@@ -118,7 +122,7 @@ function DF.date.CalendarData()
 
         d = DF.math.clamp(d, 1, getDaysInMonth(y, m))
         m = DF.math.clamp(m, 1, 12)
-        return string.format('%02d%02d%02d', math.mod(y, 100), m, d)
+        return format('%02d%02d%02d', math.mod(y, 100), m, d)
     end
 
     local function formatForDisplay(dateStr)

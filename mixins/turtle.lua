@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 function DF.mixins.HideMinimizeMaximizeButton()
     if DF.others.server ~= 'turtle' then return end

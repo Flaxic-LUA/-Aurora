@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local WorldFrame = WorldFrame
 local getn = table.getn

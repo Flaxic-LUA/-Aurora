@@ -1,4 +1,4 @@
--- UNLOCKDRAGONFLIGHT()
+-- DRAGONFLIGHT()
 
 -- DF:NewDefaults('intellisense', {
 --     enabled = {value = true},

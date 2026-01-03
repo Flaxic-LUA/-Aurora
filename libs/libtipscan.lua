@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 -- credit to shagu v1.0
 local scanner = {}
@@ -146,49 +146,3 @@ function libtipscan:List()
 end
 
 DF.lib.libtipscan = libtipscan
-
--- local testFrame = CreateFrame('Frame')
--- testFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
--- testFrame:SetScript('OnEvent', function()
---     debugprint('=== Testing libtipscan ===')
-
---     local scanner = DF.lib.libtipscan:GetScanner('test')
-
---     debugprint('Test 1: Scanning first spell')
---     scanner:SetSpell(1, 'spell')
---     local lines = scanner:GetText()
---     debugprint('Total lines: ' .. table.getn(lines))
---     for i = 1, table.getn(lines) do
---         if lines[i] then
---             debugprint('Line ' .. i .. ': ' .. (lines[i][1] or 'nil') .. ' | ' .. (lines[i][2] or 'nil'))
---         end
---     end
---     debugprint('Test 2: Finding cast time')
---     scanner:SetSpell(1, 'spell')
---     local lineNum, castTime = scanner:FindText('(%d+%.%d+) sec')
---     if lineNum then
---         debugprint('Found cast time on line ' .. lineNum .. ': ' .. castTime .. ' sec')
---     else
---         debugprint('No cast time found (instant spell)')
---     end
-
---     debugprint('Test 3: Getting line 1')
---     scanner:SetSpell(1, 'spell')
---     local left, right = scanner:GetLine(1)
---     debugprint('Line 1 left: ' .. (left or 'nil'))
---     debugprint('Line 1 right: ' .. (right or 'nil'))
-
---     debugprint('Test 4: Exact text match')
---     scanner:SetSpell(1, 'spell')
---     local exactLine = scanner:FindText(left, true)
---     if exactLine then
---         debugprint('Found exact match on line: ' .. exactLine)
---     else
---         debugprint('No exact match found')
---     end
-
---     debugprint('Test 5: Listing active scanners')
---     DF.lib.libtipscan:List()
-
---     debugprint('=== libtipscan tests complete ===')
--- end)

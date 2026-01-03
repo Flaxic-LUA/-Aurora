@@ -1,4 +1,4 @@
-UNLOCKDRAGONFLIGHT()
+DRAGONFLIGHT()
 
 local libcast = {}
 local player = UnitName('player')
@@ -7,7 +7,7 @@ local castframe = CreateFrame('Frame')
 libcast.db = {[player] = {}}
 libcast.guidToName = {}
 
-UnitChannelInfo = function(unit)
+function UnitChannelInfo(unit)
     if not unit then return end
     local guid = UnitExists(unit)
     local name = guid and libcast.guidToName[guid] or UnitName(unit)
@@ -20,7 +20,7 @@ UnitChannelInfo = function(unit)
     end
 end
 
-UnitCastingInfo = function(unit)
+function UnitCastingInfo(unit)
     if not unit then return end
     local guid = UnitExists(unit)
     local name = guid and libcast.guidToName[guid] or UnitName(unit)
@@ -35,7 +35,7 @@ end
 
 castframe:RegisterEvent('UNIT_CASTEVENT')
 castframe:SetScript('OnEvent', function()
-    local casterGUID, targetGUID, eventType, spellID, duration = arg1, arg2, arg3, arg4, arg5
+    local casterGUID, _, eventType, spellID, duration = arg1, arg2, arg3, arg4, arg5
 
     if eventType == 'START' then
         local name = UnitName(casterGUID)
