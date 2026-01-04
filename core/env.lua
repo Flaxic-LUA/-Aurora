@@ -1,3 +1,4 @@
+local lastMem
 local startTime = GetTime()
 local _, _, addonName = string.find(debugstack(), 'AddOns\\([^\\]+)\\')
 
@@ -103,7 +104,6 @@ do
     end
 end
 
-local lastMem
 local f = CreateFrame'Frame'
 f:RegisterEvent'ADDON_LOADED'
 f:RegisterEvent'VARIABLES_LOADED'
@@ -111,13 +111,16 @@ f:SetScript('OnEvent', function()
     if event == 'VARIABLES_LOADED' then
         f:UnregisterAllEvents()
         f:SetScript('OnEvent', nil)
+        -- f = nil -- no idea if this does anything, need to check
         return
     end
     if arg1 == ENV.info.addonName then
         collectgarbage()
-        lastMem = gcinfo()
+        local currentMem = gcinfo()
+        local memUsed = currentMem - (lastMem or 0)
         local loadTime = GetTime() - startTime
-        ENV.performance[arg1] = {time = loadTime, memory = 0}
+        ENV.performance[arg1] = {time = loadTime, memory = memUsed}
+        lastMem = currentMem
         return
     end
     collectgarbage()

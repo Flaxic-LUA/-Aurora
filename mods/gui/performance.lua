@@ -20,7 +20,7 @@ DF:NewModule('gui-performance', 2, function()
     statsHeaderLabel:SetJustifyH('LEFT')
 
     local statsHeaderValue = DF.ui.Font(performancePanel, 10, 'Value', {0.6, 0.6, 0.6})
-    statsHeaderValue:SetPoint('LEFT', statsHeaderLabel, 'RIGHT', 170, -0)
+    statsHeaderValue:SetPoint('LEFT', statsHeaderLabel, 'RIGHT', 185, -0)
     statsHeaderValue:SetJustifyH('RIGHT')
 
     local stats = DF.ui.Scrollframe(performancePanel, 250, 120)
@@ -438,11 +438,11 @@ DF:NewModule('gui-performance', 2, function()
     addonHeaderName:SetJustifyH('LEFT')
 
     local addonHeaderTime = DF.ui.Font(performancePanel, 10, 'Time', {0.6, 0.6, 0.6})
-    addonHeaderTime:SetPoint('LEFT', addonHeaderName, 'RIGHT', 120, 0)
+    addonHeaderTime:SetPoint('LEFT', addonHeaderName, 'RIGHT', 130, 0)
     addonHeaderTime:SetJustifyH('RIGHT')
 
     local addonHeaderMem = DF.ui.Font(performancePanel, 10, 'Memory', {0.6, 0.6, 0.6})
-    addonHeaderMem:SetPoint('LEFT', addonHeaderTime, 'RIGHT', 20, 0)
+    addonHeaderMem:SetPoint('LEFT', addonHeaderTime, 'RIGHT', 27, 0)
     addonHeaderMem:SetJustifyH('RIGHT')
 
     local addonMem = DF.ui.Scrollframe(performancePanel, 250, 230)
@@ -474,11 +474,11 @@ DF:NewModule('gui-performance', 2, function()
         addonMem.labels[i]:SetPoint('TOPLEFT', addonMem.content, 'TOPLEFT', 5, -yOffset)
         addonMem.labels[i]:SetJustifyH('LEFT')
 
-        addonMem.times[i] = DF.ui.Font(addonMem.content, 10, string.format('%.3f', time) .. 's', {0.7, 0.7, 0.7})
+        addonMem.times[i] = DF.ui.Font(addonMem.content, 10, '|cffffffff' .. string.format('%.3f', time) .. '|r|cffb3b3b3 s|r', {1, 1, 1})
         addonMem.times[i]:SetPoint('TOPRIGHT', addonMem.content, 'TOPRIGHT', -60, -yOffset)
         addonMem.times[i]:SetJustifyH('RIGHT')
 
-        addonMem.mems[i] = DF.ui.Font(addonMem.content, 10, string.format('%.0f', mem) .. 'kb', {0.7, 0.7, 0.7})
+        addonMem.mems[i] = DF.ui.Font(addonMem.content, 10, '|cffffffff' .. string.format('%.0f', mem) .. '|r|cffb3b3b3 kb|r', {1, 1, 1})
         addonMem.mems[i]:SetPoint('TOPRIGHT', addonMem.content, 'TOPRIGHT', -5, -yOffset)
         addonMem.mems[i]:SetJustifyH('RIGHT')
 

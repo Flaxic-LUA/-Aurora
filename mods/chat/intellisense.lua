@@ -360,14 +360,16 @@ DF:NewModule('intellisense', 1, function()
         local wordList = DF.data.split(text, ' ')
         for i = 1, table.getn(wordList) do
             local word = DF.data.trim(wordList[i])
-            word = string.gsub(word, '[^%a]', '')
-            if string.len(word) >= DF.profile.intellisense.minWordLength then
-                local firstLetter = string.lower(string.sub(word, 1, 1))
-                if not DF_LearnedData[firstLetter] then
-                    DF_LearnedData[firstLetter] = {}
+            if string.sub(word, 1, 1) ~= '#' then
+                word = string.gsub(word, '[^%a]', '')
+                if string.len(word) >= DF.profile.intellisense.minWordLength then
+                    local firstLetter = string.lower(string.sub(word, 1, 1))
+                    if not DF_LearnedData[firstLetter] then
+                        DF_LearnedData[firstLetter] = {}
+                    end
+                    local key = DF.profile.intellisense.preserveCase and word or string.lower(word)
+                    DF_LearnedData[firstLetter][key] = (DF_LearnedData[firstLetter][key] or 0) + 1
                 end
-                local key = DF.profile.intellisense.preserveCase and word or string.lower(word)
-                DF_LearnedData[firstLetter][key] = (DF_LearnedData[firstLetter][key] or 0) + 1
             end
         end
     end

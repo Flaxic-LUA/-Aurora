@@ -407,9 +407,7 @@ syncFrame:RegisterEvent('PLAYER_REGEN_ENABLED')
 syncFrame:SetScript('OnEvent', function()
     if event == 'SYNC_READY' then
         syncFrame:UnregisterEvent('SYNC_READY')
-
         if DF.others.server ~= 'turtle' then return end
-
         syncFrame:OnPlayerEnteringWorld()
     end
 
