@@ -1,9 +1,9 @@
 DRAGONFLIGHT()
 
 local function ShowHelp()
-    redprint('COMMANDS:')
+    redprint('Commands:')
     print('/df - Toggle Dragonflight GUI')
-    print('/df reset - Wipe DB and reload')
+    print('/df reset [sense|profiles|all] - Wipe DB and reload')
     print('/df edit or /df editmode - Toggle Edit Mode')
     print('/df gm - Open GM Help')
     print('/df safeboot - Disable all addons except Dragonflight')
@@ -33,17 +33,45 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
         )
     elseif msg == 'gm' then
         ToggleHelpFrame()
-    elseif msg == 'reset' then
-        DF.ui.StaticPopup_Show(
-            'Wipe EVERYTHING and reload UI?',
-            'Yes',
-            function()
-                _G.DF_Profiles = {}
-                _G.DF_LearnedData = {}
-                ReloadUI()
-            end,
-            'No'
-        )
+    elseif string.find(msg, 'reset') then
+        local resetType = string.sub(msg, 7)
+        if resetType == 'sense' then
+            DF.ui.StaticPopup_Show(
+                'Wipe Sense Data and reload UI?',
+                'Yes',
+                function()
+                    _G.DF_LearnedData = {}
+                    ReloadUI()
+                end,
+                'No'
+            )
+        elseif resetType == 'profiles' then
+            DF.ui.StaticPopup_Show(
+                'Wipe Profiles and reload UI?',
+                'Yes',
+                function()
+                    _G.DF_Profiles = {}
+                    ReloadUI()
+                end,
+                'No'
+            )
+        elseif resetType == 'all' then
+            DF.ui.StaticPopup_Show(
+                'Wipe EVERYTHING and reload UI?',
+                'Yes',
+                function()
+                    _G.DF_Profiles = {}
+                    _G.DF_LearnedData = {}
+                    ReloadUI()
+                end,
+                'No'
+            )
+        else
+            redprint('RESET OPTIONS:')
+            print('/df reset sense - Wipe Sense Data')
+            print('/df reset profiles - Wipe Profiles')
+            print('/df reset all - Wipe Everything')
+        end
     elseif msg == 'edit' or msg == 'editmode' then
         local frame = getglobal('DF_EditModeFrame')
         if frame then

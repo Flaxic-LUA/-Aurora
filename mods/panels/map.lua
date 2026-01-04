@@ -16,6 +16,11 @@ DF:NewModule('map', 1, 'PLAYER_ENTERING_WORLD',function()
             if texture and string.find(texture, 'UI%-WorldMap') then
                 region:Hide()
             end
+        elseif region:GetObjectType() == 'FontString' then
+            local text = region:GetText()
+            if text and text == WORLD_MAP then
+                region:Hide()
+            end
         end
     end
 
@@ -26,6 +31,10 @@ DF:NewModule('map', 1, 'PLAYER_ENTERING_WORLD',function()
     customBg:SetPoint('BOTTOMRIGHT', WorldMapFrame, 'BOTTOMRIGHT', 0, 0)
     customBg:SetFrameLevel(WorldMapFrame:GetFrameLevel())
     customBg.Bg:SetDrawLayer('BACKGROUND', -1)
+
+    local title = customBg:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
+    title:SetPoint('TOP', customBg, 'TOP', 0, -6)
+    title:SetText(WORLD_MAP)
 
     local closeButton = DF.ui.CreateRedButton(customBg, 'close', function() HideUIPanel(WorldMapFrame) end)
     closeButton:SetPoint('TOPRIGHT', customBg, 'TOPRIGHT', 0, -1)
@@ -88,8 +97,6 @@ DF:NewModule('map', 1, 'PLAYER_ENTERING_WORLD',function()
         end
     end
 
-    -- callbacks
     local callbacks = {}
-
     DF:NewCallbacks('map', callbacks)
 end)

@@ -52,6 +52,10 @@ DF:NewModule('socialframe', 1, 'PLAYER_ENTERING_WORLD', function()
     whoBg:SetVertexColor(0, 0, 0, .5)
     whoBg:Hide()
 
+    local title = customBg:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
+    title:SetPoint('TOP', customBg, 'TOP', 0, -6)
+    title:SetText('Social')
+
     local closeButton = DF.ui.CreateRedButton(customBg, 'close', function() HideUIPanel(FriendsFrame) end)
     closeButton:SetPoint('TOPRIGHT', customBg, 'TOPRIGHT', 0, -1)
     closeButton:SetSize(20, 20)
