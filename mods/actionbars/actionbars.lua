@@ -1146,5 +1146,15 @@ DF:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         end
     end
 
+    -- editmode hack for the annoying overlay
+    if callbacks['multibar4Enabled'] then
+        callbacks['multibar4Enabled'](true)
+        callbacks['multibar4Enabled'](false)
+    end
+    if callbacks['multibar5Enabled'] then
+        callbacks['multibar5Enabled'](true)
+        callbacks['multibar5Enabled'](false)
+    end
+
     DF:NewCallbacks('actionbars', callbacks)
 end)

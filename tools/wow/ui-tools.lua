@@ -559,18 +559,28 @@ function DF.ui.Dropdown(parent, text, width, height)
         end
         self.items = {}
         popup:SetHeight(10)
+        popup:SetWidth(btn:GetWidth())
     end
 
     btn.AddItem = function(self, itemText, callback)
-        local itemBtn = DF.ui.Button(popup, itemText, popup:GetWidth() - 4, 20, true)
-        itemBtn:SetPoint('TOP', popup, 'TOP', 0, -(table.getn(self.items)) * 22 - 5)
+        local count = table.getn(self.items)
+        local col = math.floor(count / 15)
+        local row = math.mod(count, 15)
+        local itemWidth = btn:GetWidth() - 4
+
+        local itemBtn = DF.ui.Button(popup, itemText, itemWidth, 20, true)
+        itemBtn:SetPoint('TOPLEFT', popup, 'TOPLEFT', col * btn:GetWidth() + 2, -row * 22 - 5)
         itemBtn:SetScript('OnClick', callback or function()
             btn.text:SetText(itemText)
             btn.selectedValue = itemText
             popup:Hide()
         end)
         table.insert(self.items, itemBtn)
-        popup:SetHeight(table.getn(self.items) * 22 + 10)
+
+        local numCols = math.floor(count / 15) + 1
+        local numRows = math.min(count + 1, 15)
+        popup:SetWidth(numCols * btn:GetWidth())
+        popup:SetHeight(numRows * 22 + 10)
     end
 
     btn:SetScript('OnClick', function()

@@ -1200,6 +1200,7 @@ function setup:OnEvent()
     self.eventFrame:RegisterEvent'RAID_ROSTER_UPDATE'
     self.eventFrame:RegisterEvent'PLAYER_LEVEL_UP'
     self.eventFrame:RegisterEvent'UNIT_LEVEL'
+    self.eventFrame:RegisterEvent'UNIT_PORTRAIT_UPDATE'
     self.eventFrame:SetScript('OnEvent', function()
     if event == 'PLAYER_TARGET_CHANGED' then
         for i = 1, table.getn(setup.portraits) do
@@ -1414,6 +1415,14 @@ function setup:OnEvent()
             local portrait = setup.portraits[i]
             if UnitExists(portrait.unit) then
                 setup:UpdateLevelColor(portrait)
+            end
+        end
+    elseif event == 'UNIT_PORTRAIT_UPDATE' then
+        for i = 1, table.getn(setup.portraits) do
+            local portrait = setup.portraits[i]
+            if arg1 == portrait.unit then
+                portrait.model.update = portrait.unit
+                SetPortraitTexture(portrait.portrait2D, portrait.unit)
             end
         end
     elseif event == 'PARTY_MEMBERS_CHANGED' or event == 'PARTY_MEMBER_ENABLE' or event == 'PARTY_MEMBER_DISABLE' or event == 'PARTY_LEADER_CHANGED' or event == 'PARTY_LOOT_METHOD_CHANGED' or event == 'RAID_ROSTER_UPDATE' then

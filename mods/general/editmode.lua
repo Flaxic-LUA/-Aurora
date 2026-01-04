@@ -74,7 +74,11 @@ DF:NewModule('editmode', 2, 'PLAYER_AFTER_ENTERING_WORLD', function()
         else
             overlay:SetBackdropColor(0, 0.5, 1, 0.2)
             overlay:SetBackdropBorderColor(0, 0.8, 1, 1)
-            local text = DF.ui.Font(overlay, 12, label, {1, 1, 1}, 'CENTER', 'OUTLINE')
+            local displayLabel = label
+            if string.sub(label, 1, 3) == 'DF_' then
+                displayLabel = string.sub(label, 4)
+            end
+            local text = DF.ui.Font(overlay, 12, displayLabel, {1, 1, 1}, 'CENTER', 'OUTLINE')
             text:SetPoint('CENTER', overlay, 'CENTER', 0, 0)
         end
 
@@ -234,7 +238,7 @@ DF:NewModule('editmode', 2, 'PLAYER_AFTER_ENTERING_WORLD', function()
 
     local editFrame = CreateFrame('Frame', 'DF_EditModeFrame', UIParent)
     editFrame:SetWidth(300)
-    editFrame:SetHeight(100)
+    editFrame:SetHeight(135)
     editFrame:SetPoint('TOP', UIParent, 'TOP', 0, -20)
     editFrame:SetBackdrop({bgFile = 'Interface\\Buttons\\WHITE8X8', edgeFile = 'Interface\\Tooltips\\UI-Tooltip-Border', tile = true, tileSize = 16, edgeSize = 16, insets = {left = 4, right = 4, top = 4, bottom = 4}})
     editFrame:SetBackdropColor(0, 0, 0, 0.6)
@@ -432,12 +436,36 @@ DF:NewModule('editmode', 2, 'PLAYER_AFTER_ENTERING_WORLD', function()
     end
     dropdown:Disable()
 
+    local recenterLabel = DF.ui.Font(editFrame, 10, 'Recenter:', {1, 1, 1}, 'LEFT', 'OUTLINE')
+    recenterLabel:SetPoint('BOTTOMLEFT', editFrame, 'BOTTOMLEFT', 10, 40)
+
+    local recenterDropdown = DF.ui.Dropdown(editFrame, 'Select', 80, 18)
+    recenterDropdown:SetPoint('LEFT', recenterLabel, 'RIGHT', 5, 0)
+
     cb1:SetScript('OnClick', function() if cb1:GetChecked() then cb3:SetChecked(false) dropdown:Disable() lastMode = 'frames' ActivateMode('frames') else ActivateMode(nil) end end)
     cb3:SetScript('OnClick', function() if cb3:GetChecked() then cb1:SetChecked(false) dropdown:Enable() lastMode = 'elements' ActivateMode('elements') else ActivateMode(nil) end end)
 
     local origOnShow = editFrame:GetScript('OnShow')
     editFrame:SetScript('OnShow', function()
         if origOnShow then origOnShow() end
+        recenterDropdown:Clear()
+        for i = 1, table.getn(registry.frames) do
+            local frameName = registry.frames[i].name
+            local displayName = frameName
+            if string.sub(frameName, 1, 3) == 'DF_' then
+                displayName = string.sub(frameName, 4)
+            end
+            recenterDropdown:AddItem(displayName, function()
+                recenterDropdown.text:SetText(displayName)
+                recenterDropdown.popup:Hide()
+                local frame = getglobal(frameName)
+                if frame then
+                    frame:ClearAllPoints()
+                    frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
+                end
+            end)
+        end
+        -- recenterDropdown.popup:SetWidth(150)
         if lastMode == 'elements' and lastDropdown ~= '' then
             cb1:SetChecked(false)
             cb3:SetChecked(true)
