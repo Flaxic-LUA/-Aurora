@@ -5,8 +5,8 @@ local function ShowHelp()
     print('/df - Toggle Dragonflight GUI')
     print('/df reset [sense|profiles|all] - Wipe DB and reload')
     print('/df edit or /df editmode - Toggle Edit Mode')
-    print('/df gm - Open GM Help')
     print('/df safeboot - Disable all addons except Dragonflight')
+    print('/gm - Open GM Help')
     print('/load ADDONNAME - Load addon')
     print('/unload ADDONNAME - Unload addon')
 end
@@ -31,8 +31,6 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
             end,
             'Cancel'
         )
-    elseif msg == 'gm' then
-        ToggleHelpFrame()
     elseif string.find(msg, 'reset') then
         local resetType = string.sub(msg, 7)
         if resetType == 'sense' then
@@ -116,4 +114,9 @@ _G.SlashCmdList['UNLOAD'] = function(addon)
     else
         print('Addon \'' .. addon .. '\' not found.')
     end
+end
+
+_G.SLASH_GM1 = '/gm'
+_G.SlashCmdList['GM'] = function()
+    ToggleHelpFrame()
 end
