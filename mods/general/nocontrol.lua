@@ -508,18 +508,46 @@ DF:NewModule('nocontrol', 1, function()
     function NoControlStartTest()
         testModeActive = true
         testStartTime = GetTime()
-        nameFont:SetText('Test CC')
-        typeFont:SetText('CC')
+
+        if DF.profile.nocontrol.showSpellName then
+            nameFont:SetText('Test CC')
+        else
+            nameFont:SetText('')
+        end
+
+        if DF.profile.nocontrol.showSpellLabel then
+            typeFont:SetText('CC')
+        else
+            typeFont:SetText('')
+        end
+
         iconTexture:SetTexture('Interface\\Icons\\INV_Misc_QuestionMark')
         iconBorder:SetVertexColor(0.8, 0.4, 1, 1)
         glowTop:SetVertexColor(0.8, 0.4, 1)
         glowBottom:SetVertexColor(0.8, 0.4, 1)
-        glowTop:Show()
-        glowBottom:Show()
-        interruptIconTexture:SetTexture('Interface\\Icons\\INV_Misc_QuestionMark')
-        interruptIconFrame:Show()
-        interruptLabelFont:SetText('Counter:')
-        interruptNameFont:SetText('Test Interrupt')
+
+        if DF.profile.nocontrol.showGlow then
+            glowTop:Show()
+            glowBottom:Show()
+        else
+            glowTop:Hide()
+            glowBottom:Hide()
+        end
+
+        if DF.profile.nocontrol.showInterrupts then
+            interruptIconTexture:SetTexture('Interface\\Icons\\INV_Misc_QuestionMark')
+            interruptIconFrame:Show()
+            if DF.profile.nocontrol.interruptIconOnly then
+                interruptLabelFont:SetText('')
+                interruptNameFont:SetText('')
+            else
+                interruptLabelFont:SetText('Counter:')
+                interruptNameFont:SetText('Test Interrupt')
+            end
+        else
+            interruptIconFrame:Hide()
+        end
+
         CooldownFrame_SetTimer(cooldown, GetTime(), 10, 1)
         frame:Show()
         testUpdateFrame:Show()
