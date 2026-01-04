@@ -82,13 +82,11 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
             end
         end
     elseif msg == 'hover' or msg == 'hoverbind' then
-        -- if DF.setups.hover then
-            if DF.setups.hover.mainFrame:IsShown() then
-                DF.setups.hover:Hide()
-            else
-                DF.setups.hover:Show()
-            end
-        -- end
+        if DF.setups.hover.mainFrame:IsShown() then
+            DF.setups.hover:Hide()
+        else
+            DF.setups.hover:Show()
+        end
     elseif msg == '' then
         DRAGONFLIGHTToggleGUI()
     else

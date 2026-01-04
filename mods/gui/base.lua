@@ -144,6 +144,24 @@ DF:NewModule('gui-base', 1, function()
         end
     end)
 
+    setup.testBtn = DF.ui.Button(setup.subframe, 'Test', 80, 20, false, {1, 0, 0})
+    setup.testBtn:SetPoint('CENTER', setup.subframe, 'CENTER', 0, 0)
+    setup.testBtn.testRunning = false
+    setup.testBtn:SetScript('OnClick', function()
+        if this.testRunning then
+            NoControlStopTest()
+            this.testRunning = false
+            this.text:SetTextColor(1, 0, 0)
+            setup.mainframe.Bg:SetAlpha(DF.profile['gui-generator'].guibgalpha / 100)
+        else
+            NoControlStartTest()
+            this.testRunning = true
+            this.text:SetTextColor(0, 1, 0)
+            setup.mainframe.Bg:SetAlpha(0.5)
+        end
+    end)
+    setup.testBtn:Hide()
+
     local panelWidth = setup.basic.width - 170
     local panelHeight = setup.basic.height - 110
     setup.panelframe = DF.ui.Scrollframe(setup.mainframe, panelWidth, panelHeight, 'DF_GUIPanelScroll')
@@ -266,6 +284,12 @@ DF:NewModule('gui-base', 1, function()
 
         self.panelframe:SetVerticalScroll(0)
         self.panelframe.scrollBar:SetValue(0)
+
+        if tabKey == 'extras' and subtabKey == 'nocontrol' then
+            self.testBtn:Show()
+        else
+            self.testBtn:Hide()
+        end
     end
 
     setup.tabframe.tabs[1].button:Click()

@@ -8,11 +8,7 @@ local init = {
 }
 
 DF.others.blacklist = {
-    '-DragonflightReloaded',
-    'ShaguTweaks',
-    'ShaguTweaks-extras',
-    'ShaguTweaks-mods',
-    -- '!!!Debugger',
+    '-DragonflightReloaded', 'ShaguTweaks', 'ShaguTweaks-extras', 'ShaguTweaks-mods',
 }
 
 DF.others.blacklistFound = false
@@ -54,20 +50,6 @@ function init:ApplyDefaults(profileName)
     end
 end
 
-function init:SetupProfile()
-    local charKey = UnitName('player') .. '-' .. GetRealmName()
-    local profileName = DF_Profiles.meta.characterProfiles[charKey]
-    if not profileName and not DF_Profiles.meta.autoAssigned[charKey] then
-        profileName = charKey
-        init:ApplyDefaults(profileName)
-        DF_Profiles.meta.characterProfiles[charKey] = profileName
-        DF_Profiles.meta.autoAssigned[charKey] = true
-    end
-    DF.profile = DF_Profiles.profiles[profileName]
-    DF_Profiles.meta.activeProfile = profileName
-    DF.others.currentProfile = profileName
-end
-
 function init:CheckBlacklist()
     -- track which blacklisted addons are loaded
     DF.others.blacklistedAddonsFound = {}
@@ -87,10 +69,7 @@ function init:CheckBlacklist()
 end
 
 function init:CheckDBVersion()
-    -- ensure meta exists before version check
-    DF_Profiles.meta = DF_Profiles.meta or {}
     DF_Profiles.meta.dbversion = DF_Profiles.meta.dbversion or DF.others.dbversion
-
     if DF_Profiles.meta.dbversion ~= DF.others.dbversion then
         DF.ui.StaticPopup_Show('DB version mismatch.\n\nReset all settings?', 'Reset', function()
             _G.DF_Profiles = {}
@@ -107,6 +86,20 @@ function init:CheckDBVersion()
         return true
     end
     return false
+end
+
+function init:SetupProfile()
+    local charKey = UnitName('player') .. '-' .. GetRealmName()
+    local profileName = DF_Profiles.meta.characterProfiles[charKey]
+    if not profileName and not DF_Profiles.meta.autoAssigned[charKey] then
+        profileName = charKey
+        init:ApplyDefaults(profileName)
+        DF_Profiles.meta.characterProfiles[charKey] = profileName
+        DF_Profiles.meta.autoAssigned[charKey] = true
+    end
+    DF.profile = DF_Profiles.profiles[profileName]
+    DF_Profiles.meta.activeProfile = profileName
+    DF.others.currentProfile = profileName
 end
 
 function init:CheckModuleVersions()
@@ -207,6 +200,7 @@ end
 
 function init:Finalize()
     DF:UnregisterAllEvents()
+    DF:SetScript('OnEvent', nil)
     -- clear pending events after finalization
     init.pendingEvents = {}
 end

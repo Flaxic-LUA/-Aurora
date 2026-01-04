@@ -254,6 +254,11 @@ DF:NewModule('nocontrol', 1, function()
     glowBottom:SetTexCoord(0, 1, 1, 0)
     glowBottom:Hide()
 
+    -- test mode
+    local testUpdateFrame = CreateFrame('Frame')
+    local testStartTime = 0
+    local testModeActive = false
+
     function frame:RefreshSpellSlotCache()
         for spellName in pairs(interrupts) do
             spellSlotCache[spellName] = nil
@@ -459,6 +464,7 @@ DF:NewModule('nocontrol', 1, function()
     frame:RegisterEvent('SPELLS_CHANGED')
     frame:RegisterEvent('UNIT_INVENTORY_CHANGED')
     frame:SetScript('OnEvent', function()
+        if testModeActive then return end
         if event == 'SPELLS_CHANGED' and arg1 == nil then
             frame:RefreshSpellSlotCache()
         elseif event == 'UNIT_INVENTORY_CHANGED' and arg1 == 'player' then
@@ -469,6 +475,7 @@ DF:NewModule('nocontrol', 1, function()
     end)
 
     frame:SetScript('OnUpdate', function()
+        if testModeActive then return end
         if frame:IsShown() then
             if currentSpellID == 'Pounce Bleed' and pounceBleedShowTime and GetTime() - pounceBleedShowTime > 2 then
                 frame:Hide()
@@ -497,6 +504,41 @@ DF:NewModule('nocontrol', 1, function()
 
     frame:RefreshSpellSlotCache()
     frame:RefreshTrinketCache()
+
+    function NoControlStartTest()
+        testModeActive = true
+        testStartTime = GetTime()
+        nameFont:SetText('Test CC')
+        typeFont:SetText('CC')
+        iconTexture:SetTexture('Interface\\Icons\\INV_Misc_QuestionMark')
+        iconBorder:SetVertexColor(0.8, 0.4, 1, 1)
+        glowTop:SetVertexColor(0.8, 0.4, 1)
+        glowBottom:SetVertexColor(0.8, 0.4, 1)
+        glowTop:Show()
+        glowBottom:Show()
+        interruptIconTexture:SetTexture('Interface\\Icons\\INV_Misc_QuestionMark')
+        interruptIconFrame:Show()
+        interruptLabelFont:SetText('Counter:')
+        interruptNameFont:SetText('Test Interrupt')
+        CooldownFrame_SetTimer(cooldown, GetTime(), 10, 1)
+        frame:Show()
+        testUpdateFrame:Show()
+    end
+
+    function NoControlStopTest()
+        testModeActive = false
+        testUpdateFrame:Hide()
+        frame:Hide()
+    end
+
+    testUpdateFrame:SetScript('OnUpdate', function()
+        if GetTime() - testStartTime >= 10 then
+            testStartTime = GetTime()
+            CooldownFrame_SetTimer(cooldown, GetTime(), 10, 1)
+        end
+    end)
+    testUpdateFrame:Hide()
+    -- end area
 
     -- callbacks
     local callbacks = {}
