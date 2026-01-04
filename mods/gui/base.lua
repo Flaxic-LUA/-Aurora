@@ -28,7 +28,7 @@ DF:NewModule('gui-base', 1, function()
             {name = 'Bags', key = 'bags'},
             {name = 'Buffs/Debuffs', key = 'buffs'},
             {name = 'Castbar', key = 'castbar', dependency = 'SuperWoW'},
-            -- {name = 'Chat', key = 'chat'},
+            {name = 'Chat', key = 'chat'},
             {name = 'Extras', key = 'extras'},
             {name = 'Loot', key = 'loot'},
             {name = 'Micromenu', key = 'micromenu'},

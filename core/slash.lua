@@ -37,11 +37,11 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
         local resetType = string.sub(msg, 7)
         if resetType == 'sense' then
             DF.ui.StaticPopup_Show(
-                'Wipe Sense Data and reload UI?',
+                'Wipe all Sense Data?',
                 'Yes',
                 function()
                     _G.DF_LearnedData = {}
-                    ReloadUI()
+                    redprint('Sense Data wiped.')
                 end,
                 'No'
             )

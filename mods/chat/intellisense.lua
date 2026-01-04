@@ -4,21 +4,22 @@ DF:NewDefaults('intellisense', {
     enabled = {value = true},
     version = {value = '1.0'},
     gui = {
-        {tab = 'general', subtab = 'tweaks', categories = 'Intellisense'},
+        {tab = 'chat', subtab = 'intellisense', categories = 'General'},
     },
-    stickyMode = {value = true, metadata = {element = 'checkbox', category = 'Intellisense', indexInCategory = 1, description = 'Keep chat type after sending message'}},
-    preserveCase = {value = true, metadata = {element = 'checkbox', category = 'Intellisense', indexInCategory = 2, description = 'Preserve uppercase/lowercase in suggestions'}},
-    autoCapitalize = {value = true, metadata = {element = 'checkbox', category = 'Intellisense', indexInCategory = 3, description = 'Auto-capitalize first letter and after punctuation'}},
-    arrowKeyNav = {value = true, metadata = {element = 'checkbox', category = 'Intellisense', indexInCategory = 4, description = 'Enable ctrl/shift/arrow key navigation'}},
-    font = {value = 'font:FRIZQT__.TTF', metadata = {element = 'dropdown', category = 'Intellisense', indexInCategory = 5, description = 'Font', options = media.fonts}},
-    fontSize = {value = 13, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 6, description = 'EditBox font size', min = 8, max = 20, stepSize = 1}},
-    suggestFontSize = {value = 12, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 7, description = 'Suggestion font size', min = 8, max = 20, stepSize = 1}},
-    width = {value = 320, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 8, description = 'EditBox width', min = 200, max = 800, stepSize = 5}},
-    height = {value = 35, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 9, description = 'EditBox height', min = 20, max = 100, stepSize = 1}},
-    suggestHeight = {value = 25, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 10, description = 'Suggestion frame height', min = 15, max = 50, stepSize = 5}},
-    bgAlpha = {value = 0.5, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 11, description = 'Background alpha', min = 0, max = 1, stepSize = 0.05}},
-    borderAlpha = {value = 0.5, metadata = {element = 'slider', category = 'Intellisense', indexInCategory = 12, description = 'Border alpha', min = 0, max = 1, stepSize = 0.05}},
-    suggestColor = {value = {1, 0, 0}, metadata = {element = 'colorpicker', category = 'Intellisense', indexInCategory = 13, description = 'Suggestion text color'}},
+    stickyMode = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 1, description = 'Keep chat type after sending message'}},
+    preserveCase = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 2, description = 'Preserve uppercase/lowercase in suggestions'}},
+    autoCapitalize = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 3, description = 'Auto-capitalize first letter and after punctuation'}},
+    minWordLength = {value = 3, metadata = {element = 'slider', category = 'General', indexInCategory = 4, description = 'Minimum word length to learn', min = 2, max = 6, stepSize = 1}},
+    arrowKeyNav = {value = true, metadata = {element = 'checkbox', category = 'General', indexInCategory = 5, description = 'Enable ctrl/shift/arrow key navigation'}},
+    font = {value = 'font:FRIZQT__.TTF', metadata = {element = 'dropdown', category = 'General', indexInCategory = 6, description = 'Font', options = media.fonts}},
+    fontSize = {value = 13, metadata = {element = 'slider', category = 'General', indexInCategory = 7, description = 'EditBox font size', min = 8, max = 20, stepSize = 1}},
+    suggestFontSize = {value = 12, metadata = {element = 'slider', category = 'General', indexInCategory = 8, description = 'Suggestion font size', min = 8, max = 20, stepSize = 1}},
+    width = {value = 320, metadata = {element = 'slider', category = 'General', indexInCategory = 9, description = 'EditBox width', min = 200, max = 800, stepSize = 5}},
+    height = {value = 35, metadata = {element = 'slider', category = 'General', indexInCategory = 10, description = 'EditBox height', min = 20, max = 100, stepSize = 1}},
+    suggestHeight = {value = 25, metadata = {element = 'slider', category = 'General', indexInCategory = 11, description = 'Suggestion frame height', min = 15, max = 50, stepSize = 5}},
+    bgAlpha = {value = 0.5, metadata = {element = 'slider', category = 'General', indexInCategory = 12, description = 'Background alpha', min = 0, max = 1, stepSize = 0.05}},
+    borderAlpha = {value = 0.5, metadata = {element = 'slider', category = 'General', indexInCategory = 13, description = 'Border alpha', min = 0, max = 1, stepSize = 0.05}},
+    suggestColor = {value = {1, 0, 0}, metadata = {element = 'colorpicker', category = 'General', indexInCategory = 14, description = 'Suggestion text color'}},
 })
 
 DF:NewModule('intellisense', 1, function()
@@ -355,7 +356,7 @@ DF:NewModule('intellisense', 1, function()
         for i = 1, table.getn(wordList) do
             local word = DF.data.trim(wordList[i])
             word = string.gsub(word, '[^%a]', '')
-            if string.len(word) >= 3 then
+            if string.len(word) >= DF.profile.intellisense.minWordLength then
                 local firstLetter = string.lower(string.sub(word, 1, 1))
                 if not DF_LearnedData[firstLetter] then
                     DF_LearnedData[firstLetter] = {}
@@ -628,6 +629,9 @@ DF:NewModule('intellisense', 1, function()
     end
 
     callbacks.autoCapitalize = function(value)
+    end
+
+    callbacks.minWordLength = function(value)
     end
 
     callbacks.arrowKeyNav = function(value)

@@ -3,9 +3,9 @@ DRAGONFLIGHT()
 DF:NewDefaults('chat', {
     enabled = {value = true},
     version = {value = '1.0'},
-    gui = {
-        {tab = 'chat', subtab = 'mainbar', categories = 'General'},
-    },
+    -- gui = {
+    --     {tab = 'chat', subtab = 'mainbar', categories = 'General'},
+    -- },
 
 })
 
