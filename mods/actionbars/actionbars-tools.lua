@@ -39,7 +39,7 @@ local setup = {
                 frame.active = 1
                 return
             elseif frame.active == 1 then
-                local fade = 30/GetFramerate()*0.05
+                local fade = 30/GetFramerate() * 0.05
                 frame:SetAlpha(frame:GetAlpha() - fade)
                 frame:SetScale(frame:GetScale() + fade)
                 if frame:GetAlpha() > 0 then return end
@@ -161,7 +161,7 @@ function setup:CreateActionButton(parent, name, actionID)
     button.animation = CreateFrame('Frame', nil, button)
     button.animation.parent = button
     button.animation:SetAllPoints(button)
-    button.animation:SetFrameLevel(button:GetFrameLevel() + 10)
+    button.animation:SetFrameLevel(button:GetFrameLevel() + 2)
     button.animation:Hide()
     button.animation.tex = button.animation:CreateTexture(nil, 'ARTWORK')
     button.animation.tex:SetAllPoints()

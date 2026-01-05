@@ -3,11 +3,14 @@ DRAGONFLIGHT()
 -- lets begin...
 DF = CreateFrame'Frame'
 
--- saved variables
+-- saved global vars
 _G.DF_Profiles = {}
 _G.DF_LearnedData = {}
 _G.DF_GlobalData = {}
 _G.DF_PlayerCache = {}
+
+-- saved per-character vars
+_G.DF_CharData = {}
 
 -- core
 DF.tables = {}

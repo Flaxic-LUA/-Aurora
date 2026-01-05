@@ -201,7 +201,7 @@ end
 function init:Finalize()
     DF:UnregisterAllEvents()
     DF:SetScript('OnEvent', nil)
-    -- clear pending events after finalization
+    -- clear pending events
     init.pendingEvents = {}
 end
 

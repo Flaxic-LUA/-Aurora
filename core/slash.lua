@@ -7,6 +7,7 @@ local function ShowHelp()
     print('/df reset [sense|profiles|all] - Wipe DB and reload')
     print('/df edit or /df editmode - Toggle Edit Mode')
     print('/df hover or /df hoverbind - Toggle Hoverbind Mode')
+    print('/df stacks - Toggle Stack Editor')
     print('/df safeboot - Disable all addons except Dragonflight')
     print('/gm - Open GM Help')
     print('/load ADDONNAME - Load addon')
@@ -57,11 +58,12 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
             )
         elseif resetType == 'all' then
             DF.ui.StaticPopup_Show(
-                'Wipe EVERYTHING and reload UI?',
+                'Wipe everything and reload UI?',
                 'Yes',
                 function()
                     _G.DF_Profiles = {}
                     _G.DF_LearnedData = {}
+                    _G.DF_CharData = {}
                     ReloadUI()
                 end,
                 'No'
@@ -87,6 +89,8 @@ _G.SlashCmdList['DRAGONFLIGHT'] = function(msg)
         else
             DF.setups.hover:Show()
         end
+    elseif msg == 'stacks' then
+        ToggleStackPanel()
     elseif msg == '' then
         DRAGONFLIGHTToggleGUI()
     else

@@ -1,10 +1,13 @@
 DRAGONFLIGHT()
 
-function DF.mixins.HideMinimizeMaximizeButton()
+function DF.mixins.HideMinimizeMaximizeButton() -- needs better init for turtle wow map mode, can bug out when in max mode
     if DF.others.server ~= 'turtle' then return end
 
     if WorldMapFrameMinimizeButton then
         WorldMapFrameMinimizeButton:Hide()
+    end
+    if WorldMapFrameMaximizeButton then
+        WorldMapFrameMaximizeButton:Hide()
     end
 end
 

@@ -1,10 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <!-- DEV -->
-    <Include file="dev\test.lua"/>
-
     <!-- ACTIONBARS -->
     <Include file="actionbars\actionbars-tools.lua"/>
     <Include file="actionbars\actionbars.lua"/>
+    <Include file="actionbars\stackbuttons.lua"/>
 
     <!-- BAGS -->
     <Include file="bags\bagbar-tools.lua"/>
@@ -30,6 +28,7 @@
 
     <!-- GENERAL -->
     <Include file="general\addons.lua"/>
+    <Include file="general\ambient.lua"/>
     <Include file="general\colors.lua"/>
     <Include file="general\combopoints.lua"/>
     <Include file="general\cooldowns.lua"/>
@@ -100,4 +99,7 @@
 
     <!-- XPREP -->
     <Include file="xprep\xprep.lua"/>
+
+    <!-- DEV -->
+    <Include file="dev\test.lua"/>
 </Ui>

@@ -81,11 +81,11 @@ function DF.common.MakeFrameMovable(targetFrame)
     moveHandle:EnableMouse(true)
     moveHandle:SetAlpha(0)
 
-    moveHandle:SetScript('OnMouseDown', function()
+    moveHandle:SetScript('OnDragStart', function()
         targetFrame:StartMoving()
     end)
 
-    moveHandle:SetScript('OnMouseUp', function()
+    moveHandle:SetScript('OnDragStop', function()
         targetFrame:StopMovingOrSizing()
     end)
 end

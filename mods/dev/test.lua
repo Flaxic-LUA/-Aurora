@@ -1,3 +1,660 @@
 ---@diagnostic disable: duplicate-set-field
 -- AU Test file
--- DRAGONFLIGHT()
+DRAGONFLIGHT()
+
+-- local stack = {}
+-- local setup
+
+-- stack.activeButton = nil
+-- stack.slotButtons = {}
+-- stack.allSpellButtons = {}
+-- stack.allItemButtons = {}
+
+-- stack.stackPanel = DF.ui.CreatePaperDollFrame('DF_StackPanel', UIParent, 700, 500, 2)
+-- stack.stackPanel:SetPoint('CENTER', UIParent, 'CENTER')
+-- stack.stackPanel:SetFrameStrata('HIGH')
+-- stack.stackPanel:SetMovable(true)
+-- stack.stackPanel:EnableMouse(true)
+-- stack.stackPanel:RegisterForDrag('LeftButton')
+-- stack.stackPanel:SetScript('OnDragStart', function() this:StartMoving() end)
+-- stack.stackPanel:SetScript('OnDragStop', function() this:StopMovingOrSizing() end)
+-- stack.stackPanel:Hide()
+-- tinsert(UISpecialFrames, 'DF_StackPanel')
+-- stack.stackPanel:SetScript('OnHide', function()
+--     if stack.stackPanel:IsVisible() then return end
+--     for _, bar in pairs(setup.bars or {}) do
+--         for i = 1, table.getn(bar.buttons) do
+--             local btn = bar.buttons[i]
+--             if btn.stackButton then
+--                 if btn.stackSlots then
+--                     btn.stackButton:SetBackdropColor(1, 1, 1, 1)
+--                     btn.stackButton:Show()
+--                 else
+--                     btn.stackButton:Hide()
+--                 end
+--             end
+--         end
+--     end
+-- end)
+
+-- stack.panelTitle = DF.ui.Font(stack.stackPanel, 13, 'Stack\'s Editor', {1, 1, 1}, 'CENTER')
+-- stack.panelTitle:SetPoint('TOP', stack.stackPanel, 'TOP', 0, -5)
+
+-- stack.closeButton = DF.ui.CreateRedButton(stack.stackPanel, 'close', function()
+--     ToggleStackPanel()
+-- end)
+-- stack.closeButton:SetPoint('TOPRIGHT', stack.stackPanel, 'TOPRIGHT', 0, -1)
+-- stack.closeButton:SetSize(20, 20)
+
+-- stack.spellScroll = DF.ui.Scrollframe(stack.stackPanel, 250, 350, 'DF_StackSpellScroll')
+-- stack.spellScroll:SetPoint('TOPLEFT', stack.stackPanel, 'TOPLEFT', 30, -100)
+-- stack.spellScroll:SetBackdrop({
+--     bgFile = 'Interface\\Buttons\\WHITE8X8',
+--     edgeFile = 'Interface\\Tooltips\\UI-Tooltip-Border',
+--     edgeSize = 16,
+--     insets = {left = 4, right = 4, top = 4, bottom = 4},
+-- })
+-- stack.spellScroll:SetBackdropColor(0, 0, 0, 0.5)
+-- stack.spellScroll:SetBackdropBorderColor(0, 0, 0, 0.5)
+-- -- debugframe(stack.spellScroll)
+
+-- stack.spellTitle = DF.ui.Font(stack.stackPanel, 12, 'Spells', {1, .82, 0}, 'CENTER')
+-- stack.spellTitle:SetPoint('BOTTOM', stack.spellScroll, 'TOP', 0, 5)
+
+-- stack.otherScroll = DF.ui.Scrollframe(stack.stackPanel, 250, 350, 'DF_StackOtherScroll')
+-- stack.otherScroll:SetPoint('LEFT', stack.spellScroll, 'RIGHT', 10, 0)
+-- stack.otherScroll:SetBackdrop({
+--     bgFile = 'Interface\\Buttons\\WHITE8X8',
+--     edgeFile = 'Interface\\Tooltips\\UI-Tooltip-Border',
+--     edgeSize = 16,
+--     insets = {left = 4, right = 4, top = 4, bottom = 4},
+-- })
+-- stack.otherScroll:SetBackdropColor(0, 0, 0, 0.5)
+-- stack.otherScroll:SetBackdropBorderColor(0, 0, 0, 0.5)
+-- -- debugframe(stack.otherScroll)
+
+-- stack.otherTitle = DF.ui.Font(stack.stackPanel, 12, 'Items', {1, .82, 0}, 'CENTER')
+-- stack.otherTitle:SetPoint('BOTTOM', stack.otherScroll, 'TOP', 0, 5)
+
+-- stack.searchBox = DF.ui.Editbox(stack.stackPanel, 300, 30, 50)
+-- stack.searchBox:SetPoint('BOTTOM', stack.stackPanel, 'BOTTOM', 0, 10)
+-- stack.searchBox:SetScript('OnTextChanged', function()
+--     stack:FilterButtons(this:GetText())
+-- end)
+-- stack.searchBox:SetScript('OnEscapePressed', function()
+--     this:SetText('')
+--     this:ClearFocus()
+-- end)
+
+-- stack.searchLabel = DF.ui.Font(stack.stackPanel, 10, 'Search:', {1, 1, 1}, 'CENTER')
+-- stack.searchLabel:SetPoint('RIGHT', stack.searchBox, 'LEFT', -10, 0)
+
+-- stack.slotFrame = CreateFrame('Frame', nil, stack.stackPanel)
+-- stack.slotFrame:SetSize(100, 350)
+-- stack.slotFrame:SetPoint('LEFT', stack.otherScroll, 'RIGHT', 10, 0)
+-- stack.slotFrame:SetBackdrop({
+--     bgFile = 'Interface\\Buttons\\WHITE8X8',
+--     edgeFile = 'Interface\\Tooltips\\UI-Tooltip-Border',
+--     edgeSize = 16,
+--     insets = {left = 4, right = 4, top = 4, bottom = 4},
+-- })
+-- stack.slotFrame:SetBackdropColor(0, 0, 0, 0.5)
+-- stack.slotFrame:SetBackdropBorderColor(0, 0, 0, 0.5)
+-- -- debugframe(stack.slotFrame)
+
+-- stack.slotTitle = DF.ui.Font(stack.stackPanel, 12, 'Slots', {1, .82, 0}, 'CENTER')
+-- stack.slotTitle:SetPoint('BOTTOM', stack.slotFrame, 'TOP', 0, 5)
+
+-- stack.clearButton = DF.ui.Button(stack.stackPanel, 'Clear', 80, 20)
+-- stack.clearButton:SetPoint('TOP', stack.slotFrame, 'BOTTOM', 0, -10)
+-- stack.clearButton:SetScript('OnClick', function()
+--     if stack.activeButton then
+--         stack.activeButton.stackSlots = nil
+--         stack:UpdateSlotButtons()
+--     end
+-- end)
+
+-- stack.activeLabel = DF.ui.Font(stack.stackPanel, 16, 'Active Button: ', {1, 1, 1}, 'CENTER')
+-- stack.activeLabel:SetPoint('TOP', stack.stackPanel, 'TOP', -50, -50)
+
+-- stack.activeText = DF.ui.Font(stack.stackPanel, 16, 'None', {1, 0.5, 0}, 'CENTER')
+-- stack.activeText:SetPoint('LEFT', stack.activeLabel, 'RIGHT', 0, 0)
+
+-- stack.spellOverlay = CreateFrame('Frame', nil, stack.spellScroll)
+-- stack.spellOverlay:SetAllPoints(stack.spellScroll)
+-- stack.spellOverlay:SetFrameLevel(stack.spellScroll:GetFrameLevel() + 10)
+-- stack.spellOverlay:SetBackdrop({bgFile = 'Interface\\Buttons\\WHITE8X8'})
+-- stack.spellOverlay:SetBackdropColor(0, 0, 0, 0.7)
+-- stack.spellOverlay:EnableMouse(true)
+-- stack.spellOverlayText = DF.ui.Font(stack.spellOverlay, 14, 'Choose Button', {0.5, 0.5, 0.5}, 'CENTER')
+-- stack.spellOverlayText:SetPoint('CENTER', stack.spellOverlay, 'CENTER')
+
+-- stack.itemOverlay = CreateFrame('Frame', nil, stack.otherScroll)
+-- stack.itemOverlay:SetAllPoints(stack.otherScroll)
+-- stack.itemOverlay:SetFrameLevel(stack.otherScroll:GetFrameLevel() + 10)
+-- stack.itemOverlay:SetBackdrop({bgFile = 'Interface\\Buttons\\WHITE8X8'})
+-- stack.itemOverlay:SetBackdropColor(0, 0, 0, 0.7)
+-- stack.itemOverlay:EnableMouse(true)
+-- stack.itemOverlayText = DF.ui.Font(stack.itemOverlay, 14, 'Choose Button', {0.5, 0.5, 0.5}, 'CENTER')
+-- stack.itemOverlayText:SetPoint('CENTER', stack.itemOverlay, 'CENTER')
+
+-- local f = CreateFrame('Frame')
+-- f:RegisterEvent('SYNC_READY')
+-- f:SetScript('OnEvent', function()
+--     setup = DF.setups.actionbars
+--     stack:HookButtons()
+--     stack:CreateStackButtons()
+--     stack:CreateSlotButtons()
+--     ToggleStackPanel()
+--     stack:PopulateSpells()
+--     stack:PopulateItems()
+-- end)
+
+-- function stack:RefreshData()
+--     for i = 1, table.getn(self.allItemButtons) do
+--         local btn = self.allItemButtons[i]
+--         if btn.bagID and btn.slotID then
+--             local texture, itemCount = GetContainerItemInfo(btn.bagID, btn.slotID)
+--             if texture then
+--                 if itemCount and itemCount > 1 then
+--                     btn.countText:SetText(itemCount)
+--                 else
+--                     btn.countText:SetText('')
+--                 end
+--             end
+--         end
+--     end
+-- end
+
+-- function stack:PopulateSpells()
+--     local numTabs = GetNumSpellTabs()
+--     local spellIndex = 1
+--     local perRow = 7
+--     local btnSize = 32
+--     local spacing = 3
+--     local row = 0
+--     local col = 0
+
+--     for tab = 1, numTabs do
+--         local _, _, offset, numSpells = GetSpellTabInfo(tab)
+--         for i = 1, numSpells do
+--             local spellName = GetSpellName(offset + i, BOOKTYPE_SPELL)
+--             local spellTexture = GetSpellTexture(offset + i, BOOKTYPE_SPELL)
+--             if spellName then
+--                 local btnName = 'DF_StackSpellBtn' .. spellIndex
+--                     local btn = DF.ui.SlotButton(self.spellScroll.content, btnName, btnSize)
+--                     btn.bg:Hide()
+--                     btn.icon:SetTexture(spellTexture)
+--                 btn:SetPoint('TOPLEFT', self.spellScroll.content, 'TOPLEFT', col * (btnSize + spacing), -row * (btnSize + spacing))
+--                 btn:RegisterForDrag('LeftButton')
+--                 btn.spellID = offset + i
+--                 btn.border:SetBackdrop(nil)
+--                 local borderTex = btn.border:CreateTexture(nil, 'BACKGROUND')
+--                 borderTex:SetTexture(media['tex:actionbars:btn_border.blp'])
+--                 borderTex:SetAllPoints(btn.border)
+--                 btn.highlight:SetBackdrop(nil)
+--                 btn.highlightTex = btn.highlight:CreateTexture(nil, 'OVERLAY')
+--                 btn.highlightTex:SetTexture(media['tex:actionbars:btn_highlight_strong.blp'])
+--                 btn.highlightTex:SetPoint('TOPLEFT', btn.highlight, 'TOPLEFT', -4, 4)
+--                 btn.highlightTex:SetPoint('BOTTOMRIGHT', btn.highlight, 'BOTTOMRIGHT', 4, -4)
+--                 btn:SetScript('OnEnter', function()
+--                     this.highlight:Show()
+--                     GameTooltip:SetOwner(this, 'ANCHOR_RIGHT')
+--                     GameTooltip:SetSpell(this.spellID, BOOKTYPE_SPELL)
+--                     GameTooltip:Show()
+--                 end)
+--                 btn:SetScript('OnLeave', function()
+--                     this.highlight:Hide()
+--                     GameTooltip:Hide()
+--                 end)
+--                 btn:SetScript('OnDragStart', function()
+--                     PickupSpell(this.spellID, BOOKTYPE_SPELL)
+--                     stack.draggedSpell = {name = spellName, texture = spellTexture, spellID = offset + i}
+--                 end)
+--                 btn.spellName = string.lower(spellName)
+--                 table.insert(self.allSpellButtons, btn)
+
+--                 col = col + 1
+--                 if col >= perRow then
+--                     col = 0
+--                     row = row + 1
+--                 end
+--                 spellIndex = spellIndex + 1
+--             end
+--         end
+--     end
+
+--     self.spellScroll.content:SetHeight((row + 1) * (btnSize + spacing))
+--     self.spellScroll.updateScrollBar()
+-- end
+
+-- function stack:PopulateItems()
+--     local itemIndex = 1
+--     local perRow = 7
+--     local btnSize = 32
+--     local spacing = 3
+--     local row = 0
+--     local col = 0
+
+--     for bag = 0, 4 do
+--         local numSlots = GetContainerNumSlots(bag)
+--         if numSlots then
+--             for slot = 1, numSlots do
+--                 local texture, itemCount = GetContainerItemInfo(bag, slot)
+--                 if texture then
+--                     local itemLink = GetContainerItemLink(bag, slot)
+--                     local itemName = itemLink
+--                     local btnName = 'DF_StackItemBtn' .. itemIndex
+--                     local btn = DF.ui.SlotButton(self.otherScroll.content, btnName, btnSize)
+--                     btn.bg:Hide()
+--                     btn.icon:SetTexture(texture)
+--                     btn:SetPoint('TOPLEFT', self.otherScroll.content, 'TOPLEFT', col * (btnSize + spacing), -row * (btnSize + spacing))
+--                     btn:RegisterForDrag('LeftButton')
+--                     btn.bagID = bag
+--                     btn.slotID = slot
+--                     btn.border:SetBackdrop(nil)
+--                     local borderTex = btn.border:CreateTexture(nil, 'BACKGROUND')
+--                     borderTex:SetTexture(media['tex:actionbars:btn_border.blp'])
+--                     borderTex:SetAllPoints(btn.border)
+--                     btn.highlight:SetBackdrop(nil)
+--                     btn.highlightTex = btn.highlight:CreateTexture(nil, 'OVERLAY')
+--                     btn.highlightTex:SetTexture(media['tex:actionbars:btn_highlight_strong.blp'])
+--                     btn.highlightTex:SetPoint('TOPLEFT', btn.highlight, 'TOPLEFT', -4, 4)
+--                     btn.highlightTex:SetPoint('BOTTOMRIGHT', btn.highlight, 'BOTTOMRIGHT', 4, -4)
+--                     btn.countText = DF.ui.Font(btn, 10, '', {1, 1, 1}, 'RIGHT')
+--                     btn.countText:SetPoint('BOTTOMRIGHT', btn, 'BOTTOMRIGHT', -2, 2)
+--                     if itemCount and itemCount > 1 then
+--                         btn.countText:SetText(itemCount)
+--                     end
+--                     btn:SetScript('OnEnter', function()
+--                         this.highlight:Show()
+--                         GameTooltip:SetOwner(this, 'ANCHOR_RIGHT')
+--                         GameTooltip:SetBagItem(this.bagID, this.slotID)
+--                         GameTooltip:Show()
+--                     end)
+--                     btn:SetScript('OnLeave', function()
+--                         this.highlight:Hide()
+--                         GameTooltip:Hide()
+--                     end)
+--                     btn:SetScript('OnDragStart', function()
+--                         PickupContainerItem(this.bagID, this.slotID)
+--                         stack.draggedItem = {name = itemName, texture = texture, bag = bag, slot = slot}
+--                     end)
+--                     btn.itemName = string.lower(itemName or '')
+--                     table.insert(self.allItemButtons, btn)
+
+--                     col = col + 1
+--                     if col >= perRow then
+--                         col = 0
+--                         row = row + 1
+--                     end
+--                     itemIndex = itemIndex + 1
+--                 end
+--             end
+--         end
+--     end
+
+--     self.otherScroll.content:SetHeight((row + 1) * (btnSize + spacing))
+--     self.otherScroll.updateScrollBar()
+-- end
+
+-- function stack:FilterButtons(searchText)
+--     searchText = string.lower(searchText)
+--     local perRow = 6
+--     local btnSize = 32
+--     local spacing = 3
+--     local spellRow = 0
+--     local spellCol = 0
+--     local itemRow = 0
+--     local itemCol = 0
+
+--     for i = 1, table.getn(self.allSpellButtons) do
+--         local btn = self.allSpellButtons[i]
+--         if searchText == '' or string.find(btn.spellName, searchText, 1, true) then
+--             btn:ClearAllPoints()
+--             btn:SetPoint('TOPLEFT', self.spellScroll.content, 'TOPLEFT', spellCol * (btnSize + spacing)+10, -spellRow * (btnSize + spacing)-10)
+--             btn:Show()
+--             spellCol = spellCol + 1
+--             if spellCol >= perRow then
+--                 spellCol = 0
+--                 spellRow = spellRow + 1
+--             end
+--         else
+--             btn:Hide()
+--         end
+--     end
+
+--     for i = 1, table.getn(self.allItemButtons) do
+--         local btn = self.allItemButtons[i]
+--         if searchText == '' or string.find(btn.itemName, searchText, 1, true) then
+--             btn:ClearAllPoints()
+--             btn:SetPoint('TOPLEFT', self.otherScroll.content, 'TOPLEFT', itemCol * (btnSize + spacing)+10, -itemRow * (btnSize + spacing)-10)
+--             btn:Show()
+--             itemCol = itemCol + 1
+--             if itemCol >= perRow then
+--                 itemCol = 0
+--                 itemRow = itemRow + 1
+--             end
+--         else
+--             btn:Hide()
+--         end
+--     end
+
+--     self.spellScroll.content:SetHeight((spellRow + 1) * (btnSize + spacing))
+--     self.spellScroll.updateScrollBar()
+--     self.otherScroll.content:SetHeight((itemRow + 1) * (btnSize + spacing))
+--     self.otherScroll.updateScrollBar()
+-- end
+
+-- function stack:CreateSlotButtons()
+--     for i = 1, 5 do
+--         local slot = DF.ui.SlotButton(self.slotFrame, 'DF_StackSlot'..i, 40)
+--         slot.bg:SetTexture(media['tex:bags:bagbg2.tga'])
+--         slot:SetPoint('TOP', self.slotFrame, 'TOP', 0, (-(i-1) * 48)-45)
+--         slot.slotIndex = i
+--         slot.border:SetBackdrop(nil)
+--         local borderTex = slot.border:CreateTexture(nil, 'BACKGROUND')
+--         borderTex:SetTexture(media['tex:actionbars:btn_border.blp'])
+--         borderTex:SetAllPoints(slot.border)
+--         slot.highlight:SetBackdrop(nil)
+--         slot.highlightTex = slot.highlight:CreateTexture(nil, 'OVERLAY')
+--         slot.highlightTex:SetTexture(media['tex:actionbars:btn_highlight_strong.blp'])
+--         slot.highlightTex:SetPoint('TOPLEFT', slot.highlight, 'TOPLEFT', -4, 4)
+--         slot.highlightTex:SetPoint('BOTTOMRIGHT', slot.highlight, 'BOTTOMRIGHT', 4, -4)
+--         slot:RegisterForDrag('LeftButton')
+--         slot:SetScript('OnReceiveDrag', function()
+--             if not stack.activeButton then return end
+--             if not stack.activeButton.stackSlots then
+--                 stack.activeButton.stackSlots = {}
+--             end
+--             local targetSlot = this.slotIndex
+--             local existingData = stack.activeButton.stackSlots[targetSlot]
+--             if stack.draggedSpell or stack.draggedItem then
+--                 stack.activeButton.stackSlots[targetSlot] = stack.draggedSpell or stack.draggedItem
+--                 if stack.dragSource and stack.dragSource.type == 'slot' then
+--                     stack.activeButton.stackSlots[stack.dragSource.index] = existingData
+--                 end
+--                 stack.draggedSpell = nil
+--                 stack.draggedItem = nil
+--                 stack.dragSource = nil
+--                 ClearCursor()
+--                 stack:UpdateSlotButtons()
+--             end
+--         end)
+--         slot:SetScript('OnDragStart', function()
+--             if stack.activeButton and stack.activeButton.stackSlots and stack.activeButton.stackSlots[this.slotIndex] then
+--                 local slotData = stack.activeButton.stackSlots[this.slotIndex]
+--                 stack.dragSource = {type = 'slot', index = this.slotIndex}
+--                 if slotData.spellID then
+--                     PickupSpell(slotData.spellID, BOOKTYPE_SPELL)
+--                     stack.draggedSpell = slotData
+--                 elseif slotData.bag then
+--                     local itemBag, itemSlot = stack:FindItemInBags(slotData.name)
+--                     if itemBag and itemSlot then
+--                         PickupContainerItem(itemBag, itemSlot)
+--                         stack.draggedItem = slotData
+--                     end
+--                 end
+--             end
+--         end)
+--         self.slotButtons[i] = slot
+--     end
+-- end
+
+-- function stack:UpdateSlotButtons()
+--     for i = 1, 5 do
+--         local slot = self.slotButtons[i]
+--         if self.activeButton and self.activeButton.stackSlots and self.activeButton.stackSlots[i] then
+--             slot.icon:SetTexture(self.activeButton.stackSlots[i].texture)
+--         else
+--             slot.icon:SetTexture(nil)
+--         end
+--     end
+--     if self.activeButton then
+--         local name = self.activeButton:GetName()
+--         name = string.gsub(name, 'DF_', '')
+--         name = string.gsub(name, 'Button', ' Button ')
+--         name = string.gsub(name, 'Bar', 'bar ')
+--         self.activeText:SetText(name)
+--         self.spellOverlay:Hide()
+--         self.itemOverlay:Hide()
+--         for i = 1, 5 do
+--             local slot = self.slotButtons[i]
+--             if self.activeButton.stackSlots and self.activeButton.stackSlots[i] then
+--                 slot.icon:SetTexture(self.activeButton.stackSlots[i].texture)
+--             else
+--                 slot.icon:SetTexture(nil)
+--             end
+--         end
+--         if self.activeButton.stackButton then
+--             if self.activeButton.stackSlots then
+--                 self.activeButton.stackButton:SetBackdropColor(1, 1, 1, 1)
+--             else
+--                 self.activeButton.stackButton:SetBackdropColor(1, 0, 0, 1)
+--             end
+--         end
+--     else
+--         self.activeText:SetText('None')
+--         self.spellOverlay:Show()
+--         self.itemOverlay:Show()
+--     end
+-- end
+
+-- function stack:FindItemInBags(itemName)
+--     for bag = 0, 4 do
+--         local numSlots = GetContainerNumSlots(bag)
+--         if numSlots then
+--             for slot = 1, numSlots do
+--                 local itemLink = GetContainerItemLink(bag, slot)
+--                 if itemLink and itemLink == itemName then
+--                     return bag, slot
+--                 end
+--             end
+--         end
+--     end
+--     return nil, nil
+-- end
+
+-- function stack:ShowStackFrames(btn)
+--     if not btn.stackSlots then return end
+
+--     if not btn.stackFrames then
+--         btn.stackFrames = {}
+--         for i = 1, 5 do
+--             local frameName = btn:GetName() .. 'StackFrame' .. i
+--             local frame = DF.ui.SlotButton(btn, frameName, btn:GetWidth())
+--             frame:SetPoint('BOTTOM', btn, 'TOP', 0, (i-1) * btn:GetHeight())
+--             frame:EnableMouse(true)
+--             frame.slotIndex = i
+--             frame.border:SetBackdrop(nil)
+--             local borderTex = frame.border:CreateTexture(nil, 'BACKGROUND')
+--             borderTex:SetTexture(media['tex:actionbars:btn_border.blp'])
+--             borderTex:SetAllPoints(frame.border)
+--             frame.highlight:SetBackdrop(nil)
+--             frame.highlightTex = frame.highlight:CreateTexture(nil, 'OVERLAY')
+--             frame.highlightTex:SetTexture(media['tex:actionbars:btn_highlight_strong.blp'])
+--             frame.highlightTex:SetPoint('TOPLEFT', frame.highlight, 'TOPLEFT', -4, 4)
+--             frame.highlightTex:SetPoint('BOTTOMRIGHT', frame.highlight, 'BOTTOMRIGHT', 4, -4)
+--             frame.countText = DF.ui.Font(frame, 10, '', {1, 1, 1}, 'RIGHT')
+--             frame.countText:SetPoint('BOTTOMRIGHT', frame, 'BOTTOMRIGHT', -2, 2)
+--             frame:SetScript('OnEnter', function()
+--                 this.highlight:Show()
+--                 local parentBtn = this:GetParent()
+--                 if parentBtn.stackSlots and parentBtn.stackSlots[this.slotIndex] then
+--                     local slotData = parentBtn.stackSlots[this.slotIndex]
+--                     GameTooltip:SetOwner(this, 'ANCHOR_RIGHT')
+--                     if slotData.bag then
+--                         local bag, slot = stack:FindItemInBags(slotData.name)
+--                         if bag and slot then
+--                             GameTooltip:SetBagItem(bag, slot)
+--                         end
+--                     elseif slotData.spellID then
+--                         GameTooltip:SetSpell(slotData.spellID, BOOKTYPE_SPELL)
+--                     end
+--                     GameTooltip:Show()
+--                 end
+--             end)
+--             frame:SetScript('OnLeave', function()
+--                 this.highlight:Hide()
+--                 GameTooltip:Hide()
+--                 stack:HideStackFrames(btn)
+--             end)
+--             frame:SetScript('OnClick', function()
+--                 local parentBtn = this:GetParent()
+--                 if parentBtn.stackSlots and parentBtn.stackSlots[this.slotIndex] then
+--                     local slotData = parentBtn.stackSlots[this.slotIndex]
+--                     if slotData.bag then
+--                         local bag, slot = stack:FindItemInBags(slotData.name)
+--                         if bag and slot then
+--                             UseContainerItem(bag, slot)
+--                         end
+--                     elseif slotData.name then
+--                         CastSpellByName(slotData.name)
+--                     end
+--                     if not IsShiftKeyDown() then
+--                         stack:HideStackFrames(parentBtn, true)
+--                     end
+--                 end
+--             end)
+--             frame:Hide()
+--             btn.stackFrames[i] = frame
+--         end
+--     end
+
+--     for i = 1, 5 do
+--         if btn.stackSlots[i] then
+--             btn.stackFrames[i].icon:SetTexture(btn.stackSlots[i].texture)
+--             if btn.stackSlots[i].bag then
+--                 local bag, slot = stack:FindItemInBags(btn.stackSlots[i].name)
+--                 if bag and slot then
+--                     local _, itemCount = GetContainerItemInfo(bag, slot)
+--                     if itemCount and itemCount > 0 then
+--                         btn.stackFrames[i].countText:SetText(itemCount)
+--                         btn.stackFrames[i].icon:SetVertexColor(1, 1, 1)
+--                     else
+--                         btn.stackFrames[i].countText:SetText('0')
+--                         btn.stackFrames[i].icon:SetVertexColor(0.4, 0.4, 0.4)
+--                     end
+--                 else
+--                     btn.stackFrames[i].countText:SetText('0')
+--                     btn.stackFrames[i].icon:SetVertexColor(0.4, 0.4, 0.4)
+--                 end
+--             else
+--                 btn.stackFrames[i].countText:SetText('')
+--                 btn.stackFrames[i].icon:SetVertexColor(1, 1, 1)
+--             end
+--             btn.stackFrames[i]:Show()
+--         else
+--             btn.stackFrames[i]:Hide()
+--         end
+--     end
+-- end
+
+-- function stack:HideStackFrames(btn, force)
+--     if btn.stackFrames then
+--         if not force then
+--             if MouseIsOver(btn) then return end
+--             for i = 1, 5 do
+--                 if btn.stackFrames[i] and MouseIsOver(btn.stackFrames[i]) then
+--                     return
+--                 end
+--             end
+--         end
+--         for i = 1, 5 do
+--             btn.stackFrames[i]:Hide()
+--         end
+--     end
+-- end
+
+-- function stack:HookButtons()
+--     for _, bar in pairs(setup.bars) do
+--         for i = 1, table.getn(bar.buttons) do
+--             local btn = bar.buttons[i]
+--             DF.hooks.HookScript(btn, 'OnEnter', function()
+--                 stack:ShowStackFrames(this)
+--             end, true)
+--             DF.hooks.HookScript(btn, 'OnLeave', function()
+--                 stack:HideStackFrames(this)
+--             end, true)
+--         end
+--     end
+-- end
+
+-- function stack:CreateStackButtons()
+--     for _, bar in pairs(setup.bars) do
+--         for i = 1, table.getn(bar.buttons) do
+--             local btn = bar.buttons[i]
+--             local btnID = btn:GetID()
+--             if not btn.stackButton and not (btnID >= 133 and btnID <= 142) and not (btnID >= 200 and btnID <= 209) then
+--                 btn.stackButton = CreateFrame('Button', nil, btn)
+--                 btn.stackButton:SetSize(btn:GetWidth(), 5)
+--                 btn.stackButton:SetPoint('BOTTOM', btn, 'TOP')
+--                 btn.stackButton:SetBackdrop({bgFile = media['tex:generic:stack_indicator.blp']})
+--                 if btn.stackSlots then
+--                     btn.stackButton:SetBackdropColor(1, 1, 1, 1)
+--                 else
+--                     btn.stackButton:SetBackdropColor(1, 0, 0, 1)
+--                 end
+--                 btn.stackButton:SetScript('OnClick', function()
+--                     stack.activeButton = btn
+--                     stack:UpdateSlotButtons()
+--                     if not stack.stackPanel:IsVisible() then
+--                         ToggleStackPanel()
+--                     end
+--                 end)
+--             end
+--         end
+--     end
+-- end
+
+-- function stack:ToggleStackButtons(show)
+--     for _, bar in pairs(setup.bars) do
+--         for i = 1, table.getn(bar.buttons) do
+--             local btn = bar.buttons[i]
+--             if btn.stackButton then
+--                 if show then
+--                     btn.stackButton:Show()
+--                 else
+--                     btn.stackButton:Hide()
+--                 end
+--             end
+--         end
+--     end
+-- end
+
+-- function ToggleStackPanel()
+--     if stack.stackPanel:IsVisible() then
+--         stack.stackPanel:Hide()
+--         for _, bar in pairs(setup.bars) do
+--             for i = 1, table.getn(bar.buttons) do
+--                 local btn = bar.buttons[i]
+--                 if btn.stackButton then
+--                     btn.stackButton:SetHeight(5)
+--                     if btn.stackSlots then
+--                         btn.stackButton:SetBackdropColor(1, 1, 1, 1)
+--                         btn.stackButton:Show()
+--                     else
+--                         btn.stackButton:Hide()
+--                     end
+--                 end
+--             end
+--         end
+--     else
+--         stack.stackPanel:Show()
+--         stack:RefreshData()
+--         for _, bar in pairs(setup.bars) do
+--             for i = 1, table.getn(bar.buttons) do
+--                 local btn = bar.buttons[i]
+--                 if btn.stackButton then
+--                     btn.stackButton:SetHeight(15)
+--                     if btn.stackSlots then
+--                         btn.stackButton:SetBackdropColor(1, 1, 1, 1)
+--                     else
+--                         btn.stackButton:SetBackdropColor(1, 0, 0, 1)
+--                     end
+--                     btn.stackButton:Show()
+--                 end
+--             end
+--         end
+--     end
+-- end

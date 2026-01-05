@@ -92,12 +92,19 @@ DF:NewModule('gamemenu', 1, function()
     end)
     yOffset = yOffset - buttonHeight - buttonSpacing
 
-    local macrosBtn = DF.ui.Button(frame, 'Macros', 160, buttonHeight)
-    macrosBtn:SetPoint('TOP', frame, 'TOP', 0, yOffset)
+    local macrosBtn = DF.ui.Button(frame, 'Macros', 140, buttonHeight)
+    macrosBtn:SetPoint('TOP', frame, 'TOP', - 10, yOffset)
     macrosBtn:SetScript('OnClick', function()
         frame:Hide()
         MacroFrame_LoadUI()
         ShowUIPanel(MacroFrame)
+    end)
+
+    local macroBtn = DF.ui.Button(frame, '+', 21, buttonHeight, nil, {.9, 0, 0})
+    macroBtn:SetPoint('LEFT', macrosBtn, 'RIGHT', -2, 0)
+    macroBtn:SetScript('OnClick', function()
+        frame:Hide()
+        ToggleStackPanel()
     end)
     yOffset = yOffset - buttonHeight - buttonSpacing * emptySpacing
 

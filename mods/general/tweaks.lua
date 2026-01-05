@@ -94,32 +94,6 @@ DF:NewModule('tweaks', 1, function()
         end
     end)
 
-    -- chatcolor.tempCache = {}
-    -- chatcolor.scanner:SetScript('OnUpdate', function()
-    --     TargetByName('Ironforge Guard')
-        -- debugprint('OnUpdate running')
-        -- chatcolor.scanTimer = chatcolor.scanTimer + arg1
-        -- if chatcolor.scanTimer >= 0.5 then
-        --     chatcolor.scanTimer = 0
-        --     debugprint('Timer hit')
-        --     if not UnitExists('target') then
-        --         debugprint('Targeting...')
-        --         _G.PlaySound = function() end
-        --         debugprint('Target exists: '..tostring(UnitExists('target')))
-        --         if UnitIsPlayer('target') then
-        --             local name = UnitName('target')
-        --             debugprint('Player found: '..(name or 'nil'))
-        --             if name and not chatcolor.tempCache[name] then
-        --                 chatcolor.tempCache[name] = true
-        --                 debugprint('Auto-targeting: '..name)
-        --             end
-        --         end
-        --         ClearTarget()
-        --         _G.PlaySound = PlaySound
-        --     end
-        -- end
-    -- end)
-
     -- callbacks
     local callbacks = {}
 

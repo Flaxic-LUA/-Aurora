@@ -52,7 +52,7 @@ DF:NewModule('gui-base', 1, function()
     end
 
     setup.mainframe = DF.ui.CreatePaperDollFrame('DF_GUI', UIParent, setup.basic.width, setup.basic.height, 1)
-    setup.mainframe:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
+    setup.mainframe:SetPoint('CENTER', UIParent, 'CENTER', 100, 0)
     setup.mainframe:SetFrameStrata('HIGH')
     setup.mainframe:EnableMouse(true)
     setup.mainframe:SetMovable(true)
@@ -142,6 +142,13 @@ DF:NewModule('gui-base', 1, function()
         else
             DF.setups.hover:Show()
         end
+    end)
+
+    local stacksBtn = DF.ui.Button(setup.subframe, 'Stacks', 80, 20, false, {1, 0, 0})
+    stacksBtn:SetPoint('LEFT', hoverbindBtn, 'RIGHT', 5, 0)
+    stacksBtn:SetScript('OnClick', function()
+        setup.mainframe:Hide()
+        ToggleStackPanel()
     end)
 
     setup.testBtn = DF.ui.Button(setup.subframe, 'Test', 80, 20, false, {1, 0, 0})
