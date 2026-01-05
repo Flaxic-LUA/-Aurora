@@ -83,7 +83,7 @@ DF:NewModule('stackbuttons', 2, 'PLAYER_LOGIN', function()
     stack.searchLabel:SetPoint('RIGHT', stack.searchBox, 'LEFT', -10, 0)
 
     stack.slotFrame = CreateFrame('Frame', nil, stack.stackPanel)
-    stack.slotFrame:SetSize(100, 350)
+    stack.slotFrame:SetSize(120, 350)
     stack.slotFrame:SetPoint('LEFT', stack.otherScroll, 'RIGHT', 10, 0)
     stack.slotFrame:SetBackdrop({
         bgFile = 'Interface\\Buttons\\WHITE8X8',
@@ -99,7 +99,7 @@ DF:NewModule('stackbuttons', 2, 'PLAYER_LOGIN', function()
     stack.slotTitle:SetPoint('BOTTOM', stack.slotFrame, 'TOP', 0, 5)
 
     stack.clearButton = DF.ui.Button(stack.stackPanel, 'Clear', 80, 20)
-    stack.clearButton:SetPoint('TOP', stack.slotFrame, 'BOTTOM', 0, -10)
+    stack.clearButton:SetPoint('TOP', stack.slotFrame, 'BOTTOM', 0, -15)
     stack.clearButton:SetScript('OnClick', function()
         if stack.activeButton then
             DF_CharData[stack.activeButton.btnID] = nil
@@ -478,7 +478,7 @@ DF:NewModule('stackbuttons', 2, 'PLAYER_LOGIN', function()
                 local frameName = btn:GetName() .. 'StackFrame' .. i
                 local frame = DF.ui.SlotButton(btn, frameName, btn:GetWidth())
                 frame:SetPoint('BOTTOM', btn, 'TOP', 0, (i-1) * btn:GetHeight())
-                frame:SetFrameStrata('MEDIUM')
+                frame:SetFrameStrata('TOOLTIP')
                 frame:EnableMouse(true)
                 frame.slotIndex = i
                 frame.border:SetBackdrop(nil)
