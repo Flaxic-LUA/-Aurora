@@ -27,6 +27,11 @@ local setup = {
         ['Mongoose Bite'] = true
     },
 
+    reagentSpells = {
+        ['Vanish'] = 'Flash Powder',
+        ['Blind'] = 'Blinding Powder'
+    },
+
     animations = {
         ['zoomfade'] = function(frame)
             if frame.active == 0 then
@@ -565,8 +570,29 @@ function setup:UpdateButtonMacroText(button)
 end
 
 function setup:UpdateButtonCount(button)
-    if IsConsumableAction(button:GetID()) then
-        button.count:SetText(GetActionCount(button:GetID()))
+    local id = button:GetID()
+    if IsConsumableAction(id) then
+        button.count:SetText(GetActionCount(id))
+    elseif HasAction(id) then
+        local scanner = DF.lib.libtipscan:GetScanner('count')
+        scanner:SetAction(id)
+        local spell = scanner:GetLine(1)
+        local reagent = self.reagentSpells[spell]
+        if reagent then
+            local count = 0
+            for bag = 0, 4 do
+                for slot = 1, GetContainerNumSlots(bag) do
+                    local link = GetContainerItemLink(bag, slot)
+                    if link and string.find(link, reagent) then
+                        local _, c = GetContainerItemInfo(bag, slot)
+                        count = count + (c or 0)
+                    end
+                end
+            end
+            button.count:SetText(count)
+        else
+            button.count:SetText('')
+        end
     else
         button.count:SetText('')
     end

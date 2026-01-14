@@ -2,7 +2,7 @@
 ## Title: |cffffffffDragonflight|r |cffff00003
 ## Notes: The Dragonflight |cffff00003|r UI for all 1.12.1 clients.
 ## Author: Guzruul
-## X-Version: 1.0.10
+## X-Version: 1.0.11
 ## X-Patch: Beta Phase
 ## SavedVariables: DF_Profiles, DF_LearnedData, DF_GlobalData, DF_PlayerCache
 ## SavedVariablesPerCharacter: DF_CharData

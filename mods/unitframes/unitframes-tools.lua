@@ -493,8 +493,10 @@ function setup:UpdateBarText(unitFrame)
     local hpPct = maxHealth > 0 and math.floor((health / maxHealth) * 100) or 0
     local manaPct = maxMana > 0 and math.floor((mana / maxMana) * 100) or 0
 
-    local hpFormat = unitFrame.healthTextFormat or 'cur/max'
-    local manaFormat = unitFrame.manaTextFormat or 'cur/max'
+    local hpFormatKey = string.find(unitFrame.unit, 'party') and 'partyHealthTextFormat' or unitFrame.unit..'HealthTextFormat'
+    local manaFormatKey = string.find(unitFrame.unit, 'party') and 'partyManaTextFormat' or unitFrame.unit..'ManaTextFormat'
+    local hpFormat = unitFrame.healthTextFormat or (DF_Profiles and DF.profile['unitframes'] and DF.profile['unitframes'][hpFormatKey]) or 'cur/max'
+    local manaFormat = unitFrame.manaTextFormat or (DF_Profiles and DF.profile['unitframes'] and DF.profile['unitframes'][manaFormatKey]) or 'cur/max'
     local hpAnchor = unitFrame.healthTextAnchor or 'left'
     local manaAnchor = unitFrame.manaTextAnchor or 'left'
     local isTarget = unitFrame.unit == 'target'
@@ -1241,7 +1243,6 @@ function setup:OnEvent()
                 setup:UpdateLevelColor(portrait)
                 setup:UpdatePvPIcon(portrait)
                 setup:UpdateBarText(portrait)
-                setup:UpdateBarTextNumbers(portrait)
                 local visibleBuffs = setup:UpdateBuffs(portrait)
                 setup:UpdateDebuffs(portrait, math.ceil(visibleBuffs / 5))
                 for k = 1, table.getn(setup.portraits) do
@@ -1281,7 +1282,6 @@ function setup:OnEvent()
                 setup:UpdateLeaderIcon(portrait)
             end
             setup:UpdateBarText(portrait)
-            setup:UpdateBarTextNumbers(portrait)
             local visibleBuffs = setup:UpdateBuffs(portrait)
             setup:UpdateDebuffs(portrait, math.ceil(visibleBuffs / 5))
             setup:UpdateCombatGlow(portrait)
@@ -1514,7 +1514,7 @@ function setup:GenerateDefaults()
 
     local defaults = {
         enabled = {value = true},
-        version = {value = '1.0'},
+        version = {value = '1.1'},
         gui = {}
     }
 
@@ -1591,7 +1591,7 @@ function setup:GenerateDefaults()
         defaults[frame.key..'ShowHealthText'] = {value = showHealthText, metadata = {element = 'checkbox', category = catHealthBar, indexInCategory = 12, description = 'Show health text', dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'HealthTextFormat'] = {value = 'cur/max', metadata = {element = 'dropdown', category = catHealthBar, indexInCategory = 13, description = 'Health text format', options = {'current', 'cur/max', 'none'}, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'HealthTextShowPercent'] = {value = false, metadata = {element = 'checkbox', category = catHealthBar, indexInCategory = 14, description = 'Show health percentage', dependency = {key = frame.key..'Enabled', state = true}}}
-        defaults[frame.key..'HealthTextAbbreviate'] = {value = true, metadata = {element = 'checkbox', category = catHealthBar, indexInCategory = 15, description = 'Abbreviate health numbers', dependency = {key = frame.key..'Enabled', state = true}}}
+        defaults[frame.key..'AbbreviateNumbers'] = {value = true, metadata = {element = 'checkbox', category = catHealthBar, indexInCategory = 15, description = 'Abbreviate numbers (K/M)', dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'HealthTextAnchor'] = {value = 'center', metadata = {element = 'dropdown', category = catHealthBar, indexInCategory = 16, description = 'Health text anchor', options = {'left', 'center', 'right'}, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'HealthTextFont'] = {value = 'font:FRIZQT__.TTF', metadata = {element = 'dropdown', category = catHealthBar, indexInCategory = 17, description = 'Health text font', options = media.fonts, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'HealthTextSize'] = {value = 10, metadata = {element = 'slider', category = catHealthBar, indexInCategory = 18, description = 'Health text size', min = 6, max = 20, step = 1, dependency = {key = frame.key..'Enabled', state = true}}}
@@ -1619,8 +1619,7 @@ function setup:GenerateDefaults()
         defaults[frame.key..'ShowManaText'] = {value = showManaText, metadata = {element = 'checkbox', category = catPowerBar, indexInCategory = 10, description = 'Show power text', dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ManaTextFormat'] = {value = 'cur/max', metadata = {element = 'dropdown', category = catPowerBar, indexInCategory = 11, description = 'Power text format', options = {'current', 'cur/max', 'none'}, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ManaTextShowPercent'] = {value = false, metadata = {element = 'checkbox', category = catPowerBar, indexInCategory = 12, description = 'Show power percentage', dependency = {key = frame.key..'Enabled', state = true}}}
-        defaults[frame.key..'ManaTextAbbreviate'] = {value = true, metadata = {element = 'checkbox', category = catPowerBar, indexInCategory = 13, description = 'Abbreviate power numbers', dependency = {key = frame.key..'Enabled', state = true}}}
-        defaults[frame.key..'ManaTextAnchor'] = {value = 'center', metadata = {element = 'dropdown', category = catPowerBar, indexInCategory = 14, description = 'Power text anchor', options = {'left', 'center', 'right'}, dependency = {key = frame.key..'Enabled', state = true}}}
+        defaults[frame.key..'ManaTextAnchor'] = {value = 'center', metadata = {element = 'dropdown', category = catPowerBar, indexInCategory = 13, description = 'Power text anchor', options = {'left', 'center', 'right'}, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ManaTextFont'] = {value = 'font:FRIZQT__.TTF', metadata = {element = 'dropdown', category = catPowerBar, indexInCategory = 15, description = 'Power text font', options = media.fonts, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ManaTextSize'] = {value = 10, metadata = {element = 'slider', category = catPowerBar, indexInCategory = 16, description = 'Power text size', min = 6, max = 20, step = 1, dependency = {key = frame.key..'Enabled', state = true}}}
         defaults[frame.key..'ManaTextColor'] = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker', category = catPowerBar, indexInCategory = 17, description = 'Power text color', dependency = {key = frame.key..'Enabled', state = true}}}
@@ -1837,7 +1836,7 @@ function setup:GenerateCallbacks()
                 end
             end
         end
-        callbacks[frame.key..'HealthTextAbbreviate'] = function(value)
+        callbacks[frame.key..'AbbreviateNumbers'] = function(value)
             for j = 1, table.getn(setup.portraits) do
                 local portrait = setup.portraits[j]
                 if (frame.key == 'party' and string.find(portrait.unit, 'party')) or portrait.unit == frame.key then
@@ -1873,15 +1872,7 @@ function setup:GenerateCallbacks()
                 end
             end
         end
-        callbacks[frame.key..'ManaTextAbbreviate'] = function(value)
-            for j = 1, table.getn(setup.portraits) do
-                local portrait = setup.portraits[j]
-                if (frame.key == 'party' and string.find(portrait.unit, 'party')) or portrait.unit == frame.key then
-                    portrait.abbreviateNumbers = value
-                    setup:UpdateBarText(portrait)
-                end
-            end
-        end
+
         callbacks[frame.key..'ManaTextAnchor'] = function(value)
             for j = 1, table.getn(setup.portraits) do
                 local portrait = setup.portraits[j]

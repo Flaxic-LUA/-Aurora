@@ -38,6 +38,8 @@ for i = 1, table.getn(frameConfigs) do
     idx = idx + 1
     defaults[cfg.prefix..'DurationFontSize'] = {value = 10, metadata = {element = 'slider', category = cat, indexInCategory = idx, description = cfg.name..' duration font size', min = 6, max = 20, stepSize = 1, dependency = {key = showKey, state = true}}}
     idx = idx + 1
+    defaults[cfg.prefix..'TimeFormatHHMM'] = {value = false, metadata = {element = 'checkbox', category = cat, indexInCategory = idx, description = cfg.name..' show hh:mm format', dependency = {key = showKey, state = true}}}
+    idx = idx + 1
     if cfg.hasSorting then
         defaults[cfg.prefix..'SortOrder'] = {value = 'descending', metadata = {element = 'dropdown', category = cat, indexInCategory = idx, description = cfg.name..' sort by duration', options = {'ascending', 'descending'}, dependency = {key = showKey, state = true}}}
     end
@@ -120,6 +122,18 @@ DF:NewModule('buffs', 1, 'PLAYER_LOGIN', function()
         callbacks[prefix..'DurationFontSize'] = function(value)
             for _, btn in pairs(frame.buttons) do
                 btn.duration:SetFont(media[DF.profile['buffs'][prefix..'DurationFont']], value, 'OUTLINE')
+            end
+        end
+
+        callbacks[prefix..'TimeFormatHHMM'] = function(value)
+            if prefix == 'weapon' then
+                for _, btn in pairs(frame.buttons) do
+                    setup:UpdateWeaponButton(btn)
+                end
+            else
+                for _, btn in pairs(frame.buttons) do
+                    setup:UpdateButton(btn)
+                end
             end
         end
 

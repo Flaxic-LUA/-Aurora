@@ -31,11 +31,12 @@ defaults.rangeIndicatorMode = {value = 'keybind', metadata = {element = 'dropdow
 defaults.showKeybindsOnEmpty = {value = false, metadata = {element = 'checkbox', category = catGenSettings, indexInCategory = 3, description = 'Show keybinds on empty buttons'}}
 
 defaults.hotkeyShow = {value = true, metadata = {element = 'checkbox', category = catHotkeys, indexInCategory = 1, description = 'Toggle visibility of hotkey bindings on action buttons'}}
-defaults.hotkeyFont = {value = 'font:PT-Sans-Narrow-Bold.ttf', metadata = {element = 'dropdown', category = catHotkeys, indexInCategory = 2, description = 'Select font for hotkey text', options = media.fonts, dependency = {key = 'hotkeyShow', state = true}}}
-defaults.hotkeyFontSize = {value = 11, metadata = {element = 'slider', category = catHotkeys, indexInCategory = 3, description = 'Adjust the font size of hotkey text', min = 6, max = 20, stepSize = 1, dependency = {key = 'hotkeyShow', state = true}}}
-defaults.hotkeyColour = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker', category = catHotkeys, indexInCategory = 4, description = 'Set the color of hotkey text', dependency = {key = 'hotkeyShow', state = true}}}
-defaults.hotkeyX = {value = -1, metadata = {element = 'slider', category = catHotkeys, indexInCategory = 5, description = 'Horizontal position offset for hotkey text', min = -20, max = 20, stepSize = 1, dependency = {key = 'hotkeyShow', state = true}}}
-defaults.hotkeyY = {value = -1, metadata = {element = 'slider', category = catHotkeys, indexInCategory = 6, description = 'Vertical position offset for hotkey text', min = -20, max = 20, stepSize = 1, dependency = {key = 'hotkeyShow', state = true}}}
+defaults.stancePetShow = {value = true, metadata = {element = 'checkbox', category = catHotkeys, indexInCategory = 2, description = 'Also show for stance-/petbar', dependency = {key = 'hotkeyShow', state = true}}}
+defaults.hotkeyFont = {value = 'font:PT-Sans-Narrow-Bold.ttf', metadata = {element = 'dropdown', category = catHotkeys, indexInCategory = 3, description = 'Select font for hotkey text', options = media.fonts, dependency = {key = 'hotkeyShow', state = true}}}
+defaults.hotkeyFontSize = {value = 11, metadata = {element = 'slider', category = catHotkeys, indexInCategory = 4, description = 'Adjust the font size of hotkey text', min = 6, max = 20, stepSize = 1, dependency = {key = 'hotkeyShow', state = true}}}
+defaults.hotkeyColour = {value = {1, 1, 1, 1}, metadata = {element = 'colorpicker', category = catHotkeys, indexInCategory = 5, description = 'Set the color of hotkey text', dependency = {key = 'hotkeyShow', state = true}}}
+defaults.hotkeyX = {value = -1, metadata = {element = 'slider', category = catHotkeys, indexInCategory = 6, description = 'Horizontal position offset for hotkey text', min = -20, max = 20, stepSize = 1, dependency = {key = 'hotkeyShow', state = true}}}
+defaults.hotkeyY = {value = -1, metadata = {element = 'slider', category = catHotkeys, indexInCategory = 7, description = 'Vertical position offset for hotkey text', min = -20, max = 20, stepSize = 1, dependency = {key = 'hotkeyShow', state = true}}}
 
 defaults.macroShow = {value = true, metadata = {element = 'checkbox', category = catMacros, indexInCategory = 1, description = 'Toggle visibility of macro text on action buttons'}}
 defaults.macroFont = {value = 'font:PT-Sans-Narrow-Bold.ttf', metadata = {element = 'dropdown', category = catMacros, indexInCategory = 2, description = 'Select font for macro text', options = media.fonts, dependency = {key = 'macroShow', state = true}}}
@@ -605,6 +606,39 @@ DF:NewModule('actionbars', 1, 'PLAYER_LOGIN', function()
         for _, bar in setup.bars do
             for i = 1, table.getn(bar.buttons) do
                 if value then bar.buttons[i].keybind:Show() else bar.buttons[i].keybind:Hide() end
+            end
+        end
+        if value and DF.profile['actionbars']['stancePetShow'] then
+            for i = 1, table.getn(setup.petButtons) do
+                setup.petButtons[i].keybind:Show()
+            end
+            for i = 1, table.getn(setup.stanceButtons) do
+                setup.stanceButtons[i].keybind:Show()
+            end
+        else
+            for i = 1, table.getn(setup.petButtons) do
+                setup.petButtons[i].keybind:Hide()
+            end
+            for i = 1, table.getn(setup.stanceButtons) do
+                setup.stanceButtons[i].keybind:Hide()
+            end
+        end
+    end
+
+    callbacks.stancePetShow = function(value)
+        if DF.profile['actionbars']['hotkeyShow'] and value then
+            for i = 1, table.getn(setup.petButtons) do
+                setup.petButtons[i].keybind:Show()
+            end
+            for i = 1, table.getn(setup.stanceButtons) do
+                setup.stanceButtons[i].keybind:Show()
+            end
+        else
+            for i = 1, table.getn(setup.petButtons) do
+                setup.petButtons[i].keybind:Hide()
+            end
+            for i = 1, table.getn(setup.stanceButtons) do
+                setup.stanceButtons[i].keybind:Hide()
             end
         end
     end

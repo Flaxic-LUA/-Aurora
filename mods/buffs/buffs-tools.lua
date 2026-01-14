@@ -13,6 +13,17 @@ local setup = {
     }
 }
 
+-- helper
+function setup:FormatTimeHHMM(seconds)
+    local hours = math.floor(seconds / 3600)
+    local mins = math.floor(math.mod(seconds, 3600) / 60)
+    if hours > 0 then
+        return string.format('%d:%02dh', hours, mins)
+    else
+        return string.format('0:%02dm', mins)
+    end
+end
+
 -- create
 function setup:CreateBuffButton(parent, name, id, buffFilter)
     local button = CreateFrame('Button', name, parent)
@@ -91,7 +102,12 @@ function setup:UpdateDuration(button)
     if button.buffIndex and button.buffIndex >= 0 then
         local timeLeft = GetPlayerBuffTimeLeft(button.buffIndex)
         if timeLeft and timeLeft > 0 then
-            button.duration:SetText(SecondsToTimeAbbrev(timeLeft))
+            local frame = button:GetParent()
+            local prefix = frame.buffFilter == 'HELPFUL' and 'buff' or 'debuff'
+            local useHHMM = DF.profile['buffs'][prefix..'TimeFormatHHMM']
+            local text = (useHHMM and timeLeft >= 3600) and self:FormatTimeHHMM(timeLeft) or SecondsToTimeAbbrev(timeLeft)
+            text = string.gsub(text, '([hms])$', '|cFFFF0000%1|r')
+            button.duration:SetText(text)
             button.duration:Show()
         else
             button.duration:Hide()
@@ -123,7 +139,10 @@ function setup:UpdateWeaponDuration(button)
         timeLeft = ohtime / 1000
     end
     if timeLeft > 0 then
-        button.duration:SetText(SecondsToTimeAbbrev(timeLeft))
+        local useHHMM = DF.profile['buffs']['weaponTimeFormatHHMM']
+        local text = (useHHMM and timeLeft >= 3600) and self:FormatTimeHHMM(timeLeft) or SecondsToTimeAbbrev(timeLeft)
+        text = string.gsub(text, '([hms])$', '|cFFFF0000%1|r')
+        button.duration:SetText(text)
         button.duration:Show()
     else
         button.duration:Hide()

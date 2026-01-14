@@ -45,7 +45,7 @@ for _, customEvent in pairs(customEvents) do
     end
 end
 
--- hook future frames via CreateFrame override
+-- hook future frames
 local _CreateFrame = CreateFrame
 CreateFrame = function(frameType, name, parent, template)
     local frame = _CreateFrame(frameType, name, parent, template)
