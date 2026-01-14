@@ -36,7 +36,7 @@ DF:NewModule('talents', 1, function() -- TODO: needs total rewrite
         frame = DF.ui.CreatePaperDollFrame('DF_TalentFrame', UIParent, 870, 600, 1)
         frame:SetPoint('CENTER', UIParent, 'CENTER', 0, 80)
         frame:SetFrameStrata('MEDIUM')
-        frame:SetFrameLevel(1)
+        frame:SetFrameLevel(5)
         frame:SetScale(.9)
         frame:EnableMouse(true)
         SetPortraitTexture(frame.portrait, 'player')
