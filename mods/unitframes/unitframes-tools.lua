@@ -28,7 +28,8 @@ local setup = {
         borderElite = media['tex:unitframes:uf_elite.blp'],
         borderRare = media['tex:unitframes:uf_rare.blp'],
         borderBoss = media['tex:unitframes:uf_boss.blp'],
-        groupLeader = media['tex:unitframes:groupleader.blp']
+        groupLeader = media['tex:unitframes:groupleader.blp'],
+        raidTargetIcon = 'Interface\\TargetingFrame\\UI-RaidTargetingIcons'
     },
 
 
@@ -87,11 +88,18 @@ function setup:CreateUnitFrame(unit, width, height)
     unitFrame.classBorderOverlay:SetSize(96, 96)
     unitFrame.classBorderOverlay:Hide()
 
+    local iconFrame = CreateFrame('Frame', nil, unitFrame.portraitFrame)
+    iconFrame:SetFrameLevel(borderFrame:GetFrameLevel() + 1)
+    iconFrame:SetAllPoints(unitFrame.portraitFrame)
+
+    unitFrame.raidIcon = iconFrame:CreateTexture(nil, 'OVERLAY')
+    unitFrame.raidIcon:SetTexture(self.textures.raidTargetIcon)
+    unitFrame.raidIcon:SetSize(20, 20)
+    unitFrame.raidIcon:SetPoint('CENTER', unitFrame.portraitFrame, 'TOP', 0, -5)
+    unitFrame.raidIcon:Hide()
+
     if string.find(unit, 'party') or unit == 'player' then
-        local leaderFrame = CreateFrame('Frame', nil, unitFrame.portraitFrame)
-        leaderFrame:SetFrameLevel(borderFrame:GetFrameLevel() + 1)
-        leaderFrame:SetAllPoints(unitFrame.portraitFrame)
-        unitFrame.leaderIcon = leaderFrame:CreateTexture(nil, 'OVERLAY')
+        unitFrame.leaderIcon = iconFrame:CreateTexture(nil, 'OVERLAY')
         unitFrame.leaderIcon:SetTexture(self.textures.groupLeader)
         unitFrame.leaderIcon:SetSize(16, 16)
         unitFrame.leaderIcon:SetPoint('TOP', unitFrame.portraitFrame, 'TOP', -25, 2)
@@ -585,6 +593,20 @@ function setup:UpdatePvPIcon(unitFrame)
             unitFrame.pvpIcon:SetTexture(self.textures.pvpHorde)
         end
         unitFrame.pvpIcon:Show()
+    end
+end
+
+function setup:UpdateRaidIcon(unitFrame)
+    local index = GetRaidTargetIndex(unitFrame.unit)
+    if index then
+        local left = math.mod(index - 1, 4) * 0.25
+        local right = left + 0.25
+        local top = math.floor((index - 1) / 4) * 0.25
+        local bottom = top + 0.25
+        unitFrame.raidIcon:SetTexCoord(left, right, top, bottom)
+        unitFrame.raidIcon:Show()
+    else
+        unitFrame.raidIcon:Hide()
     end
 end
 
@@ -1193,6 +1215,7 @@ function setup:OnEvent()
     self.eventFrame:RegisterEvent'PARTY_LEADER_CHANGED'
     self.eventFrame:RegisterEvent'PARTY_LOOT_METHOD_CHANGED'
     self.eventFrame:RegisterEvent'RAID_ROSTER_UPDATE'
+    self.eventFrame:RegisterEvent'RAID_TARGET_UPDATE'
     self.eventFrame:RegisterEvent'PLAYER_LEVEL_UP'
     self.eventFrame:RegisterEvent'UNIT_LEVEL'
     self.eventFrame:RegisterEvent'UNIT_PORTRAIT_UPDATE'
@@ -1236,6 +1259,7 @@ function setup:OnEvent()
                 end
                 setup:UpdatePortraitVisibility(portrait)
                 setup:UpdateClassificationBorder(portrait)
+                setup:UpdateRaidIcon(portrait)
                 setup:UpdateUnitHealth(portrait, true)
                 setup:UpdateUnitMana(portrait, true)
                 setup:UpdateHealthBarColor(portrait, portrait.unit)
@@ -1281,6 +1305,7 @@ function setup:OnEvent()
             if string.find(portrait.unit, 'party') or portrait.unit == 'player' then
                 setup:UpdateLeaderIcon(portrait)
             end
+            setup:UpdateRaidIcon(portrait)
             setup:UpdateBarText(portrait)
             local visibleBuffs = setup:UpdateBuffs(portrait)
             setup:UpdateDebuffs(portrait, math.ceil(visibleBuffs / 5))
@@ -1416,6 +1441,13 @@ function setup:OnEvent()
             if arg1 == portrait.unit then
                 portrait.model.update = portrait.unit
                 SetPortraitTexture(portrait.portrait2D, portrait.unit)
+            end
+        end
+    elseif event == 'RAID_TARGET_UPDATE' then
+        for i = 1, table.getn(setup.portraits) do
+            local portrait = setup.portraits[i]
+            if UnitExists(portrait.unit) then
+                setup:UpdateRaidIcon(portrait)
             end
         end
     elseif event == 'PARTY_MEMBERS_CHANGED' or event == 'PARTY_MEMBER_ENABLE' or event == 'PARTY_MEMBER_DISABLE' or event == 'PARTY_LEADER_CHANGED' or event == 'PARTY_LOOT_METHOD_CHANGED' or event == 'RAID_ROSTER_UPDATE' then

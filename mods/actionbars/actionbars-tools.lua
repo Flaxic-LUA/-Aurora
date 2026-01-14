@@ -951,6 +951,7 @@ function setup:OnEvent()
     setup.eventFrame:RegisterEvent'SPELL_UPDATE_USABLE'
     setup.eventFrame:RegisterEvent'ACTIONBAR_SHOWGRID'
     setup.eventFrame:RegisterEvent'ACTIONBAR_HIDEGRID'
+    setup.eventFrame:RegisterEvent'BAG_UPDATE'
     setup.hideEmptyFrame = CreateFrame('Frame')
     setup.hideEmptyFrame:SetScript('OnUpdate', function()
         if setup.hideEmptyTimer then
@@ -1141,6 +1142,12 @@ function setup:OnEvent()
         setup:ShowAllButtons()
     elseif event == 'ACTIONBAR_HIDEGRID' then
         setup.hideEmptyTimer = 0.15
+    elseif event == 'BAG_UPDATE' then
+        for _, bar in pairs(setup.bars) do
+            for i = 1, table.getn(bar.buttons) do
+                setup:UpdateButtonCount(bar.buttons[i])
+            end
+        end
     end
     end)
 end
